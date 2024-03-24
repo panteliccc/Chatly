@@ -15,19 +15,25 @@ import {
 } from "../Components/ui/form";
 import { Input } from "../Components/ui/input";
 
-export function Login() {
+export function Register() {
   const formSchema = z.object({
+    username: z.string().min(4, {
+      message: "Username must be at least 4 characters.",
+    }),
     email: z.string().email({
       message: "Email is not in valid form",
     }),
     password: z.string(),
+    confirmPassword: z.string(),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      username: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -35,14 +41,31 @@ export function Login() {
   }
   return (
     <div
-      className={`flex justify-center h-screen md:h-5/6  bg-background w-screen md:w-11/12 lg:w-3/4  rounded px-6`}
+      className={`flex justify-center h-screen md:h-5/6 bg-background w-screen md:w-11/12 lg:w-3/4  rounded px-6`}
     >
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 flex flex-col w-full m-auto md:w-1/2 justify-between"
+          className="space-y-5 flex flex-col w-full m-auto md:w-1/2 justify-between"
         >
-          <h1 className={`text-5xl font-bold`}>Weclome Back</h1>
+          <h1 className={`text-4xl font-bold`}>Weclome To Chatly</h1>
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Username"
+                    {...field}
+                    className={`rounded bg-softBlue text-white hover:bg-softBlue text-lg py-6`}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="email"
@@ -78,10 +101,28 @@ export function Login() {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm Password</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Confirm Password"
+                    type="password"
+                    {...field}
+                    className={`rounded bg-softBlue text-white hover:bg-softBlue text-lg py-6`}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <span className={`flex gap-1 items-center text-base`}>
-            Do not have an account?
-            <a href="/Account/Register" className={`underline text-lg font-semibold`}>
-              Register
+          You already have an account?
+            <a href="/Account/Login" className={`underline text-lg font-semibold`}>
+              Login
             </a>
           </span>
           <Button
@@ -93,7 +134,11 @@ export function Login() {
         </form>
       </Form>
       <div className="invisible w-0 overflow-hidden md:w-1/2 md:visible flex justify-center items-center">
-        <img src={`/login_ilustration.svg`} alt="login ilustration" className=" w-96"/>
+        <img
+          src={`/signup_ilustration.svg`}
+          alt="login ilustration"
+          className=" w-80"
+        />
       </div>
     </div>
   );
