@@ -14,18 +14,36 @@ import {
   FormMessage,
 } from "../Components/ui/form";
 import { Input } from "../Components/ui/input";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 export function Register() {
-  const formSchema = z.object({
-    username: z.string().min(4, {
-      message: "Username must be at least 4 characters.",
-    }),
-    email: z.string().email({
-      message: "Email is not in valid form",
-    }),
-    password: z.string(),
-    confirmPassword: z.string(),
-  });
+  const router = useNavigate();
+
+  const formSchema = z
+    .object({
+      username: z.string().min(4, {
+        message: "Username must be at least 4 characters.",
+      }),
+      email: z.string().email({
+        message: "Email is not in valid form",
+      }),
+      password: z
+        .string()
+        .min(8, "Password must be at least 8 characters long")
+        .regex(
+          /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+          {
+            message:
+              "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+          }
+        ),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords don't match",
+      path: ["confirmPassword"],
+    });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -36,8 +54,19 @@ export function Register() {
       confirmPassword: "",
     },
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    const { username, email, password } = values;
+    try {
+      await axios.post("http://localhost:5500/api/register", {
+        username,
+        email,
+        password,
+      });
+      router("/Account/Login")
+    } catch (err) {
+      console.log(err);
+    }
   }
   return (
     <div
@@ -120,10 +149,13 @@ export function Register() {
             )}
           />
           <span className={`flex gap-1 items-center text-base`}>
-          You already have an account?
-            <a href="/Account/Login" className={`underline text-lg font-semibold`}>
+            You already have an account?
+            <Link
+              to="/Account/Login"
+              className={`underline text-lg font-semibold`}
+            >
               Login
-            </a>
+            </Link>
           </span>
           <Button
             type="submit"

@@ -14,8 +14,11 @@ import {
   FormMessage,
 } from "../Components/ui/form";
 import { Input } from "../Components/ui/input";
+import { Link,useNavigate} from "react-router-dom";
+import axios from "axios";
 
-export function Login() {
+export function Login(props:any) {
+  const router = useNavigate();
   const formSchema = z.object({
     email: z.string().email({
       message: "Email is not in valid form",
@@ -30,8 +33,20 @@ export function Login() {
       password: "",
     },
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    const { email, password } = values;
+    try {
+      const res = await axios.post("http://localhost:5500/api/authUser", {
+        email,
+        password,
+      });
+      const data = await res.data;
+      props.setCookie("chatly.session-token",data);
+      router("/")
+    } catch (err) {
+      console.log(err);
+    }
   }
   return (
     <div
@@ -80,9 +95,9 @@ export function Login() {
           />
           <span className={`flex gap-1 items-center text-base`}>
             Do not have an account?
-            <a href="/Account/Register" className={`underline text-lg font-semibold`}>
+            <Link to="/Account/Register" className={`underline text-lg font-semibold`}>
               Register
-            </a>
+            </Link>
           </span>
           <Button
             type="submit"

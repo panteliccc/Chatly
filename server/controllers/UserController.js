@@ -40,7 +40,7 @@ const authUser = async (req, res) => {
         process.env.SECRET_KEY,
         { expiresIn: "8h" }
       );
-      res.status(200).json({ token: token });
+      res.status(200).json({message:"Authorize", data: token });
     }
   } catch (err) {
     res.status(401).json({ error: "Invalid username or password" });
