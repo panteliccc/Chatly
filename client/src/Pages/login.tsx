@@ -16,9 +16,12 @@ import {
 import { Input } from "../Components/ui/input";
 import { Link,useNavigate} from "react-router-dom";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 
-export function Login(props:any) {
+export function Login() {
   const router = useNavigate();
+  const [, setCookie] = useCookies(["chatly.session-token"])
+  
   const formSchema = z.object({
     email: z.string().email({
       message: "Email is not in valid form",
@@ -42,7 +45,7 @@ export function Login(props:any) {
         password,
       });
       const data = await res.data;
-      props.setCookie("chatly.session-token",data);
+      setCookie("chatly.session-token", data, { path: '/' });
       router("/")
     } catch (err) {
       console.log(err);
