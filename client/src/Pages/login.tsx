@@ -16,11 +16,10 @@ import {
 import { Input } from "../Components/ui/input";
 import { Link,useNavigate} from "react-router-dom";
 import axios from "axios";
-import { useCookies } from "react-cookie";
 
-export function Login() {
+export function Login(props:any) {
   const router = useNavigate();
-  const [, setCookie] = useCookies(["chatly.session-token"])
+  
   
   const formSchema = z.object({
     email: z.string().email({
@@ -45,7 +44,10 @@ export function Login() {
         password,
       });
       const data = await res.data;
-      setCookie("chatly.session-token", data, { path: '/' });
+      console.log(data.data);
+      const expirationDate = new Date();
+      expirationDate.setHours(expirationDate.getHours() + 8)
+      props.setCookie('chatly.session-token', data.data, { path: '/', expires: expirationDate });
       router("/")
     } catch (err) {
       console.log(err);
