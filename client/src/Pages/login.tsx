@@ -47,7 +47,7 @@ export function Login(props:any) {
       console.log(data.data);
       const expirationDate = new Date();
       expirationDate.setHours(expirationDate.getHours() + 8)
-      props.setCookie('chatly.session-token', data.data, { path: '/', expires: expirationDate });
+      props.setCookie('chatly.session-token', data.user, { path: '/', expires: expirationDate });
       router("/")
     } catch (err) {
       console.log(err);

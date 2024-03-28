@@ -34,15 +34,13 @@ const authUser = async (req, res) => {
     else {
       const expirationTime = Math.floor(Date.now() / 1000) + 1 * 60;
       const token = jwt.sign(
-        
         {
-          email,
-          username: user.username,
+          _id: user._id,
         },
         process.env.SECRET_KEY,
         { expiresIn: expirationTime }
       );
-      res.status(200).json({message:"Authorize", data: token });
+      res.status(200).json({ message: "Authorize", user: token });
     }
   } catch (err) {
     res.status(401).json({ error: "Invalid username or password" });

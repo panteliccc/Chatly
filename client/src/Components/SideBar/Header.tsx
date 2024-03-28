@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/popover";
 import { Input } from "../ui/input";
+import ChatCard from "./ChatCard";
 
 function Header() {
   return (
@@ -54,6 +55,11 @@ function Header() {
           className="shadow-none focus-visible:ring-0 border-0"
         />
       </div>
+      <ChatCard/>
+      <ChatCard/>
+      <ChatCard/>
+      <ChatCard/>
+      <ChatCard/>
     </div>
   );
 }
