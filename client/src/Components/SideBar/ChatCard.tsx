@@ -23,7 +23,6 @@ function ChatCard() {
     return (r + g + b) / 3 > 128;
   }
   const randomColor = getRandomColor();
-  console.log(randomColor);
   
   return (
     <div

@@ -5,9 +5,11 @@ const ConnectDb = require("./db/connection");
 const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const cookieParser = require('cookie-parser');
+const nocache = require('nocache');
 
 const app = express();
 app.use(cookieParser());
+app.use(nocache());
 
 const PORT = 5500;
 dotenv.config();

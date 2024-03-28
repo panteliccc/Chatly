@@ -20,9 +20,9 @@ const createChat = asyncHandler(async (req, res) => {
     path:"latestMessage.user",
     select:"username email image"
   })
-
-  if (isChat > 0) {
-    res.send(isChat[0]);
+  console.log(isChat);
+  if (isChat != 0) {
+    return res.send(isChat[0]);
   } else {
     try{
         const createdChat = await Chat.create({

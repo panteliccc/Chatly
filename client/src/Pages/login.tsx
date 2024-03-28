@@ -36,7 +36,6 @@ export function Login(props:any) {
     },
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     const { email, password } = values;
     try {
       const res = await axios.post("http://localhost:5500/api/authUser", {
@@ -44,7 +43,6 @@ export function Login(props:any) {
         password,
       });
       const data = await res.data;
-      console.log(data.data);
       const expirationDate = new Date();
       expirationDate.setHours(expirationDate.getHours() + 8)
       props.setCookie('chatly.session-token', data.user, { path: '/', expires: expirationDate });

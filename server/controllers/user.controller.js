@@ -32,7 +32,7 @@ const authUser = async (req, res) => {
     if (!user || !validPassword)
       return res.status(400).json({ message: "Inavlid email or password" });
     else {
-      const expirationTime = Math.floor(Date.now() / 1000) + 1 * 60;
+      const expirationTime = Math.floor(Date.now() / 1000) + 8 * 60 * 60;
       const token = jwt.sign(
         {
           _id: user._id,
@@ -46,7 +46,5 @@ const authUser = async (req, res) => {
     res.status(401).json({ error: "Invalid username or password" });
   }
 };
-const verifyToken = (token) => {
-  return jwt.verify(token, process.env.SECRET_KEY);
-};
+
 module.exports = { registerUser, authUser };
