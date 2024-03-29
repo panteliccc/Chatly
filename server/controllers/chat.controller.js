@@ -58,7 +58,7 @@ const getChats = asyncHandler(async (req, res) => {
       select: "name image email",
     });
     let authUser = await User.findOne({ _id: req.user._id }).select(
-      "username email -_id"
+      "username email image -_id"
     );
     res.status(200).json({ chats, authUser });
   } catch (err) {

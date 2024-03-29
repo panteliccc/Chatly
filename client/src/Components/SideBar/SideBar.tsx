@@ -21,11 +21,12 @@ interface Users {
   image: string;
 }
 
-const SideBar = () => {
+const SideBar = (props:any) => {
   const [data, setData] = useState<Data[]>([]);
   const [authUser, setAuthUser] = useState<{
     username: string;
     email: string;
+    image:string;
   } | null>(null);
 
   useEffect(() => {
@@ -53,7 +54,7 @@ const SideBar = () => {
     <div
       className={`px-3 bg-secondary h-screen w-screen flex flex-col md:w-1/3 lg:w-1/4`}
     >
-      <Header />
+      <Header user={authUser} logOut={props.logOut}/>
       {data.map((chat) => (
         <ChatCard
           key={chat._id}

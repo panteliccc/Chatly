@@ -29,9 +29,10 @@ function Home(props:any) {
     return Date.now() >= (exp ? exp * 1000 : 0);
   };
 
+
   return (
     <div className={`bg-background w-screen h-screen flex`}>
-      <SideBar />
+      <SideBar logOut={props.removeToken}/>
       <Chat />
     </div>
   );

@@ -46,5 +46,4 @@ const authUser = async (req, res) => {
     res.status(401).json({ error: "Invalid username or password" });
   }
 };
-
 module.exports = { registerUser, authUser };
