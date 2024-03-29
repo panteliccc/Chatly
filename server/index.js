@@ -2,8 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const ConnectDb = require("./db/connection");
-const userRoutes = require("./routes/userRoutes");
-const chatRoutes = require("./routes/chatRoutes");
+const userRoutes = require("./routes/user.routes");
+const chatRoutes = require("./routes/chat.routes");
 const cookieParser = require('cookie-parser');
 const nocache = require('nocache');
 

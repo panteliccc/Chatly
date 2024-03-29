@@ -9,11 +9,10 @@ import {
   DropdownMenuTrigger,
 } from "../ui/popover";
 import { Input } from "../ui/input";
-import ChatCard from "./ChatCard";
 
 function Header() {
   return (
-    <div className="px-3">
+    <div className="">
       <div className={`flex py-3 justify-between items-center border-b-2`}>
         <div className="flex items-center gap-2">
           <Avatar className="w-10 h-10">
@@ -40,7 +39,7 @@ function Header() {
               <DropdownMenuItem className="rounded cursor-pointer">
                 Settings
               </DropdownMenuItem>
-              <DropdownMenuItem className="rounded cursor-pointer">
+              <DropdownMenuItem className="rounded cursor-pointer" >
                 Log out
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -55,11 +54,7 @@ function Header() {
           className="shadow-none focus-visible:ring-0 border-0"
         />
       </div>
-      <ChatCard/>
-      <ChatCard/>
-      <ChatCard/>
-      <ChatCard/>
-      <ChatCard/>
+
     </div>
   );
 }

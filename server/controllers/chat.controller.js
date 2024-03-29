@@ -14,34 +14,55 @@ const createChat = asyncHandler(async (req, res) => {
       { users: { $elemMatch: { $eq: req.user._id } } },
       { users: { $elemMatch: { $eq: userId } } },
     ],
-  }).populate("users", "-password").populate("latestMessage");
-
-  isChat = await User.populate(isChat,{
-    path:"latestMessage.user",
-    select:"username email image"
   })
+    .populate("users", "-password")
+    .populate("latestMessage");
+
+  isChat = await User.populate(isChat, {
+    path: "latestMessage.user",
+    select: "username email image",
+  });
   console.log(isChat);
   if (isChat != 0) {
     return res.send(isChat[0]);
   } else {
-    try{
-        const createdChat = await Chat.create({
-            chatName:"user",
-            isGroup:false,
-            users:[req.user._id,userId] 
-        });
+    try {
+      const createdChat = await Chat.create({
+        chatName: "user",
+        isGroup: false,
+        users: [req.user._id, userId],
+      });
 
-        const fullChat = await Chat.findOne({_id: createdChat._id}).populate(
-            "users",
-            "-password"
-        );
+      const fullChat = await Chat.findOne({ _id: createdChat._id }).populate(
+        "users",
+        "-password"
+      );
 
-        res.status(200).json({fullChat, message:"dufsuidhfshd"});
-
-    }catch(err) {
-        res.status(400).json({ error: err})
+      res.status(200).json({ fullChat, message: "dufsuidhfshd" });
+    } catch (err) {
+      res.status(400).json({ error: err });
     }
   }
 });
+const getChats = asyncHandler(async (req, res) => {
+  try {
+    let chats = Chat.find({
+      users: { $elemMatch: { $eq: req.user._id } },
+    })
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password")
+      .populate("latestMessage");
 
-module.exports = {createChat}
+    chats = await User.populate(chats, {
+      path: "latestMessage.sender",
+      select: "name image email",
+    });
+    let authUser = await User.findOne({ _id: req.user._id }).select(
+      "username email -_id"
+    );
+    res.status(200).json({ chats, authUser });
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+module.exports = { createChat, getChats };
