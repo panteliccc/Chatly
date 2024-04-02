@@ -54,6 +54,7 @@ export function Login(props: any) {
         throw new Error("Invalid username or password");
       }
     } catch (err:any) {
+      console.log(err);
       if (err.response && err.response.status === 400) {
         form.setError("email", { message: "" });
         form.setError("password", { message: "Invalid username or password" });

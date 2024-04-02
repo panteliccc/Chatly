@@ -21,13 +21,29 @@ interface Users {
   image: string;
 }
 
-const SideBar = (props:any) => {
+const SideBar = (props: any) => {
   const [data, setData] = useState<Data[]>([]);
   const [authUser, setAuthUser] = useState<{
     username: string;
     email: string;
-    image:string;
+    image: string;
   } | null>(null);
+  const handleStartChat = async (id: string) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:5500/api/createChat",
+        {
+          userId: id,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,27 +62,39 @@ const SideBar = (props:any) => {
   }, []);
   if (!authUser) return <div>Loading...</div>;
 
-  const getSender = (authUsername: string, users: Users[]): string => {
-    const sender = users.find(user => user.username !== authUsername);
-    return sender ? sender.username : "Unknown User";
+  const getSenderIndex = (authUsername: string, users: Users[]): number => {
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].username !== authUsername) {
+        return i;
+      }
+    }
+    return -1;
   };
   return (
     <div
       className={`px-3 bg-secondary h-screen w-screen flex flex-col md:w-1/3 lg:w-1/4 overflow-y-auto`}
     >
-      <Header user={authUser} logOut={props.logOut}/>
+      <Header user={authUser} logOut={props.logOut} />
       {data.map((chat) => (
         <ChatCard
           key={chat._id}
           _id={chat._id}
           chatName={
-            chat.isGroup?chat.chatName:(authUser.username && getSender(authUser.username,chat.users))
+            chat.isGroup
+              ? chat.chatName
+              : authUser.username &&
+                chat.users[getSenderIndex(authUser.username, chat.users)]
+                  ?.username
           }
-          image={chat.users[1].image}
+          image={chat.users[1]?.image}
           latestMessage={chat.latestMessage}
+          userId={
+            chat.users[getSenderIndex(authUser.username, chat.users)]?._id
+          }
+          onClick ={()=>handleStartChat(chat.users[getSenderIndex(authUser.username, chat.users)]?._id)}
           className=""
         />
-      ))} 
+      ))}
     </div>
   );
 };

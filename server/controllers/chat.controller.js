@@ -38,7 +38,7 @@ const createChat = asyncHandler(async (req, res) => {
         "-password"
       );
 
-      res.status(200).json({ fullChat, message: "dufsuidhfshd" });
+      res.status(201).json({ fullChat, message: "Created chat" });
     } catch (err) {
       res.status(400).json({ error: err });
     }

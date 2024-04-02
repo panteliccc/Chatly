@@ -5,9 +5,10 @@ interface Props {
   _id: string;
   chatName: string;
   image: string;
-  //users: Users[];
   latestMessage: Message;
-  className:string;
+  userId: string;
+  className: string;
+  onClick: () => Promise<void>; // Dodali smo onClick prop ovde
 }
 interface Message {
   sender: Users;
@@ -21,27 +22,36 @@ interface Users {
 }
 
 function ChatCard(props: Props) {
+
   function getInitials(username: string): string {
+    if (!username) return "";
     const names = username.split(" ");
     return names
       .map((name) => name.charAt(0))
       .join("")
       .toUpperCase();
   }
+
   return (
     <div
-      className={`flex items-start gap-3 border-b py-3 cursor-pointer hover:bg-accent rounded ${props.className}`}
+      className={`flex items-center gap-3 border-b py-3 cursor-pointer hover:bg-accent rounded ${props.className}`}
+      onClick={() => {
+        props.onClick();
+      }}
     >
       <Avatar className="w-10 h-10">
         {props.image ? (
           <AvatarImage src={props.image} />
         ) : (
-          <AvatarFallback>
-            {getInitials(props.chatName)}
-          </AvatarFallback>
+          <AvatarFallback>{getInitials(props.chatName)}</AvatarFallback>
         )}
       </Avatar>
-      <h1 className="text-2xl">{props.chatName}</h1>
+      <div className="flex flex-col">
+        <h1 className="text-2xl">{props.chatName}</h1>
+        <span>
+          {props.latestMessage ? props.latestMessage.content : "start chat"}
+        </span>
+      </div>
     </div>
   );
 }

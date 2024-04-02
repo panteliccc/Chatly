@@ -19,7 +19,7 @@ function Search() {
   const [data, setData] = useState<Data[]>([]);
   const [searchValue, setValueSearch] = useState("");
   const [visible, setVisibe] = useState("hidden");
-  const fetchData = async (searchValue:string) => {
+  const fetchData = async (searchValue: string) => {
     try {
       const { data } = await axios.get(
         `http://localhost:5500/api?search=${searchValue}`,
@@ -32,9 +32,26 @@ function Search() {
       console.log(error);
     }
   };
+  const handleStartChat = async (id: string) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:5500/api/createChat",
+        {
+          userId: id,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+      setVisibe("hidden")
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
     fetchData(searchValue);
-    if (searchValue !== "") {
+    if (searchValue.trim() !== "") {
       setVisibe("flex");
     } else {
       setVisibe("hidden");
@@ -55,7 +72,7 @@ function Search() {
         />
       </div>
       <div
-        className={`bg-popover flex-col p-3 absolute z-20 w-full rounded max-h-64 overflow-auto shadow-xl ${visible}`}
+        className={`bg-popover flex-col p-3 absolute z-20 w-full rounded max-h-72 overflow-auto shadow-xl ${visible}`}
       >
         {data.length === 0 ? (
           <div>No results found</div>
@@ -67,7 +84,9 @@ function Search() {
               chatName={user.username}
               image={user.image}
               latestMessage={user.latestMessage}
-              className=" hover:bg-transparent border-b-0"
+              userId={user._id}
+              className=" hover:bg-transparent"
+              onClick={()=>handleStartChat(user._id)}
             />
           ))
         )}
