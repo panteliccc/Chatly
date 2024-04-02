@@ -14,13 +14,12 @@ import {
   FormMessage,
 } from "../Components/ui/form";
 import { Input } from "../Components/ui/input";
-import { Link,useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export function Login(props:any) {
+export function Login(props: any) {
   const router = useNavigate();
-  
-  
+
   const formSchema = z.object({
     email: z.string().email({
       message: "Email is not in valid form",
@@ -42,15 +41,29 @@ export function Login(props:any) {
         email,
         password,
       });
-      const data = await res.data;
-      const expirationDate = new Date();
-      expirationDate.setHours(expirationDate.getHours() + 8)
-      props.setCookie('chatly.session-token', data.user, { path: '/', expires: expirationDate });
-      router("/")
-    } catch (err) {
-      console.log(err);
+      if (res.status === 200) {
+        const data = await res.data;
+        const expirationDate = new Date();
+        expirationDate.setHours(expirationDate.getHours() + 8);
+        props.setCookie("chatly.session-token", data.user, {
+          path: "/",
+          expires: expirationDate,
+        });
+        router("/");
+      } else {
+        throw new Error("Invalid username or password");
+      }
+    } catch (err:any) {
+      if (err.response && err.response.status === 400) {
+        form.setError("email", { message: "" });
+        form.setError("password", { message: "Invalid username or password" });
+      } else {
+        console.error("An error occurred:", err);
+      }
     }
+    
   }
+  
   return (
     <div
       className={`flex justify-center h-screen md:h-5/6  bg-background w-screen md:w-11/12 lg:w-3/4  rounded px-6`}
@@ -98,7 +111,10 @@ export function Login(props:any) {
           />
           <span className={`flex gap-1 items-center text-base`}>
             Do not have an account?
-            <Link to="/Account/Register" className={`underline text-lg font-semibold`}>
+            <Link
+              to="/Account/Register"
+              className={`underline text-lg font-semibold`}
+            >
               Register
             </Link>
           </span>
@@ -111,7 +127,11 @@ export function Login(props:any) {
         </form>
       </Form>
       <div className="invisible w-0 overflow-hidden md:w-1/2 md:visible flex justify-center items-center">
-        <img src={`/login_ilustration.svg`} alt="login ilustration" className=" w-96"/>
+        <img
+          src={`/login_ilustration.svg`}
+          alt="login ilustration"
+          className=" w-96"
+        />
       </div>
     </div>
   );

@@ -64,8 +64,12 @@ export function Register() {
         password,
       });
       router("/Account/Login")
-    } catch (err) {
-      console.log(err);
+    } catch (err:any) {
+      if (err.response && err.response.status === 400) {
+        form.setError("username", { message: "That username is taken. Try another" });
+      } else {
+        console.error("An error occurred:", err);
+      }
     }
   }
   return (

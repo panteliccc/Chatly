@@ -8,12 +8,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/popover";
-import { Input } from "../ui/input";
-interface Props{
-  user:User,
-  logOut:any,
+import Search from "./Search";
+
+interface Props {
+  user: User;
+  logOut: any;
 }
-interface User{
+interface User {
   username: string;
   email: string;
   image: string;
@@ -25,19 +26,19 @@ function getInitials(username: string): string {
     .join("")
     .toUpperCase();
 }
-function Header(props:Props) {
+function Header(props: Props) {
   return (
     <div className="">
       <div className={`flex py-3 justify-between items-center border-b-2`}>
         <div className="flex items-center gap-2">
           <Avatar className="w-10 h-10">
-          {props.user.image ? (
-          <AvatarImage src={props.user.image} />
-        ) : (
-          <AvatarFallback>
-            {getInitials(props.user.username)}
-          </AvatarFallback>
-        )}
+            {props.user.image ? (
+              <AvatarImage src={props.user.image} />
+            ) : (
+              <AvatarFallback>
+                {getInitials(props.user.username)}
+              </AvatarFallback>
+            )}
           </Avatar>
           <h2 className={`text-2xl font-semibold`}>Chats</h2>
         </div>
@@ -59,21 +60,17 @@ function Header(props:Props) {
               <DropdownMenuItem className="rounded cursor-pointer">
                 Settings
               </DropdownMenuItem>
-              <DropdownMenuItem className="rounded cursor-pointer" onClick={props.logOut}>
+              <DropdownMenuItem
+                className="rounded cursor-pointer"
+                onClick={props.logOut}
+              >
                 Log out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
-      <div className="flex p-2 border my-3 rounded">
-        <img src="/search.svg" alt="search icon" className={`w-5`} />
-        <Input
-          type="search"
-          placeholder="Search people...."
-          className="shadow-none focus-visible:ring-0 border-0"
-        />
-      </div>
+      <Search />
     </div>
   );
 }

@@ -52,7 +52,7 @@ const SideBar = (props:any) => {
   };
   return (
     <div
-      className={`px-3 bg-secondary h-screen w-screen flex flex-col md:w-1/3 lg:w-1/4`}
+      className={`px-3 bg-secondary h-screen w-screen flex flex-col md:w-1/3 lg:w-1/4 overflow-y-auto`}
     >
       <Header user={authUser} logOut={props.logOut}/>
       {data.map((chat) => (
@@ -64,8 +64,9 @@ const SideBar = (props:any) => {
           }
           image={chat.users[1].image}
           latestMessage={chat.latestMessage}
+          className=""
         />
-      ))}
+      ))} 
     </div>
   );
 };
