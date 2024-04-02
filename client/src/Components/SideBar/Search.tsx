@@ -44,7 +44,8 @@ function Search() {
           withCredentials: true,
         }
       );
-      setVisibe("hidden")
+      setVisibe("hidden");
+      setValueSearch("");
     } catch (err) {
       console.log(err);
     }

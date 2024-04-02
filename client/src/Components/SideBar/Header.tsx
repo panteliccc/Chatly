@@ -9,10 +9,10 @@ import {
   DropdownMenuTrigger,
 } from "../ui/popover";
 import Search from "./Search";
+import { useChatState } from "../../Context/Provider";
 
 interface Props {
   user: User;
-  logOut: any;
 }
 interface User {
   username: string;
@@ -27,6 +27,8 @@ function getInitials(username: string): string {
     .toUpperCase();
 }
 function Header(props: Props) {
+  const chatState = useChatState();
+  
   return (
     <div className="">
       <div className={`flex py-3 justify-between items-center border-b-2`}>
@@ -62,7 +64,7 @@ function Header(props: Props) {
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="rounded cursor-pointer"
-                onClick={props.logOut}
+                onClick={chatState.removeCookie["chatly.session-token"]}
               >
                 Log out
               </DropdownMenuItem>

@@ -8,7 +8,7 @@ interface Props {
   latestMessage: Message;
   userId: string;
   className: string;
-  onClick: () => Promise<void>; // Dodali smo onClick prop ovde
+  onClick: () => Promise<void>;
 }
 interface Message {
   sender: Users;

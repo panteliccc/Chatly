@@ -3,12 +3,13 @@ import SideBar from "../Components/SideBar/SideBar";
 import Chat from "../Components/Chat";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { useChatState } from "../Context/Provider";
 
 function Home(props:any) {
   const router = useNavigate();
-
+  const chatState = useChatState();
   useEffect(() => {
-    const token = props.cookie["chatly.session-token"];
+    const token = chatState?.cookie["chatly.session-token"];
     if (token) {
       try {
         const user = jwtDecode(token);
@@ -22,7 +23,7 @@ function Home(props:any) {
     } else {
       router("/Account/Login");
     }
-  }, [props.cookie, router]);
+  }, [chatState.cookie, router]);
 
   const isTokenExpired = (token: string) => {
     const { exp } = jwtDecode(token);
@@ -32,7 +33,7 @@ function Home(props:any) {
 
   return (
     <div className={`bg-background w-screen h-screen flex`}>
-      <SideBar logOut={props.removeToken}/>
+      <SideBar/>
       <Chat />
     </div>
   );

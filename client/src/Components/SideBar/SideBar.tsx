@@ -1,19 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Header from "./Header";
 import ChatCard from "./ChatCard";
 import axios from "axios";
+import { useChatState } from "../../Context/Provider";
 
-interface Data {
-  _id: string;
-  chatName: string;
-  isGroup: boolean;
-  users: Users[];
-  latestMessage: Message;
-}
-interface Message {
-  sender: Users;
-  content: string;
-}
 interface Users {
   _id: string;
   username: string;
@@ -21,13 +11,8 @@ interface Users {
   image: string;
 }
 
-const SideBar = (props: any) => {
-  const [data, setData] = useState<Data[]>([]);
-  const [authUser, setAuthUser] = useState<{
-    username: string;
-    email: string;
-    image: string;
-  } | null>(null);
+const SideBar = () => {
+  const chatState = useChatState();
   const handleStartChat = async (id: string) => {
     try {
       const res = await axios.post(
@@ -51,16 +36,16 @@ const SideBar = (props: any) => {
         const { data } = await axios.get("http://localhost:5500/api/getChats", {
           withCredentials: true,
         });
-        setData(data.chats);
-        setAuthUser(data.authUser);
+        chatState.setChats(data.chats);
+        chatState.setAuthUser(data.authUser);
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchData();
-  }, []);
-  if (!authUser) return <div>Loading...</div>;
+  }, [chatState]);
+  if (!chatState.authUser) return <div>Loading...</div>;
 
   const getSenderIndex = (authUsername: string, users: Users[]): number => {
     for (let i = 0; i < users.length; i++) {
@@ -74,27 +59,41 @@ const SideBar = (props: any) => {
     <div
       className={`px-3 bg-secondary h-screen w-screen flex flex-col md:w-1/3 lg:w-1/4 overflow-y-auto`}
     >
-      <Header user={authUser} logOut={props.logOut} />
-      {data.map((chat) => (
-        <ChatCard
-          key={chat._id}
-          _id={chat._id}
-          chatName={
-            chat.isGroup
-              ? chat.chatName
-              : authUser.username &&
-                chat.users[getSenderIndex(authUser.username, chat.users)]
-                  ?.username
-          }
-          image={chat.users[1]?.image}
-          latestMessage={chat.latestMessage}
-          userId={
-            chat.users[getSenderIndex(authUser.username, chat.users)]?._id
-          }
-          onClick ={()=>handleStartChat(chat.users[getSenderIndex(authUser.username, chat.users)]?._id)}
-          className=""
-        />
-      ))}
+      <Header user={chatState.authUser} />
+      {chatState.chats &&
+        chatState.chats.map((chat) => (
+          <ChatCard
+            key={chat._id}
+            _id={chat._id}
+            chatName={
+              chat.isGroup
+                ? chat.chatName
+                : (chatState.authUser?.username &&
+                    chat.users[
+                      getSenderIndex(
+                        chatState.authUser?.username || "",
+                        chat.users
+                      )
+                    ]?.username) ||
+                  ""
+            }
+            image={chat.users[1]?.image}
+            latestMessage={chat.latestMessage}
+            userId={
+              chat.users[
+                getSenderIndex(chatState.authUser?.username || "", chat.users)
+              ]?._id
+            }
+            onClick={() =>
+              handleStartChat(
+                chat.users[
+                  getSenderIndex(chatState.authUser?.username || "", chat.users)
+                ]?._id
+              )
+            }
+            className=""
+          />
+        ))}
     </div>
   );
 };

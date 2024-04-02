@@ -16,9 +16,11 @@ import {
 import { Input } from "../Components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useChatState } from "../Context/Provider";
 
-export function Login(props: any) {
+export function Login() {
   const router = useNavigate();
+  const chatState = useChatState();
 
   const formSchema = z.object({
     email: z.string().email({
@@ -45,7 +47,7 @@ export function Login(props: any) {
         const data = await res.data;
         const expirationDate = new Date();
         expirationDate.setHours(expirationDate.getHours() + 8);
-        props.setCookie("chatly.session-token", data.user, {
+        chatState?.setCookie("chatly.session-token", data.user, {
           path: "/",
           expires: expirationDate,
         });
@@ -53,7 +55,7 @@ export function Login(props: any) {
       } else {
         throw new Error("Invalid username or password");
       }
-    } catch (err:any) {
+    } catch (err: any) {
       console.log(err);
       if (err.response && err.response.status === 400) {
         form.setError("email", { message: "" });
@@ -62,9 +64,8 @@ export function Login(props: any) {
         console.error("An error occurred:", err);
       }
     }
-    
   }
-  
+
   return (
     <div
       className={`flex justify-center h-screen md:h-5/6  bg-background w-screen md:w-11/12 lg:w-3/4  rounded px-6`}
