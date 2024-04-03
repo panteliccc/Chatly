@@ -22,7 +22,6 @@ const createChat = asyncHandler(async (req, res) => {
     path: "latestMessage.user",
     select: "username email image",
   });
-  console.log(isChat);
   if (isChat != 0) {
     return res.send(isChat[0]);
   } else {
@@ -38,7 +37,7 @@ const createChat = asyncHandler(async (req, res) => {
         "-password"
       );
 
-      res.status(201).json({ fullChat, message: "Created chat" });
+      res.status(201).json(fullChat);
     } catch (err) {
       res.status(400).json({ error: err });
     }

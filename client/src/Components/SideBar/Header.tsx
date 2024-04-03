@@ -10,6 +10,7 @@ import {
 } from "../ui/popover";
 import Search from "./Search";
 import { useChatState } from "../../Context/Provider";
+import { Link } from "react-router-dom";
 
 interface Props {
   user: User;
@@ -28,7 +29,6 @@ function getInitials(username: string): string {
 }
 function Header(props: Props) {
   const chatState = useChatState();
-  
   return (
     <div className="">
       <div className={`flex py-3 justify-between items-center border-b-2`}>
@@ -46,24 +46,28 @@ function Header(props: Props) {
         </div>
         <div>
           <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger className=" rounded-full w-8 h-8 flex justify-center items-center">
               <div className="flex gap-1">
                 <div className="w-1 h-1 bg-text rounded-full"></div>
                 <div className="w-1 h-1 bg-text rounded-full"></div>
                 <div className="w-1 h-1 bg-text rounded-full"></div>
               </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className=" absolute right-0 rounded w-44 mt-2">
-              <DropdownMenuLabel>{props.user.username}</DropdownMenuLabel>
+            <DropdownMenuContent className=" absolute right-0 rounded w-44 mt-2 ">
+              <DropdownMenuLabel className=" text-lg">{props.user.username}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="rounded cursor-pointer">
+              <DropdownMenuItem className="rounded cursor-pointer text-lg">
                 New Group
               </DropdownMenuItem>
-              <DropdownMenuItem className="rounded cursor-pointer">
-                Settings
+              <DropdownMenuItem className="rounded cursor-pointer text-lg">
+                <Link
+                  to="/Account/Settings"
+                >
+                  Settings
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="rounded cursor-pointer"
+                className="rounded cursor-pointer text-lg"
                 onClick={chatState.removeCookie["chatly.session-token"]}
               >
                 Log out

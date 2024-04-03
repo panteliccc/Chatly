@@ -15,11 +15,12 @@ interface ChatContextType {
   selectedChat: Chat | null;
   setSelectedChat: (selectedChat: Chat | null) => void;
   chats: Chat[] | null;
-  setChats: (chats: Chat[] | null) => void;
+  setChats: any;
   cookie: any;
   setCookie: any;
   removeCookie: any;
 }
+
 interface User {
   _id: string;
   username: string;
@@ -34,13 +35,17 @@ interface Message {
 
 const ChatContext = createContext<ChatContextType | null>(null);
 
-const ChatProvider = ({ children }: { children: any }) => {
+const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [authUser, setAuthUser] = useState<User | null>(null);
   const [chats, setChats] = useState<Chat[] | null>(null);
   const [cookie, setCookie, removeCookie] = useCookies([
     "chatly.session-token",
   ]);
+
+  const addNewChat = (newChat: Chat) => {
+    setChats((prevChats) => (prevChats ? [...prevChats, newChat] : [newChat]));
+  };
 
   return (
     <ChatContext.Provider
@@ -49,8 +54,8 @@ const ChatProvider = ({ children }: { children: any }) => {
         setSelectedChat,
         authUser,
         setAuthUser,
-        chats,
         setChats,
+        chats,
         cookie,
         setCookie,
         removeCookie,

@@ -68,7 +68,7 @@ export function Login() {
 
   return (
     <div
-      className={`flex justify-center h-screen md:h-5/6  bg-background w-screen md:w-11/12 lg:w-3/4  rounded px-6`}
+      className={`flex justify-center h-screen md:h-5/6  bg-background w-screen md:w-11/12 lg:w-3/4  rounded px-6 `}
     >
       <Form {...form}>
         <form

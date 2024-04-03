@@ -4,11 +4,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 interface Props {
   _id: string;
   chatName: string;
-  image: string;
+  sender?:Users
   latestMessage: Message;
-  userId: string;
   className: string;
-  onClick: () => Promise<void>;
 }
 interface Message {
   sender: Users;
@@ -35,13 +33,10 @@ function ChatCard(props: Props) {
   return (
     <div
       className={`flex items-center gap-3 border-b py-3 cursor-pointer hover:bg-accent rounded ${props.className}`}
-      onClick={() => {
-        props.onClick();
-      }}
     >
       <Avatar className="w-10 h-10">
-        {props.image ? (
-          <AvatarImage src={props.image} />
+        {props.sender ? (
+          <AvatarImage src={props.sender?.image} />
         ) : (
           <AvatarFallback>{getInitials(props.chatName)}</AvatarFallback>
         )}

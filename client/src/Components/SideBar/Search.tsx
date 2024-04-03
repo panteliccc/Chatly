@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import axios from "axios";
 import ChatCard from "./ChatCard";
+import { useChatState } from "../../Context/Provider";
 
 interface Data {
   _id: string;
@@ -14,8 +15,22 @@ interface Message {
   sender: Data;
   content: string;
 }
+interface Chat {
+  _id: string;
+  chatName: string;
+  isGroup: boolean;
+  users: User[];
+  latestMessage: Message;
+}
+interface User {
+  _id: string;
+  username: string;
+  email: string;
+  image: string;
+}
 
 function Search() {
+  const chatSate = useChatState();
   const [data, setData] = useState<Data[]>([]);
   const [searchValue, setValueSearch] = useState("");
   const [visible, setVisibe] = useState("hidden");
@@ -34,7 +49,7 @@ function Search() {
   };
   const handleStartChat = async (id: string) => {
     try {
-      const res = await axios.post(
+      const { data }: { data: Chat } = await axios.post(
         "http://localhost:5500/api/createChat",
         {
           userId: id,
@@ -44,10 +59,17 @@ function Search() {
           withCredentials: true,
         }
       );
-      setVisibe("hidden");
-      setValueSearch("");
+      const elementExists = chatSate.chats?.some(item=>item._id===data._id)
+      if(!elementExists){
+        chatSate?.setChats((prev: Chat[]) => [...prev, data]);
+      }
+      
+      
     } catch (err) {
       console.log(err);
+    } finally {
+      setVisibe("hidden");
+      setValueSearch("");
     }
   };
   useEffect(() => {
@@ -79,16 +101,19 @@ function Search() {
           <div>No results found</div>
         ) : (
           data.map((user) => (
-            <ChatCard
+            <div
               key={user._id}
-              _id={user._id}
-              chatName={user.username}
-              image={user.image}
-              latestMessage={user.latestMessage}
-              userId={user._id}
-              className=" hover:bg-transparent"
-              onClick={()=>handleStartChat(user._id)}
-            />
+              onClick={() => {
+                handleStartChat(user._id);
+              }}
+            >
+              <ChatCard
+                _id={user._id}
+                chatName={user.username}
+                latestMessage={user.latestMessage}
+                className=" hover:bg-transparent"
+              />
+            </div>
           ))
         )}
       </div>
