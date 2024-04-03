@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 interface Props {
   _id: string;
   chatName: string;
-  sender?:Users
+  sender?: Users;
   latestMessage: Message;
   className: string;
 }
@@ -20,7 +20,6 @@ interface Users {
 }
 
 function ChatCard(props: Props) {
-
   function getInitials(username: string): string {
     if (!username) return "";
     const names = username.split(" ");

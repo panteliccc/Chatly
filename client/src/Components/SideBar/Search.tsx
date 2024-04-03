@@ -59,12 +59,12 @@ function Search() {
           withCredentials: true,
         }
       );
-      const elementExists = chatSate.chats?.some(item=>item._id===data._id)
-      if(!elementExists){
+      const elementExists = chatSate.chats?.some(
+        (item) => item._id === data._id
+      );
+      if (!elementExists) {
         chatSate?.setChats((prev: Chat[]) => [...prev, data]);
       }
-      
-      
     } catch (err) {
       console.log(err);
     } finally {
