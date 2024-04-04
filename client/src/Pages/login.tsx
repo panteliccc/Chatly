@@ -68,7 +68,7 @@ export function Login() {
 
   return (
     <div
-      className={`flex justify-center h-screen md:h-5/6  bg-background w-screen md:w-11/12 lg:w-3/4  rounded px-6 `}
+      className={`flex justify-center h-screen md:h-5/6 bg-background w-screen md:w-11/12 lg:w-3/4 rounded px-6`}
     >
       <Form {...form}>
         <form
@@ -128,7 +128,9 @@ export function Login() {
           </Button>
         </form>
       </Form>
-      <div className="invisible w-0 overflow-hidden md:w-1/2 md:visible flex justify-center items-center">
+      <div
+        className={`invisible w-0 overflow-hidden md:w-1/2 md:visible flex justify-center items-center`}
+      >
         <img
           src={`/login_ilustration.svg`}
           alt="login ilustration"
