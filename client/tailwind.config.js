@@ -73,11 +73,10 @@ module.exports = {
       },
     },
     colors: {
-      text: "#eef3f6",
-      background: "#0b1013",
+      text: "#eef3f6",  
       lightBlue: "#adc4d1",
       blue: "#3f4570",
-      softBlue: "#31008C",
+      softBlue: "#1757fa",
       white: "#fff",
       transparent:"transparent"
     },

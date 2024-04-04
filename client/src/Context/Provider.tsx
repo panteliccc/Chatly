@@ -19,6 +19,8 @@ interface ChatContextType {
   cookie: any;
   setCookie: any;
   removeCookie: any;
+  activeLink: string | null;
+  setActiveLink: any;
 }
 
 interface User {
@@ -42,10 +44,8 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [cookie, setCookie, removeCookie] = useCookies([
     "chatly.session-token",
   ]);
+  const [activeLink, setActiveLink] = useState("messages");
 
-  const addNewChat = (newChat: Chat) => {
-    setChats((prevChats) => (prevChats ? [...prevChats, newChat] : [newChat]));
-  };
 
   return (
     <ChatContext.Provider
@@ -59,6 +59,8 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         cookie,
         setCookie,
         removeCookie,
+        activeLink,
+        setActiveLink
       }}
     >
       <CookiesProvider>{children}</CookiesProvider>

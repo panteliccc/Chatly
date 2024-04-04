@@ -3,6 +3,7 @@ import { Input } from "../ui/input";
 import axios from "axios";
 import ChatCard from "./ChatCard";
 import { useChatState } from "../../Context/Provider";
+import { ScrollArea } from "../ui/scrollarea";
 
 interface Data {
   _id: string;
@@ -83,39 +84,43 @@ function Search() {
   if (!data) return <div>Loading...</div>;
 
   return (
-    <div className="w-full relative">
-      <div className="flex p-2 border my-3 rounded">
-        <img src="/search.svg" alt="search icon" className={`w-5`} />
-        <Input
-          type="search"
-          placeholder="Search people...."
-          className="shadow-none focus-visible:ring-0 border-0"
-          onChange={(e) => setValueSearch(e.target.value)}
-          value={searchValue}
-        />
-      </div>
-      <div
-        className={`bg-popover flex-col p-3 absolute z-20 w-full rounded max-h-72 overflow-auto shadow-xl ${visible}`}
-      >
-        {data.length === 0 ? (
-          <div>No results found</div>
-        ) : (
-          data.map((user) => (
-            <div
-              key={user._id}
-              onClick={() => {
-                handleStartChat(user._id);
-              }}
-            >
-              <ChatCard
-                _id={user._id}
-                chatName={user.username}
-                latestMessage={user.latestMessage}
-                className=" hover:bg-transparent"
-              />
-            </div>
-          ))
-        )}
+    <div className=" px-3">
+      <div className="w-full relative">
+        <div className="flex p-2 my-3 rounded bg-input">
+          <img src="/search.svg" alt="search icon" className={`w-5`} />
+          <Input
+            type="search"
+            placeholder="Search people...."
+            className="shadow-none focus-visible:ring-0 border-0 "
+            onChange={(e) => setValueSearch(e.target.value)}
+            value={searchValue}
+          />
+        </div>
+        <div
+          className={` bg-background flex-col absolute z-20 w-full left-0 rounded overflow-hidden shadow-2xl  ${visible}`}
+        >
+          <ScrollArea className=" h-56">
+            {data.length === 0 ? (
+              <div className="p-3">No results found</div>
+            ) : (
+              data.map((user) => (
+                <div
+                  key={user._id}
+                  onClick={() => {
+                    handleStartChat(user._id);
+                  }}
+                >
+                  <ChatCard
+                    _id={user._id}
+                    chatName={user.username}
+                    latestMessage={user.latestMessage}
+                    className=" hover:bg-transparent"
+                  />
+                </div>
+              ))
+            )}
+          </ScrollArea>
+        </div>
       </div>
     </div>
   );

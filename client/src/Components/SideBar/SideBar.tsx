@@ -3,7 +3,7 @@ import Header from "./Header";
 import ChatCard from "./ChatCard";
 import axios from "axios";
 import { useChatState } from "../../Context/Provider";
-
+import { ScrollArea } from "../ui/scrollarea"
 interface User {
   _id: string;
   username: string;
@@ -68,23 +68,25 @@ const SideBar = () => {
 
   return (
     <div
-      className={`px-3 bg-secondary h-screen w-screen flex flex-col md:w-1/3 lg:w-1/4 overflow-y-auto`}
+      className={`bg-secondary h-screen w-screen flex flex-col md:w-1/3 lg:w-1/4 overflow-y-auto overflow-x-hidden`}
     >
-      <Header user={chatState.authUser} />
-      {chatState.chats &&
-        chatState.chats.map((chat) => (
-          <ChatCard
-            key={chat._id}
-            _id={chat._id}
-            chatName={
-              chat.isGroup
-                ? chat.chatName
-                : getSender(chatState?.authUser, chat.users)
-            }
-            latestMessage={chat.latestMessage}
-            className=""
-          />
-        ))}
+      <Header />
+      <ScrollArea  className="">
+        {chatState.chats &&
+          chatState.chats.map((chat) => (
+            <ChatCard
+              key={chat._id}
+              _id={chat._id}
+              chatName={
+                chat.isGroup
+                  ? chat.chatName
+                  : getSender(chatState?.authUser, chat.users)
+              }
+              latestMessage={chat.latestMessage}
+              className=""
+            />
+          ))}
+      </ScrollArea >
     </div>
   );
 };

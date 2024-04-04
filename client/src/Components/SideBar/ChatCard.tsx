@@ -31,13 +31,13 @@ function ChatCard(props: Props) {
 
   return (
     <div
-      className={`flex items-center gap-3 border-b py-3 cursor-pointer hover:bg-accent rounded ${props.className}`}
+      className={`flex items-center gap-3 border-b p-3 cursor-pointer hover:bg-accent hover:duration-300 ${props.className}`}
     >
       <Avatar className="w-10 h-10">
         {props.sender ? (
-          <AvatarImage src={props.sender?.image} />
+          <AvatarImage src={props.sender?.image} className="w-full h-full rounded-full overflow-hidden"/>
         ) : (
-          <AvatarFallback>{getInitials(props.chatName)}</AvatarFallback>
+          <AvatarFallback className=" bg-[#272f37]">{getInitials(props.chatName)}</AvatarFallback>
         )}
       </Avatar>
       <div className="flex flex-col">

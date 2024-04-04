@@ -4,6 +4,7 @@ import Chat from "../Components/Chat";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { useChatState } from "../Context/Provider";
+import Menu from "../Components/Menu";
 
 function Home(props:any) {
     const router = useNavigate();
@@ -32,7 +33,8 @@ function Home(props:any) {
 
 
   return (
-    <div className={`bg-background w-screen h-screen flex`}>
+    <div className={`bg-background w-screen h-screen flex flex-col-reverse md:flex-row`}>
+      <Menu/>
       <SideBar/>
       <Chat />
     </div>
