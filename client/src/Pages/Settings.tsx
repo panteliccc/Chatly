@@ -9,6 +9,7 @@ import { EditAccount } from "../Components/Settings/EditAccount";
 import ChangePassword from "../Components/Settings/ChangePassword";
 import DeleteAccount from "../Components/Settings/DeleteAccount";
 import Menu from "../Components/Menu";
+import { ScrollArea, ScrollBar } from "../Components/ui/scrollarea";
 
 function Settings() {
   const [isTabsListHidden, setIsTabsListHidden] = useState(false);
@@ -101,26 +102,19 @@ function Settings() {
         <div
           className={`${
             isContentOpen ? "flex w-screen" : "hidden w-0"
-          } h-screen w-0 flex-col md:w-6/12 xl:w-7/12 md:flex p-1`}
+          } h-screen w-0 flex-col md:w-7/12 xl:w-8/12 md:flex p-1`}
         >
-          <div className="py-3 border-b mb-1 flex items-center gap-4 text-center w-full">
-            <img
-              src={`/arrow-left-solid.svg`}
-              alt="login ilustration"
-              className=" w-5 md:hidden flex"
-              onClick={handleBackClick}
-            />
-            <h1 className="text-2xl font-semibold text-white">{headerText}</h1>
-          </div>
-          <TabsContent value="account" className=" py-14">
-            <EditAccount />
-          </TabsContent>
-          <TabsContent value="password">
-            <ChangePassword />
-          </TabsContent>
-          <TabsContent value="delete">
-            <DeleteAccount />
-          </TabsContent>
+          <ScrollArea>
+            <TabsContent value="account">
+              <EditAccount handleBackClick={handleBackClick}/>
+            </TabsContent>
+            <TabsContent value="password" >
+              <ChangePassword handleBackClick={handleBackClick}/>
+            </TabsContent>
+            <TabsContent value="delete">
+              <DeleteAccount  handleBackClick={handleBackClick}/>
+            </TabsContent>
+          </ScrollArea>
         </div>
       </Tabs>
     </div>
