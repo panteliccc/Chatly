@@ -1,5 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import React, { useState } from "react";
 import { useChatState } from "../Context/Provider";
 import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -28,7 +27,7 @@ function Menu() {
   }
 
   return (
-    <div className="h-auto p-3 bg-background w-full flex items-center flex-col justify-between md:w-20 md:h-screen">
+    <div className="h-auto p-3 bg-background w-full flex items-center flex-col justify-between md:w-1/12 md:h-screen lg:w-auto">
       <div className=" flex items-center flex-col gap-14">
         <Avatar className="w-10 h-14 hidden md:flex">
           {chatState.authUser?.image ? (

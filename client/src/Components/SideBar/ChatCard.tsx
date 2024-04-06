@@ -31,7 +31,7 @@ function ChatCard(props: Props) {
 
   return (
     <div
-      className={`flex items-center gap-3 border-b p-3 cursor-pointer hover:bg-accent hover:duration-300 ${props.className}`}
+      className={`flex items-center gap-3 border-b p-3 cursor-pointer hover:bg-primary hover:duration-300 ${props.className}`}
     >
       <Avatar className="w-10 h-10">
         {props.sender ? (

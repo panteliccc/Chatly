@@ -9,6 +9,7 @@ interface Chat {
   users: User[];
   latestMessage: Message;
 }
+
 interface ChatContextType {
   authUser: User | null;
   setAuthUser: (user: User | null) => void;
@@ -21,6 +22,8 @@ interface ChatContextType {
   removeCookie: any;
   activeLink: string | null;
   setActiveLink: any;
+  searchResults: Data[] | null;
+  setSearchResults: any;
 }
 
 interface User {
@@ -34,18 +37,25 @@ interface Message {
   sender: User;
   content: string;
 }
+interface Data {
+  _id: string;
+  username: string;
+  email: string;
+  image: string;
+  latestMessage: Message;
+}
 
 const ChatContext = createContext<ChatContextType | null>(null);
 
 const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+  const [searchResults, setSearchResults] = useState<Data[] | null>(null);
   const [authUser, setAuthUser] = useState<User | null>(null);
   const [chats, setChats] = useState<Chat[] | null>(null);
   const [cookie, setCookie, removeCookie] = useCookies([
     "chatly.session-token",
   ]);
-  const [activeLink, setActiveLink] = useState("messages");
-
+  const [activeLink, setActiveLink] = useState<string | null>("messages");
 
   return (
     <ChatContext.Provider
@@ -60,7 +70,9 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         setCookie,
         removeCookie,
         activeLink,
-        setActiveLink
+        setActiveLink,
+        searchResults,
+        setSearchResults,
       }}
     >
       <CookiesProvider>{children}</CookiesProvider>

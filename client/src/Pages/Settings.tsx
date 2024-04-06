@@ -13,7 +13,7 @@ import Menu from "../Components/Menu";
 function Settings() {
   const [isTabsListHidden, setIsTabsListHidden] = useState(false);
   const [isContentOpen, setIsContentOpen] = useState(false);
-  const [headerText, setHeaderText] = useState("Edite Profile");
+  const [headerText, setHeaderText] = useState("Edit Profile");
   const [, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -60,7 +60,7 @@ function Settings() {
         <TabsList
           className={`${
             isTabsListHidden ? "hidden" : ""
-          } flex-col h-full justify-between w-screen bg-secondary md:w-1/3 lg:w-1/4 p-1`}
+          } flex-col h-full justify-between w-screen bg-secondary md:w-5/12 xl:w-4/12 p-1 rounded-none `}
         >
           <div className="w-full">
             <div className="p-3 border-b mb-1 flex items-center gap-4 text-center ">
@@ -101,13 +101,13 @@ function Settings() {
         <div
           className={`${
             isContentOpen ? "flex w-screen" : "hidden w-0"
-          } h-screen w-0 flex-col md:w-2/3 md:flex lg:w-3/4 p-1`}
+          } h-screen w-0 flex-col md:w-6/12 xl:w-7/12 md:flex p-1`}
         >
-          <div className="p-3 border-b mb-1 flex items-center gap-4 text-center w-full">
+          <div className="py-3 border-b mb-1 flex items-center gap-4 text-center w-full">
             <img
               src={`/arrow-left-solid.svg`}
               alt="login ilustration"
-              className=" w-5 sm:hidden flex"
+              className=" w-5 md:hidden flex"
               onClick={handleBackClick}
             />
             <h1 className="text-2xl font-semibold text-white">{headerText}</h1>

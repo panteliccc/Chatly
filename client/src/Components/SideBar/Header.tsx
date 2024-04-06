@@ -1,6 +1,4 @@
 import React from "react";
-
-import Search from "./Search";
 function Header() {
   return (
     <div>
@@ -9,7 +7,7 @@ function Header() {
           <h2 className={`text-2xl font-semibold`}>Messages</h2>
         </div>
       </div>
-      <Search />
+
     </div>
   );
 }
