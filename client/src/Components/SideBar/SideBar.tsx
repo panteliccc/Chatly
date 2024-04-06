@@ -11,6 +11,7 @@ interface User {
   username: string;
   email: string;
   image: string;
+  isDeleted?: boolean;
 }
 
 const SideBar = () => {
@@ -32,16 +33,25 @@ const SideBar = () => {
     };
 
     fetchData();
-  });
+  }, []);
 
   if (!chatState.authUser || !chatState.chats) return <div>Loading...</div>;
-
-  const getSender = (loggedUser: User | null, users: User[]) => {
+  const getSender = (users: User[]) => {
+    const loggedUser = chatState.authUser;
     if (!users || users.length === 0) {
       return "";
     }
+
+    const isSenderDeleted = users.some(
+      (user) => user._id !== loggedUser?._id && user.isDeleted
+    );
+
+    if (isSenderDeleted) {
+      return "Deleted user";
+    }
+
     const isSender = users[0]?._id === loggedUser?._id;
-    return isSender ? users[0].username : users[1].username;
+    return isSender ? users[1].username : users[0]?.username || "Deleted user";
   };
 
   return (
@@ -51,23 +61,21 @@ const SideBar = () => {
       <Header />
       <Search setIsSearching={setIsSearching} />
       {!isSearching ? (
-        <ScrollArea >
+        <ScrollArea>
           {chatState.chats &&
             chatState.chats.map((chat) => (
               <ChatCard
                 key={chat._id}
                 _id={chat._id}
-                chatName={
-                  chat.isGroup
-                    ? chat.chatName
-                    : getSender(chatState?.authUser, chat.users)
-                }
+                chatName={chat.isGroup ? chat.chatName : getSender(chat.users)}
                 latestMessage={chat.latestMessage}
                 className=""
               />
             ))}
         </ScrollArea>
-      ):""}
+      ) : (
+        ""
+      )}
     </div>
   );
 };

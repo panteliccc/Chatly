@@ -3,21 +3,27 @@ const mongoose = require("mongoose");
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
-    require: true,
+    required: true,
   },
   email: {
     type: String,
-    require: true,
+    required: true,
   },
   password: {
     type: String,
-    require: true,
+    required: true,
   },
   image: {
     type: String,
-    require: false,
+    required: false,
     default: null,
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
+},{
+  timeseries:true   
 });
 
 const User = mongoose.model("Users", UserSchema);

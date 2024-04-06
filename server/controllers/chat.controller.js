@@ -45,23 +45,26 @@ const createChat = asyncHandler(async (req, res) => {
 });
 const getChats = asyncHandler(async (req, res) => {
   try {
-    let chats = Chat.find({
+    let chats = await Chat.find({
       users: { $elemMatch: { $eq: req.user._id } },
     })
       .populate("users", "-password")
       .populate("groupAdmin", "-password")
-      .populate("latestMessage");
+      .populate("latestMessage")
+      .sort({ updatedAt: -1 });
 
     chats = await User.populate(chats, {
       path: "latestMessage.sender",
       select: "name image email",
     });
+
     let authUser = await User.findOne({ _id: req.user._id }).select(
-      "username email image -_id"
+      "username email image _id"
     );
     res.status(200).json({ chats, authUser });
   } catch (err) {
     res.status(400).json(err);
   }
 });
+
 module.exports = { createChat, getChats };

@@ -70,7 +70,7 @@ function Search({ setIsSearching }: Props) {
         (item) => item._id === data._id
       );
       if (!elementExists) {
-        chatSate?.setChats((prev: Chat[]) => [...prev, data]);
+        chatSate?.setChats((prev: Chat[]) => [data,...prev]);
       }
     } catch (err) {
       console.log(err);

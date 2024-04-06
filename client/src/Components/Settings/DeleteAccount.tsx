@@ -1,6 +1,23 @@
+import { useChatState } from "../../Context/Provider";
+import axios from "axios";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function DeleteAccount(props: any) {
+  const chatState = useChatState();
+  const router = useNavigate()
+  const deleteAccount = async () => {
+    try {
+      const res = await axios.put("http://localhost:5500/api/deleteAccount",{}, {
+        withCredentials: true,
+      });
+      chatState.removeCookie(["chatly.session-token"])
+      router("/Account/Login")
+    } catch (err: any) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="px-5">
       <div className="py-3  border-b mb-1 flex items-center gap-4 text-center w-full">
@@ -27,7 +44,12 @@ function DeleteAccount(props: any) {
           If you're certain about this decision, click the "Delete Account"
           button below.
         </p>
-        <button className=" w-52 p-5 bg-destructive rounded mt-7">Delete Account</button>
+        <button
+          className=" w-52 p-5 bg-destructive rounded mt-7"
+          onClick={deleteAccount}
+        >
+          Delete Account
+        </button>
       </div>
     </div>
   );

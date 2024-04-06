@@ -57,10 +57,11 @@ const searchUser = asyncHandler(async (req, res) => {
     ? {
         username: { $regex: req.query.search, $options: "i" },
       }
-    : {};
+    : { isDeleted: true }; 
   const users = await User.find(keyword)
     .find({ _id: { $ne: req.user._id } })
-    .select("-password ");
+    .select("-password");
   res.send(users);
 });
+
 module.exports = { registerUser, authUser, searchUser };
