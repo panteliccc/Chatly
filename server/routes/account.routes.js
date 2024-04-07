@@ -7,4 +7,5 @@ const router = express.Router();
 router.put("/deleteAccount",authenticateUser,deleteAccount)
 router.put("/updateAccount",authenticateUser,updateAccount )
 router.put("/changePassword",authenticateUser,changePassword )
+
 module.exports = router;

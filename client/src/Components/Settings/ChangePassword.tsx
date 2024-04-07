@@ -35,6 +35,7 @@ function ChangePassword(props: any) {
       confirmNewPassword: "",
     },
   });
+
   return (
     <div>
       <div className="px-3 flex flex-col gap-3">
