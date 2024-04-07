@@ -9,13 +9,16 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useChatState } from "../../Context/Provider";
+import { useNavigate } from "react-router-dom";
 
 function ChangePassword(props: any) {
+  const chatState = useChatState();
+  const router = useNavigate()
   const formSchema = z
     .object({
       currentPassword: z.string(),
@@ -35,7 +38,25 @@ function ChangePassword(props: any) {
       confirmNewPassword: "",
     },
   });
-
+  const changePassword = async (values: z.infer<typeof formSchema>)=>{
+    const {currentPassword,newPassword } = values
+    try{
+      axios.put("http://localhost:5500/api/changePassword",{
+        currentPassword,newPassword
+      },{
+        withCredentials:true
+      })
+      console.log("Password is changed");
+      chatState.removeCookie(["chatly.session-token"])
+      router("/Account/Login")      
+    }catch(err:any){
+      if(err.response.status === 400) {
+        form.setError("currentPassword", {
+          message: "Invalid current password",
+        });
+      }
+    }
+  }
   return (
     <div>
       <div className="px-3 flex flex-col gap-3">
@@ -68,7 +89,7 @@ function ChangePassword(props: any) {
           <li>Click on "Change Password" button to confirm the change</li>
         </ol>
         <Form {...form}>
-          <form className="space-y-2 flex flex-col w-full lg:w-3/4 xl:w-1/2 justify-between">
+          <form className="space-y-2 flex flex-col w-full lg:w-3/4 xl:w-1/2 justify-between" onSubmit={form.handleSubmit(changePassword)}>
             <FormField
               control={form.control}
               name="currentPassword"

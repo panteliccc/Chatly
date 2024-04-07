@@ -9,12 +9,16 @@ import { EditAccount } from "../Components/Settings/EditAccount";
 import ChangePassword from "../Components/Settings/ChangePassword";
 import DeleteAccount from "../Components/Settings/DeleteAccount";
 import Menu from "../Components/Menu";
-import { ScrollArea, ScrollBar } from "../Components/ui/scrollarea";
-
+import { ScrollArea } from "../Components/ui/scrollarea";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
+import { useChatState } from "../Context/Provider";
 function Settings() {
+  const router = useNavigate();
+  const chatState = useChatState();
   const [isTabsListHidden, setIsTabsListHidden] = useState(false);
   const [isContentOpen, setIsContentOpen] = useState(false);
-  const [headerText, setHeaderText] = useState("Edit Profile");
   const [, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -72,7 +76,6 @@ function Settings() {
               className="w-full py-5 text-lg"
               onClick={() => {
                 handleTabClick();
-                setHeaderText("Edit Profile");
               }}
             >
               Edit Profile
@@ -82,7 +85,6 @@ function Settings() {
               className="w-full py-5 text-lg"
               onClick={() => {
                 handleTabClick();
-                setHeaderText("Change Password");
               }}
             >
               Change Password
@@ -92,12 +94,24 @@ function Settings() {
               className="w-full py-5 text-lg"
               onClick={() => {
                 handleTabClick();
-                setHeaderText("Delete Acoount");
               }}
             >
               Delete Account
             </TabsTrigger>
           </div>
+          <button
+            className=" w-full p-5 bg-destructive rounded mt-7 text-white flex items-center justify-center gap-3 md:hidden "
+            onClick={() => {
+              chatState.removeCookie(["chatly.session-token"]);
+              router("/Account/Login");
+            }}
+          >
+            <FontAwesomeIcon
+              icon={faRightFromBracket}
+              className=" cursor-pointer"
+            />
+            Log Out
+          </button>
         </TabsList>
         <div
           className={`${
@@ -106,13 +120,13 @@ function Settings() {
         >
           <ScrollArea>
             <TabsContent value="account">
-              <EditAccount handleBackClick={handleBackClick}/>
+              <EditAccount handleBackClick={handleBackClick} />
             </TabsContent>
-            <TabsContent value="password" >
-              <ChangePassword handleBackClick={handleBackClick}/>
+            <TabsContent value="password">
+              <ChangePassword handleBackClick={handleBackClick} />
             </TabsContent>
             <TabsContent value="delete">
-              <DeleteAccount  handleBackClick={handleBackClick}/>
+              <DeleteAccount handleBackClick={handleBackClick} />
             </TabsContent>
           </ScrollArea>
         </div>
