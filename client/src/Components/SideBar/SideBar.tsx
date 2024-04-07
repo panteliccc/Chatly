@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import {useState } from "react";
 import Header from "./Header";
 import ChatCard from "./ChatCard";
-import axios from "axios";
 import { useChatState } from "../../Context/Provider";
 import { ScrollArea } from "../ui/scrollarea";
 import Search from "./Search";
@@ -18,22 +17,6 @@ const SideBar = () => {
   const chatState = useChatState();
   const [isSearching, setIsSearching] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get("http://localhost:5500/api/getChats", {
-          withCredentials: true,
-        });
-
-        chatState.setChats(data.chats);
-        chatState.setAuthUser(data.authUser);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   if (!chatState.authUser || !chatState.chats) return <div>Loading...</div>;
   const getSender = (users: User[]) => {

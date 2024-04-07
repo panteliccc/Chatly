@@ -15,6 +15,7 @@ import { Input } from "../ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useState } from "react";
 import { useChatState } from "../../Context/Provider";
+import axios from "axios";
 export function EditAccount(props: any) {
   const chatState = useChatState();
 
@@ -32,6 +33,37 @@ export function EditAccount(props: any) {
       username: chatState.authUser?.username,
     },
   });
+
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    const { username, email } = values;
+    console.log(username,email);
+    
+    try {
+      await axios.put(
+        "http://localhost:5500/api/updateAccount",
+        {
+          username,
+          email,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+    } catch (err:any) {
+      if (err.response.data.message === "That username is taken. Try another") {
+        form.setError("username", {
+          message: "That username is taken. Try another",
+        });
+      } else if (err.response.data.message === "That email is taken. Try another") {
+        form.setError("email", {
+          message: "That email is taken. Try another",
+        });
+      } else {
+        console.error(err);
+      }
+    }
+  };
+  
   const [isHovered, setIsHovered] = useState(false);
   return (
     <div className={`h-full flex flex-col`}>
@@ -46,7 +78,10 @@ export function EditAccount(props: any) {
       </div>
       <div className="flex flex-col-reverse w-full lg:w-3/4 justify-start items-center mx-auto my-10 h-full ">
         <Form {...form}>
-          <form className="space-y-5 flex flex-col h-full w-full m-auto justify-center lg:w-3/4">
+          <form
+            className="space-y-6 flex flex-col h-full w-full m-auto justify-center lg:w-3/4"
+            onSubmit={form.handleSubmit(handleSubmit)}
+          >
             <FormField
               control={form.control}
               name="username"
@@ -111,7 +146,9 @@ export function EditAccount(props: any) {
                     className="w-full h-full rounded-full overflow-hidden"
                   />
                 ) : (
-                  <AvatarFallback className=" text-7xl flex items-center justify-center w-auto">{chatState.authUser?.username[0].toUpperCase()}</AvatarFallback>
+                  <AvatarFallback className=" text-7xl flex items-center justify-center w-auto">
+                    {chatState.authUser?.username[0].toUpperCase()}
+                  </AvatarFallback>
                 )}
               </Avatar>
             </div>

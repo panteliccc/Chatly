@@ -1,4 +1,5 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
 import { CookiesProvider, useCookies } from "react-cookie";
 
@@ -58,6 +59,22 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   ]);
   const [activeLink, setActiveLink] = useState<string | null>("messages");
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get("http://localhost:5500/api/getChats", {
+          withCredentials: true,
+        });
+
+        setChats(data.chats);
+        setAuthUser(data.authUser);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <ChatContext.Provider
       value={{

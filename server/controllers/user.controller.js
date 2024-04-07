@@ -22,8 +22,8 @@ const registerUser = async (req, res) => {
     } catch (err) {
       res.status(400).json({ error: "User not created" });
     }
-  }else {
-    res.status(400).json({massage:"That username is taken. Try another"})
+  } else {
+    res.status(400).json({ massage: "That username is taken. Try another" });
   }
 };
 const authUser = async (req, res) => {
@@ -35,18 +35,22 @@ const authUser = async (req, res) => {
       password,
       user.password ? user.password : ""
     );
-    if (!user || !validPassword)
-      return res.status(400).json({ message: "Inavlid email or password" });
-    else {
-      const expirationTime = Math.floor(Date.now() / 1000) + 8 * 60 * 60;
-      const token = jwt.sign(
-        {
-          _id: user._id,
-        },
-        process.env.SECRET_KEY,
-        { expiresIn: expirationTime }
-      );
-      res.status(200).json({ message: "Authorize", user: token });
+    if (!user.isDeleted) {
+      if (!user || !validPassword)
+        return res.status(400).json({ message: "Inavlid email or password" });
+      else {
+        const expirationTime = Math.floor(Date.now() / 1000) + 8 * 60 * 60;
+        const token = jwt.sign(
+          {
+            _id: user._id,
+          },
+          process.env.SECRET_KEY,
+          { expiresIn: expirationTime }
+        );
+        res.status(200).json({ message: "Authorize", user: token });
+      }
+    }else{
+      return res.status(404).json({ message: "Account is deleted" });
     }
   } catch (err) {
     res.status(400).json({ error: "Invalid username or password" });
@@ -57,7 +61,7 @@ const searchUser = asyncHandler(async (req, res) => {
     ? {
         username: { $regex: req.query.search, $options: "i" },
       }
-    : { isDeleted: true }; 
+    : { isDeleted: true };
   const users = await User.find(keyword)
     .find({ _id: { $ne: req.user._id } })
     .select("-password");

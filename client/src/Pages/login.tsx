@@ -58,7 +58,11 @@ export function Login() {
       if (err.response && err.response.status === 400) {
         form.setError("email", { message: "" });
         form.setError("password", { message: "Invalid username or password" });
-      } else {
+      }else if(err.response && err.response.status === 404){
+        form.setError("email", { message: "" });
+        form.setError("password", { message: "Account is deleted" });
+      } 
+      else {
         console.error("An error occurred:", err);
       }
     }

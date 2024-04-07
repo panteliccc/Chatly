@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useChatState } from "../Context/Provider";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage } from "@fortawesome/free-regular-svg-icons";
 import {
@@ -12,6 +12,7 @@ import {
 function Menu() {
   const chatState = useChatState();
   const location = useLocation();
+  const router = useNavigate()
 
   function isLinkActive(path: string) {
     return location.pathname === path;
@@ -79,7 +80,10 @@ function Menu() {
       <FontAwesomeIcon
         icon={faRightFromBracket}
         className=" cursor-pointer hidden md:flex"
-        onClick={chatState.removeCookie["chatly.session-token"]}
+        onClick={()=>{
+          chatState.removeCookie(["chatly.session-token"])
+          router("/Account/Login")
+        }}
       />
     </div>
   );

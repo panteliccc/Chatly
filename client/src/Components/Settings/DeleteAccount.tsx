@@ -5,14 +5,18 @@ import { useNavigate } from "react-router-dom";
 
 function DeleteAccount(props: any) {
   const chatState = useChatState();
-  const router = useNavigate()
+  const router = useNavigate();
   const deleteAccount = async () => {
     try {
-      const res = await axios.put("http://localhost:5500/api/deleteAccount",{}, {
-        withCredentials: true,
-      });
-      chatState.removeCookie(["chatly.session-token"])
-      router("/Account/Login")
+      await axios.put(
+        "http://localhost:5500/api/deleteAccount",
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      chatState.removeCookie(["chatly.session-token"]);
+      router("/Account/Login");
     } catch (err: any) {
       console.log(err);
     }
