@@ -49,7 +49,7 @@ const authUser = async (req, res) => {
         );
         res.status(200).json({ message: "Authorize", user: token });
       }
-    }else{
+    } else {
       return res.status(404).json({ message: "Account is deleted" });
     }
   } catch (err) {
@@ -60,11 +60,14 @@ const searchUser = asyncHandler(async (req, res) => {
   const keyword = req.query.search
     ? {
         username: { $regex: req.query.search, $options: "i" },
+        isDeleted: false,
+        _id: { $ne: req.user._id },
       }
-    : { isDeleted: true };
-  const users = await User.find(keyword)
-    .find({ _id: { $ne: req.user._id } })
-    .select("-password");
+    : {
+        isDeleted: false,
+        _id: { $ne: req.user._id },
+      };
+  const users = await User.find(keyword).select("-password");
   res.send(users);
 });
 

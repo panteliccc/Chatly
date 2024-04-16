@@ -24,15 +24,17 @@ function DeleteAccount(props: any) {
 
   return (
     <div className="px-5">
-      <div className="py-3  border-b mb-1 flex items-center gap-4 text-center w-full">
-        <img
-          src={`/arrow-left-solid.svg`}
-          alt="login ilustration"
-          className=" w-5 md:hidden flex"
-          onClick={props.handleBackClick}
-        />
-        <h1 className="text-2xl font-semibold text-white">Delete Account</h1>
-      </div>
+       <div className="py-2  border-b mb-1 flex items-center gap-4 text-center w-full">
+          <img
+            src={`/arrow-left-solid.svg`}
+            alt="login ilustration"
+            className=" w-5 md:hidden flex"
+            onClick={props.handleBackClick}
+          />
+          <h1 className="text-xl md:text-2xl font-semibold text-white">
+            Delete Account
+          </h1>
+        </div>
       <div className="flex flex-col gap-3 py-6">
         <p className="text-lg md:text-xl">
           Are you sure you want to delete your account? This action cannot be

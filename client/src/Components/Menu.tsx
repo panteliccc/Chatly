@@ -6,16 +6,16 @@ import { faMessage } from "@fortawesome/free-regular-svg-icons";
 import {
   faGear,
   faRightFromBracket,
-  faUserGroup,
 } from "@fortawesome/free-solid-svg-icons";
+import CreateGroup from "./createGroup";
 
 function Menu() {
   const chatState = useChatState();
   const location = useLocation();
-  const router = useNavigate()
+  const router = useNavigate();
 
   function isLinkActive(path: string) {
-    return location.pathname === path;
+    return location.pathname + location.search === path;
   }
 
   function getInitials(username: string): string {
@@ -56,7 +56,7 @@ function Menu() {
           </li>
           <li
             className={` w-1/4 p-2 flex items-center justify-center rounded-full md:w-full ${
-                isLinkActive("/Account/Settings") ? "bg-softBlue" : ""
+              isLinkActive("/Account/Settings") ? "bg-softBlue" : ""
             }`}
           >
             <Link
@@ -66,23 +66,17 @@ function Menu() {
               <FontAwesomeIcon icon={faGear} />
             </Link>
           </li>
-          <li
-            className={` w-1/4 p-2 flex items-center justify-center rounded-full md:w-full ${
-                isLinkActive("/Create/Group") ? "bg-softBlue" : ""
-            }`}
-          >
-            <Link to={"/"} onClick={() => chatState.setActiveLink("usergroup")}>
-              <FontAwesomeIcon icon={faUserGroup} />
-            </Link>
+          <li className={` w-1/4 p-2 flex items-center justify-center rounded-full md:w-ful`}>
+          <CreateGroup/>
           </li>
         </ul>
       </div>
       <FontAwesomeIcon
         icon={faRightFromBracket}
         className=" cursor-pointer hidden md:flex"
-        onClick={()=>{
-          chatState.removeCookie(["chatly.session-token"])
-          router("/Account/Login")
+        onClick={() => {
+          chatState.removeCookie(["chatly.session-token"]);
+          router("/Account/Login");
         }}
       />
     </div>

@@ -67,15 +67,17 @@ export function EditAccount(props: any) {
   const [isHovered, setIsHovered] = useState(false);
   return (
     <div className={`h-full flex flex-col`}>
-      <div className="py-3 px-5 border-b mb-1 flex items-center gap-4 text-center">
-        <img
-          src={`/arrow-left-solid.svg`}
-          alt="login ilustration"
-          className=" w-5 md:hidden flex"
-          onClick={props.handleBackClick}
-        />
-        <h1 className="text-2xl font-semibold text-white">Edit Profile</h1>
-      </div>
+       <div className="py-2  border-b mb-1 flex items-center gap-4 text-center w-full">
+          <img
+            src={`/arrow-left-solid.svg`}
+            alt="login ilustration"
+            className=" w-5 md:hidden flex"
+            onClick={props.handleBackClick}
+          />
+          <h1 className="text-xl md:text-2xl font-semibold text-white">
+            Edit Profile
+          </h1>
+        </div>
       <div className="flex flex-col-reverse w-full lg:w-3/4 justify-start items-center mx-auto my-10 h-full ">
         <Form {...form}>
           <form

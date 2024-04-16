@@ -37,6 +37,7 @@ function Home(props:any) {
       <Menu/>
       <SideBar/>
       <Chat />
+
     </div>
   );
 }
