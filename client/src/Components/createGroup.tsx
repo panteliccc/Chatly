@@ -39,10 +39,10 @@ function CreateGroup() {
   const [data, setData] = useState<Data[] | null>(null);
   const [people, setPeople] = useState<User[]>([]);
 
-  const fetchData = async () => {
+  const fetchData = async (searchvalue : string) => {
     try {
       const { data } = await axios.get<Data[]>(
-        `http://localhost:5500/api?search=${searchValue}`,
+        `http://localhost:5500/api?search=${encodeURIComponent(searchvalue)}`,
         {
           withCredentials: true,
         }
@@ -52,6 +52,7 @@ function CreateGroup() {
       console.log(error);
     }
   };
+  
 
   const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -60,19 +61,21 @@ function CreateGroup() {
     } else {
       setVisible("hidden");
     }
-    setValueSearch(value);
-    fetchData();
+    setValueSearch(value)
+    fetchData(value);
   };
 
   const handleUserClick = (user: User) => {
     if (!people.some((people) => people._id === user._id)) {
       setPeople((prevPeople) => [...prevPeople, user]);
+      setValueSearch("")
+      setVisible("hidden")
+      
     }
   };
   const handleRemoveUser = (userId: string) => {
     setPeople(prevPeople => prevPeople.filter(user => user._id !== userId));
   };
-  
   return (
     <Sheet>
       <SheetTrigger>
@@ -95,9 +98,9 @@ function CreateGroup() {
               onChange={handleChangeSearch}
               value={searchValue}
             />
-            <ScrollArea className={`h-60 w-full  flex flex-col ${visible}`}>
-              {data ? (
-                data.map((user: Data) => (
+            <ScrollArea className={`max-h-60 w-full  flex flex-col ${visible}`}>
+              {data?.length !== 0 ? (
+                data && data.map((user: Data) => (
                   <div key={user._id} onClick={() => handleUserClick(user)}>
                     <ChatCard
                       _id={user._id}

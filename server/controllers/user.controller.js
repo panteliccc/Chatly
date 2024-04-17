@@ -59,7 +59,7 @@ const authUser = async (req, res) => {
 const searchUser = asyncHandler(async (req, res) => {
   const keyword = req.query.search
     ? {
-        username: { $regex: req.query.search, $options: "i" },
+        username: { $regex: `^${req.query.search}`, $options: "i" },
         isDeleted: false,
         _id: { $ne: req.user._id },
       }

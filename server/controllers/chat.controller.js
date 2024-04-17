@@ -67,4 +67,10 @@ const getChats = asyncHandler(async (req, res) => {
   }
 });
 
+const createGroupChat = asyncHandler(async (req, res) =>{
+  const {chatName, users} = req.body
+
+});
+
+
 module.exports = { createChat, getChats };
