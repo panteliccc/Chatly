@@ -36,7 +36,6 @@ const createChat = asyncHandler(async (req, res) => {
         "users",
         "-password"
       );
-
       res.status(201).json(fullChat);
     } catch (err) {
       res.status(400).json({ error: err });
@@ -67,10 +66,32 @@ const getChats = asyncHandler(async (req, res) => {
   }
 });
 
-const createGroupChat = asyncHandler(async (req, res) =>{
-  const {chatName, users} = req.body
+const createGroupChat = asyncHandler(async (req, res) => {
+  const { chatName, users } = req.body;
 
+  users.push(req.user);
+
+  if (users.length < 2) {
+    return res.status(400).send("Group should have at least 2 members");
+  }
+  
+  try {
+    const groupChat = await Chat.create({
+      chatName,
+      users,
+      isGroup: true,
+      groupAdmin: req.user,
+    });
+
+    const fullGroupChat = await Chat.findOne({ _id: groupChat._id })
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
+
+    res.status(200).json(fullGroupChat);
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
 });
 
-
-module.exports = { createChat, getChats };
+module.exports = { createChat, getChats, createGroupChat };

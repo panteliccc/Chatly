@@ -12,6 +12,7 @@ import { Input } from "./ui/input";
 import axios from "axios";
 import ChatCard from "./SideBar/ChatCard";
 import { ScrollArea } from "./ui/scrollarea";
+import { useChatState } from "../Context/Provider";
 
 interface User {
   _id: string;
@@ -32,14 +33,22 @@ interface Data {
   image: string;
   latestMessage: Message;
 }
-
+interface Chat {
+  _id: string;
+  chatName: string;
+  isGroup: boolean;
+  users: User[];
+  latestMessage: Message;
+}
 function CreateGroup() {
   const [searchValue, setValueSearch] = useState("");
+  const [chatName, setChatName] = useState("");
   const [visible, setVisible] = useState("hidden");
   const [data, setData] = useState<Data[] | null>(null);
   const [people, setPeople] = useState<User[]>([]);
+  const chatSate = useChatState();
 
-  const fetchData = async (searchvalue : string) => {
+  const fetchData = async (searchvalue: string) => {
     try {
       const { data } = await axios.get<Data[]>(
         `http://localhost:5500/api?search=${encodeURIComponent(searchvalue)}`,
@@ -52,7 +61,6 @@ function CreateGroup() {
       console.log(error);
     }
   };
-  
 
   const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -61,20 +69,46 @@ function CreateGroup() {
     } else {
       setVisible("hidden");
     }
-    setValueSearch(value)
+    setValueSearch(value);
     fetchData(value);
   };
 
   const handleUserClick = (user: User) => {
     if (!people.some((people) => people._id === user._id)) {
       setPeople((prevPeople) => [...prevPeople, user]);
-      setValueSearch("")
-      setVisible("hidden")
-      
+      setValueSearch("");
+      setVisible("hidden");
     }
   };
   const handleRemoveUser = (userId: string) => {
-    setPeople(prevPeople => prevPeople.filter(user => user._id !== userId));
+    setPeople((prevPeople) => prevPeople.filter((user) => user._id !== userId));
+  };
+
+  const CreateGroupChat = async () => {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:5500/api/createGroupChat",
+        {
+          chatName,
+          users: people,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+      const elementExists = chatSate.chats?.some(
+        (item) => item._id === data._id
+      );
+      if (!elementExists) {
+        chatSate?.setChats((prev: Chat[]) => [data,...prev]);
+      }
+      setChatName("");
+      setPeople([]);
+      setValueSearch("");
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <Sheet>
@@ -90,7 +124,12 @@ function CreateGroup() {
         </SheetHeader>
         <div className="flex flex-col w-full gap-3">
           <form className="pt-5 flex flex-col gap-5">
-            <Input placeholder="Group Name" className="rounded" />
+            <Input
+              placeholder="Group Name"
+              className="rounded"
+              onChange={(e)=>setChatName(e.target.value)}
+              value={chatName}
+            />
             <Input
               type="search"
               placeholder="Add people"
@@ -100,7 +139,8 @@ function CreateGroup() {
             />
             <ScrollArea className={`max-h-60 w-full  flex flex-col ${visible}`}>
               {data?.length !== 0 ? (
-                data && data.map((user: Data) => (
+                data &&
+                data.map((user: Data) => (
                   <div key={user._id} onClick={() => handleUserClick(user)}>
                     <ChatCard
                       _id={user._id}
@@ -131,7 +171,12 @@ function CreateGroup() {
               </div>
             ))}
           </div>
-          <button className=" bg-input w-full  p-3 rounded">Create Group</button>
+          <button
+            className=" bg-input w-full  p-3 rounded"
+            onClick={CreateGroupChat}
+          >
+            Create Group
+          </button>
         </div>
       </SheetContent>
     </Sheet>
