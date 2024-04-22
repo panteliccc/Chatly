@@ -5,6 +5,7 @@ const ConnectDb = require("./db/connection");
 const userRoutes = require("./routes/user.routes");
 const chatRoutes = require("./routes/chat.routes");
 const accountRoutes = require("./routes/account.routes")
+const messageRoutes = require("./routes/message.routes")
 const cookieParser = require('cookie-parser');
 const nocache = require('nocache');
 
@@ -29,6 +30,7 @@ app.get("/", (req, res) => {
 app.use("/api", userRoutes);
 app.use("/api", chatRoutes);
 app.use("/api", accountRoutes);
+app.use("/api", messageRoutes);
 
 ConnectDb();
 app.listen(PORT, () => {
