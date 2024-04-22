@@ -20,14 +20,6 @@ interface Users {
 }
 
 function ChatCard(props: Props) {
-  function getInitials(username: string): string {
-    if (!username) return "";
-    const names = username.split(" ");
-    return names
-      .map((name) => name.charAt(0))
-      .join("")
-      .toUpperCase();
-  }
 
   return (
     <div
@@ -37,7 +29,7 @@ function ChatCard(props: Props) {
         {props.sender ? (
           <AvatarImage src={props.sender?.image} className="w-full h-full rounded-full overflow-hidden"/>
         ) : (
-          <AvatarFallback className=" bg-[#272f37]">{getInitials(props.chatName)}</AvatarFallback>
+          <AvatarFallback className=" bg-[#272f37]">{props.chatName[0]}</AvatarFallback>
         )}
       </Avatar>
       <div className="flex flex-col">

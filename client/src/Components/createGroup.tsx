@@ -5,6 +5,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetClose,
 } from "./ui/sheet";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserGroup, faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -101,7 +102,7 @@ function CreateGroup() {
         (item) => item._id === data._id
       );
       if (!elementExists) {
-        chatSate?.setChats((prev: Chat[]) => [data,...prev]);
+        chatSate?.setChats((prev: Chat[]) => [data, ...prev]);
       }
       setChatName("");
       setPeople([]);
@@ -127,7 +128,7 @@ function CreateGroup() {
             <Input
               placeholder="Group Name"
               className="rounded"
-              onChange={(e)=>setChatName(e.target.value)}
+              onChange={(e) => setChatName(e.target.value)}
               value={chatName}
             />
             <Input
@@ -171,12 +172,14 @@ function CreateGroup() {
               </div>
             ))}
           </div>
-          <button
-            className=" bg-input w-full  p-3 rounded"
-            onClick={CreateGroupChat}
-          >
-            Create Group
-          </button>
+          <SheetClose>
+            <button
+              className=" bg-input w-full  p-3 rounded"
+              onClick={CreateGroupChat}
+            >
+              Create Group
+            </button>
+          </SheetClose>
         </div>
       </SheetContent>
     </Sheet>
