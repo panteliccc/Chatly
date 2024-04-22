@@ -44,7 +44,6 @@ const SideBar = () => {
   
         chatState.setChats(data.chats);
         chatState.setAuthUser(data.authUser);
-        
       } catch (error) {
         console.log(error);
       }

@@ -5,12 +5,12 @@ interface Props {
   _id: string;
   chatName: string;
   sender?: Users;
-  latestMessage: Message;
+  latestMessage?: Message;
   className: string;
 }
 interface Message {
-  sender: Users;
-  content: string;
+  user: Users;
+  text: string;
 }
 interface Users {
   _id: string;
@@ -35,7 +35,7 @@ function ChatCard(props: Props) {
       <div className="flex flex-col">
         <h1 className="text-2xl">{props.chatName}</h1>
         <span>
-          {props.latestMessage ? props.latestMessage.content : "start chat"}
+          {props.latestMessage ? props.latestMessage.text : "start chat"}
         </span>
       </div>
     </div>

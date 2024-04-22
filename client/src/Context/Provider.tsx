@@ -36,8 +36,8 @@ interface User {
 }
 
 interface Message {
-  sender: User;
-  content: string;
+  user: User;
+  text: string;
 }
 interface Data {
   _id: string;

@@ -146,7 +146,6 @@ function CreateGroup() {
                     <ChatCard
                       _id={user._id}
                       chatName={user.username}
-                      latestMessage={user.latestMessage}
                       className=""
                     />
                   </div>
