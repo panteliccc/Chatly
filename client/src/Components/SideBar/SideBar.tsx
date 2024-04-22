@@ -5,6 +5,7 @@ import { useChatState } from "../../Context/Provider";
 import { ScrollArea } from "../ui/scrollarea";
 import Search from "./Search";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface User {
   _id: string;
@@ -17,7 +18,7 @@ interface User {
 const SideBar = () => {
   const chatState = useChatState();
   const [isSearching, setIsSearching] = useState(false);
-
+  const router = useNavigate();
   const getSender = (users: User[]) => {
     const loggedUser = chatState.authUser;
     if (!users || users.length === 0) {
@@ -35,22 +36,26 @@ const SideBar = () => {
     const isSender = users[0]?._id === loggedUser?._id;
     return isSender ? users[1].username : users[0]?.username || "Deleted user";
   };
-  useEffect(()=>{
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const { data } = await axios.get("http://localhost:5500/api/getChats", {
           withCredentials: true,
         });
-  
+
         chatState.setChats(data.chats);
         chatState.setAuthUser(data.authUser);
       } catch (error) {
         console.log(error);
       }
     };
-  
+
     fetchData();
-  },[])
+  }, []);
+
+  const handleStartChat = (chatId: string) => {
+    router(`?chat=${chatId}`);
+  };
   return (
     <div
       className={`bg-secondary h-screen w-screen flex flex-col md:w-5/12 xl:w-4/12  overflow-y-hidden overflow-x-hidden `}
@@ -61,13 +66,21 @@ const SideBar = () => {
         <ScrollArea>
           {chatState.chats &&
             chatState.chats.map((chat) => (
-              <ChatCard
+              <div
+                onClick={() => {
+                  handleStartChat(chat._id);
+                }}
                 key={chat._id}
-                _id={chat._id}
-                chatName={chat.isGroup ? chat.chatName : getSender(chat.users)}
-                latestMessage={chat.latestMessage}
-                className=""
-              />
+              >
+                <ChatCard
+                  _id={chat._id}
+                  chatName={
+                    chat.isGroup ? chat.chatName : getSender(chat.users)
+                  }
+                  latestMessage={chat.latestMessage}
+                  className=""
+                />
+              </div>
             ))}
         </ScrollArea>
       ) : (

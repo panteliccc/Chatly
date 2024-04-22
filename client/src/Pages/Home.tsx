@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import SideBar from "../Components/SideBar/SideBar";
-import Chat from "../Components/Chat";
+import Chat from "../Components/Messages/Chat";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { useChatState } from "../Context/Provider";
