@@ -70,7 +70,6 @@ const SideBar = () => {
                 onClick={() => {
                   handleStartChat(chat._id);
                 }}
-                key={chat._id}
               >
                 <ChatCard
                   _id={chat._id}

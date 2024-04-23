@@ -3,10 +3,7 @@ import { useChatState } from "../Context/Provider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage } from "@fortawesome/free-regular-svg-icons";
-import {
-  faGear,
-  faRightFromBracket,
-} from "@fortawesome/free-solid-svg-icons";
+import { faGear, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import CreateGroup from "./createGroup";
 
 function Menu() {
@@ -15,7 +12,14 @@ function Menu() {
   const router = useNavigate();
 
   function isLinkActive(path: string) {
-    return location.pathname + location.search === path;
+    return location.pathname === path;
+  }
+
+  function isFirstLinkActive(path: string) {
+    return (
+      location.pathname === path ||
+      (location.pathname === "/" && new URLSearchParams(location.search).get("chat") === null)
+    );
   }
 
   function getInitials(username: string): string {
@@ -29,7 +33,7 @@ function Menu() {
 
   return (
     <div className="h-auto p-3 bg-background w-full flex items-center flex-col justify-between md:w-1/12 md:h-screen lg:w-auto">
-      <div className=" flex items-center flex-col gap-14">
+      <div className="flex items-center flex-col gap-14">
         <Avatar className="w-10 h-14 hidden md:flex">
           {chatState.authUser?.image ? (
             <AvatarImage
@@ -37,7 +41,7 @@ function Menu() {
               className="w-full h-full rounded-full overflow-hidden"
             />
           ) : (
-            <AvatarFallback className="w-full h-full  bg-secondary flex justify-center items-center rounded-full">
+            <AvatarFallback className="w-full h-full bg-secondary flex justify-center items-center rounded-full">
               {getInitials(
                 chatState.authUser?.username ? chatState.authUser?.username : ""
               )}
@@ -46,8 +50,8 @@ function Menu() {
         </Avatar>
         <ul className="flex justify-center items-center w-screen h-full md:flex-col md:gap-10 md:w-full">
           <li
-            className={` w-1/4 p-2 flex items-center justify-center rounded-full md:w-full ${
-              isLinkActive("/") ? "bg-softBlue" : ""
+            className={`w-1/4 p-2 flex items-center justify-center rounded-full md:w-full ${
+              isFirstLinkActive("/") ? "bg-softBlue" : ""
             }`}
           >
             <Link to={"/"} onClick={() => chatState.setActiveLink("messages")}>
@@ -55,7 +59,7 @@ function Menu() {
             </Link>
           </li>
           <li
-            className={` w-1/4 p-2 flex items-center justify-center rounded-full md:w-full ${
+            className={`w-1/4 p-2 flex items-center justify-center rounded-full md:w-full ${
               isLinkActive("/Account/Settings") ? "bg-softBlue" : ""
             }`}
           >
@@ -66,14 +70,14 @@ function Menu() {
               <FontAwesomeIcon icon={faGear} />
             </Link>
           </li>
-          <li className={` w-1/4 p-2 flex items-center justify-center rounded-full md:w-ful`}>
-          <CreateGroup/>
+          <li className={`w-1/4 p-2 flex items-center justify-center rounded-full md:w-full`}>
+            <CreateGroup/>
           </li>
         </ul>
       </div>
       <FontAwesomeIcon
         icon={faRightFromBracket}
-        className=" cursor-pointer hidden md:flex"
+        className="cursor-pointer hidden md:flex"
         onClick={() => {
           chatState.removeCookie(["chatly.session-token"]);
           router("/Account/Login");

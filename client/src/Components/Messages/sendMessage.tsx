@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-
 function SendMessage() {
   const [message, setMessage] = useState("");
   const location = useLocation();
   const chatId = new URLSearchParams(location.search).get("chat");
 
   const sendMessage = async () => {
+    if (message.trim() === "") {
+      return;
+    }
+
     try {
       await axios.post(
         "http://localhost:5500/api/sendMessage",
@@ -30,6 +33,7 @@ function SendMessage() {
   const onKeyDown = (e: any) => {
     if (e.key === "Enter") sendMessage();
   };
+
   return (
     <div className="p-3 bg-primary flex gap-3">
       <Input
@@ -41,8 +45,9 @@ function SendMessage() {
           onKeyDown(e);
         }}
       />
+
       <button
-        className=" w-16 bg-softBlue md:flex items-center justify-center rounded hidden "
+        className="w-16 bg-softBlue md:flex items-center justify-center rounded hidden"
         onClick={sendMessage}
       >
         <img src="/send.svg" alt="" />

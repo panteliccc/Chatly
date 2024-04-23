@@ -9,6 +9,7 @@ interface Chat {
   isGroup: boolean;
   users: User[];
   latestMessage: Message;
+  sender?:User
 }
 
 interface ChatContextType {
@@ -46,7 +47,6 @@ interface Data {
   image: string;
   latestMessage: Message;
 }
-
 const ChatContext = createContext<ChatContextType | null>(null);
 
 const ChatProvider = ({ children }: { children: React.ReactNode }) => {
@@ -58,7 +58,6 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     "chatly.session-token",
   ]);
   const [activeLink, setActiveLink] = useState<string | null>("messages");
-
   useEffect(() => {
     const fetchData = async () => {
       try {
