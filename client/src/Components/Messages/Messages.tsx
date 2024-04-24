@@ -10,7 +10,7 @@ function Messages() {
   let prevSender: string | null = null;
   
   return (
-    <ScrollableFeed className="h-full flex flex-col gap-1 p-3 -mt-2">
+    <ScrollableFeed className="h-full flex flex-col gap-1 p-3 ScrollBar">
       {messages && messages.map((message, index) => {
         const sameSender = message.user._id === prevSender;
         prevSender = message.user._id; 
