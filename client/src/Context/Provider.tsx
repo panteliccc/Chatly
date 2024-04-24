@@ -16,6 +16,8 @@ interface ChatContextType {
   setAuthUser: (user: User | null) => void;
   selectedChat: Chat | null;
   setSelectedChat: (selectedChat: Chat | null) => void;
+  messages: Message[] | null;
+  setMessages: (messages: Message[] | null) => void;
   chats: Chat[] | null;
   setChats: any;
   cookie: any;
@@ -52,6 +54,7 @@ const ChatContext = createContext<ChatContextType | null>(null);
 
 const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+  const [messages, setMessages] = useState<Message[] | null>(null);
   const [searchResults, setSearchResults] = useState<Data[] | null>(null);
   const [authUser, setAuthUser] = useState<User | null>(null);
   const [chats, setChats] = useState<Chat[] | null>(null);
@@ -81,6 +84,8 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       value={{
         selectedChat,
         setSelectedChat,
+        messages,
+        setMessages,
         authUser,
         setAuthUser,
         setChats,
@@ -93,7 +98,7 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         searchResults,
         setSearchResults,
         visible,
-        setVisible
+        setVisible,
       }}
     >
       <CookiesProvider>{children}</CookiesProvider>

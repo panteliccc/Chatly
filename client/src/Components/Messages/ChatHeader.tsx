@@ -66,7 +66,7 @@ function ChatHeader() {
           ) : (
             <AvatarFallback className=" bg-[#272f37]">
               {chatState.selectedChat?.isGroup
-                ? chatState.selectedChat.chatName
+                ? chatState.selectedChat.chatName[0]
                 : sender?.username[0]}
             </AvatarFallback>
           )}

@@ -25,6 +25,9 @@ function Chat() {
       );
       const chatData = response.data.chat[0];
       chatState.setSelectedChat(chatData);
+      console.log(response.data.messages);
+      
+      chatState.setMessages(response.data.messages)
       setLoading(false);
     } catch (err) {
       console.log(err);
