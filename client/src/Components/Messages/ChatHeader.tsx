@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useChatState } from "../../Context/Provider";
 import { useNavigate } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 interface User {
   _id: string;
@@ -13,11 +14,12 @@ interface User {
 function ChatHeader() {
   const chatState = useChatState();
   const router = useNavigate();
-  
+  const [sender, setSender] = useState<User | null>(null);
+
   const getSender = (users: User[] | null | undefined) => {
     const loggedUser = chatState.authUser;
     if (!users || users.length === 0) {
-      return "";
+      return null;
     }
 
     const isSenderDeleted = users.some(
@@ -25,31 +27,54 @@ function ChatHeader() {
     );
 
     if (isSenderDeleted) {
-      return "Deleted user";
+      return null;
     }
 
     const isSender = users[0]?._id === loggedUser?._id;
-    return isSender ? users[1].username : users[0]?.username || "Deleted user";
+    const newSender = isSender ? users[1] : users[2];
+
+    setSender(newSender);
+    return newSender;
   };
-  const closeChat = () =>{
-    router("/")
+
+  useEffect(() => {
+    getSender(chatState?.selectedChat?.users);
+  }, [chatState?.selectedChat?.users]);
+
+  const closeChat = () => {
+    router("/");
     chatState.setVisible(false);
-  }
+  };
+
   return (
     <div
       className={`flex p-3 justify-between items-center bg-primary border-b border-primary`}
     >
-      <div className="flex gap-3 items-center">
+      <div className="flex gap-2 items-center ">
         <img
           src={`/arrow-left-solid.svg`}
           alt="login ilustration"
-          className=" w-5 md:hidden flex"
+          className=" w-4 md:hidden flex"
           onClick={closeChat}
-        />  
+        />
+        <Avatar className="w-10 h-10 rounded-full">
+          {sender?.image ? (
+            <AvatarImage
+              src={sender?.image}
+              className="w-full h-full rounded-full overflow-hidden"
+            />
+          ) : (
+            <AvatarFallback className=" bg-[#272f37]">
+              {chatState.selectedChat?.isGroup
+                ? chatState.selectedChat.chatName
+                : sender?.username[0]}
+            </AvatarFallback>
+          )}
+        </Avatar>
         <h2 className={`text-2xl font-semibold`}>
           {chatState.selectedChat?.isGroup
             ? chatState.selectedChat.chatName
-            : getSender(chatState.selectedChat?.users)}
+            : sender?.username || ""}
         </h2>
       </div>
     </div>
