@@ -31,12 +31,14 @@ function ChatHeader() {
     }
 
     const isSender = users[0]?._id === loggedUser?._id;
-    const newSender = isSender ? users[1] : users[2];
+    const newSender = isSender ? users[1] : users[0];
 
     setSender(newSender);
     return newSender;
-  };
 
+  };
+  
+  
   useEffect(() => {
     getSender(chatState?.selectedChat?.users);
   }, [chatState?.selectedChat?.users]);
@@ -45,7 +47,6 @@ function ChatHeader() {
     router("/");
     chatState.setVisible(false);
   };
-
   return (
     <div
       className={`flex p-3 justify-between items-center bg-primary border-b border-primary`}
@@ -74,7 +75,7 @@ function ChatHeader() {
         <h2 className={`text-2xl font-semibold`}>
           {chatState.selectedChat?.isGroup
             ? chatState.selectedChat.chatName
-            : sender?.username || ""}
+            : sender?.username  }
         </h2>
       </div>
     </div>

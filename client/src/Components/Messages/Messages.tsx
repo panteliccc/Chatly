@@ -8,21 +8,20 @@ function Messages() {
   const { messages } = chatState;
 
   let prevSender: string | null = null;
-
-  console.log(messages);
   
   return (
-    <ScrollableFeed className="h-full flex flex-col gap-1 p-3">
+    <ScrollableFeed className="h-full flex flex-col gap-1 p-3 -mt-2">
       {messages && messages.map((message, index) => {
         const sameSender = message.user._id === prevSender;
         prevSender = message.user._id; 
-
+  
         return (
           <Message
             key={index}
-            sender={true}
+            sender={message.user}
             text={message.text}
-            showIcon={!sameSender} 
+            isFirstMessage={!sameSender} 
+            isGroup={chatState.selectedChat?.isGroup}
           />
         );
       })}
