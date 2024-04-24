@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import SideBar from "../Components/SideBar/SideBar";
 import Chat from "../Components/Messages/Chat";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { useChatState } from "../Context/Provider";
 import Menu from "../Components/Menu";
@@ -30,11 +30,16 @@ function Home(props:any) {
       const { exp } = jwtDecode(token);
       return Date.now() >= (exp ? exp * 1000 : 0);
     };
+    const location = useLocation();
+    const chatId = new URLSearchParams(location.search).get("chat");
+    useEffect(()=>{
+      if(chatId) chatState.setVisible(true)
+    },[chatId])
 
-
+    
   return (
     <div className={`bg-background w-screen h-screen flex flex-col-reverse md:flex-row`}>
-      <Menu/>
+      <Menu />
       <SideBar/>
       <Chat />
 

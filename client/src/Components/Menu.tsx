@@ -32,7 +32,7 @@ function Menu() {
   }
 
   return (
-    <div className="h-auto p-3 bg-background w-full flex items-center flex-col justify-between md:w-1/12 md:h-screen lg:w-auto">
+    <div className={`h-auto p-3 bg-background ${chatState.visible?'hidden w-0':'flex w-full'} items-center flex-col justify-between md:w-1/12 md:h-screen lg:w-auto md:flex`}>
       <div className="flex items-center flex-col gap-14">
         <Avatar className="w-10 h-14 hidden md:flex">
           {chatState.authUser?.image ? (

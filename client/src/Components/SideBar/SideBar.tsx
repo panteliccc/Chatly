@@ -52,7 +52,6 @@ const SideBar = () => {
 
     fetchData();
   }, []);
-  console.log(chatState.chats);
   
 
   const handleStartChat = (chatId: string) => {
@@ -60,7 +59,7 @@ const SideBar = () => {
   };
   return (
     <div
-      className={`bg-secondary h-screen w-screen flex flex-col md:w-5/12 xl:w-4/12  overflow-hidden`}
+      className={`bg-secondary h-screen ${chatState.visible?'hidden w-0':'flex w-screen'}  md:flex flex-col md:w-5/12 xl:w-4/12  overflow-hidden`}
     >
       <Header />
       <Search setIsSearching={setIsSearching} />
@@ -72,6 +71,7 @@ const SideBar = () => {
                 onClick={() => {
                   handleStartChat(chat._id);
                 }}
+                key={chat._id}
               >
                 <ChatCard
                   _id={chat._id}

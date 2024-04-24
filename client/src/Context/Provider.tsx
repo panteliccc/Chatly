@@ -25,6 +25,8 @@ interface ChatContextType {
   setActiveLink: any;
   searchResults: Data[] | null;
   setSearchResults: any;
+  visible: any;
+  setVisible:any;
 }
 
 interface User {
@@ -57,6 +59,7 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     "chatly.session-token",
   ]);
   const [activeLink, setActiveLink] = useState<string | null>("messages");
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -89,6 +92,8 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         setActiveLink,
         searchResults,
         setSearchResults,
+        visible,
+        setVisible
       }}
     >
       <CookiesProvider>{children}</CookiesProvider>
