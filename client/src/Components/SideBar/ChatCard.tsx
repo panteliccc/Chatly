@@ -1,5 +1,6 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useChatState } from "../../Context/Provider";
 
 interface Props {
   _id: string;
@@ -11,6 +12,7 @@ interface Props {
 interface Message {
   user: Users;
   text: string;
+  createdAt: string;
 }
 interface Users {
   _id: string;
@@ -20,6 +22,29 @@ interface Users {
 }
 
 function ChatCard(props: Props) {
+  const chatState = useChatState();
+
+  const formatDate = (date: Date): string => {
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    if (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    ) {
+      return new Date(date).toLocaleTimeString();
+    } else if (
+      date.getDate() === yesterday.getDate() &&
+      date.getMonth() === yesterday.getMonth() &&
+      date.getFullYear() === yesterday.getFullYear()
+    ) {
+      return "Yesterday";
+    } else {
+      return new Date(date).toLocaleDateString();
+    }
+  };
 
   return (
     <div
@@ -27,15 +52,32 @@ function ChatCard(props: Props) {
     >
       <Avatar className="w-10 h-10">
         {props.sender ? (
-          <AvatarImage src={props.sender?.image} className="w-full h-full rounded-full overflow-hidden"/>
+          <AvatarImage
+            src={props.sender?.image}
+            className="w-full h-full rounded-full overflow-hidden"
+          />
         ) : (
-          <AvatarFallback className=" bg-[#272f37]">{props.chatName[0]}</AvatarFallback>
+          <AvatarFallback className=" bg-[#272f37]">
+            {props.chatName[0]}
+          </AvatarFallback>
         )}
       </Avatar>
-      <div className="flex flex-col">
-        <h1 className="text-2xl">{props.chatName}</h1>
-        <span>
-          {props.latestMessage ? props.latestMessage.text : "start chat"}
+      <div className="flex flex-col w-full">
+        <div className="text-2xl flex justify-between items-center w-full">
+          <h1 className="text-2xl">{props.chatName}</h1>
+          {props.latestMessage && (
+            <span className="text-sm">
+              {formatDate(new Date(props.latestMessage.createdAt))}
+            </span>
+          )}
+        </div>
+
+        <span className="line-clamp-1">
+          {props.latestMessage
+            ? (props.latestMessage.user._id === chatState.authUser?._id
+                ? "you: "
+                : "") + props.latestMessage.text
+            : "start chat"}
         </span>
       </div>
     </div>

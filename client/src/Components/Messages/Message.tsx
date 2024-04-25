@@ -23,7 +23,7 @@ function Message(props: Props) {
   const sender: User = props.sender;
 
   return (
-    <div className={`flex w-full gap-2 items-start relative ${props.isFirstMessage && "mt-2"}`}>
+    <div className={`flex w-full gap-2 items-start relative ${props.isFirstMessage && "mt-2"} `}>
       <div className="w-10 h-10 absolute">
         {!isSender && props.isFirstMessage && props.isGroup && (
           <Avatar className="w-10 h-10 rounded-full ">
@@ -70,7 +70,7 @@ function Message(props: Props) {
         <div
           className={`${
             isSender ? "bg-softBlue " : " bg-primary "
-          } py-1 px-3 relative break-words max-w-[90%] xl:max-w-[70%] rounded-xl`}
+          } py-1 px-3 relative break-words max-w-[90%] xl:max-w-[70%] rounded-xl text-pretty`}
         >
           {props.text}
         </div>

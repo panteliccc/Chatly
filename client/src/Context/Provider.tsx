@@ -42,6 +42,7 @@ interface User {
 interface Message {
   user: User;
   text: string;
+  createdAt:string;
 }
 interface Data {
   _id: string;

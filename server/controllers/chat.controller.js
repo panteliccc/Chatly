@@ -53,11 +53,12 @@ const getChats = asyncHandler(async (req, res) => {
       .sort({ updatedAt: -1 });
 
     chats = await User.populate(chats, {
-      path: "latestMessage.sender",
-      select: "name image email",
+      path: "latestMessage.user",
+      select: "username image email",
     });
+    console.log(chats);
 
-    let authUser = await User.findOne({ _id: req.user._id }).select(
+    const authUser = await User.findOne({ _id: req.user._id }).select(
       "username email image _id"
     );
     res.status(200).json({ chats, authUser });
