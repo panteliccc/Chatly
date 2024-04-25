@@ -79,6 +79,7 @@ const SideBar = () => {
                     chat.isGroup ? chat.chatName : getSender(chat.users)
                   }
                   latestMessage={chat.latestMessage}
+                  isGroup={chat.isGroup}
                   className=""
                 />
               </div>

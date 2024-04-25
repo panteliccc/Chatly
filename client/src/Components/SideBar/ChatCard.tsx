@@ -7,6 +7,7 @@ interface Props {
   chatName: string;
   sender?: Users;
   latestMessage?: Message;
+  isGroup?: boolean;
   className: string;
 }
 interface Message {
@@ -71,13 +72,16 @@ function ChatCard(props: Props) {
             </span>
           )}
         </div>
-
         <span className="line-clamp-1">
           {props.latestMessage
-            ? (props.latestMessage.user._id === chatState.authUser?._id
-                ? "you: "
-                : "") + props.latestMessage.text
+            ? props.isGroup &&
+              chatState.authUser?._id !== props.latestMessage.user._id
+              ? `${props.latestMessage.user.username}: `
+              : props.latestMessage.user._id === chatState.authUser?._id
+              ? "you: "
+              : ""
             : "start chat"}
+          {props.latestMessage ? props.latestMessage.text : ""}
         </span>
       </div>
     </div>
