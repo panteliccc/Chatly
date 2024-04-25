@@ -4,10 +4,10 @@ const dotenv = require("dotenv");
 const ConnectDb = require("./db/connection");
 const userRoutes = require("./routes/user.routes");
 const chatRoutes = require("./routes/chat.routes");
-const accountRoutes = require("./routes/account.routes")
-const messageRoutes = require("./routes/message.routes")
-const cookieParser = require('cookie-parser');
-const nocache = require('nocache');
+const accountRoutes = require("./routes/account.routes");
+const messageRoutes = require("./routes/message.routes");
+const cookieParser = require("cookie-parser");
+const nocache = require("nocache");
 
 const app = express();
 app.use(cookieParser());
@@ -33,6 +33,26 @@ app.use("/api", accountRoutes);
 app.use("/api", messageRoutes);
 
 ConnectDb();
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Lisening on port ${PORT}`);
+});
+
+const io = require("socket.io")(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
+io.on("connection", (socket) =>{
+  console.log("Connected to socket.io");
+  socket.on("setup", (userData) => {
+    socket.join(userData?._id);
+    socket.emit("connected");
+  })
+
+  socket.on("join chat", (room) =>{
+      socket.join(room);
+      console.log("user joined room :" + room);
+  })
 });

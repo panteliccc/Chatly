@@ -17,7 +17,7 @@ interface ChatContextType {
   selectedChat: Chat | null;
   setSelectedChat: (selectedChat: Chat | null) => void;
   messages: Message[] | null;
-  setMessages: (messages: Message[] | null) => void;
+  setMessages: any;
   chats: Chat[] | null;
   setChats: any;
   cookie: any;

@@ -6,12 +6,18 @@ import SendMessage from "./sendMessage";
 import axios from "axios";
 import { useChatState } from "../../Context/Provider";
 import { Skeleton } from "../ui/skeleton";
+import io from "socket.io-client";
+
+const ENDPOINT: string = "http://localhost:5500";
+let socket: any;
+var selectedChatCompare;
 
 function Chat() {
   const location = useLocation();
   const chatId = new URLSearchParams(location.search).get("chat");
   const chatState = useChatState();
   const [loading, setLoading] = useState(false);
+  const [socketConnected, setSocketConnected] = useState(false);
 
   const getChat = async () => {
     try {
@@ -26,9 +32,11 @@ function Chat() {
       const chatData = response.data.chat[0];
       chatState.setSelectedChat(chatData);
       console.log(response.data.messages);
-      
-      chatState.setMessages(response.data.messages)
+
+      chatState.setMessages(response.data.messages);
       setLoading(false);
+
+      socket.emit("join chat", chatId)
     } catch (err) {
       console.log(err);
     }
@@ -40,6 +48,18 @@ function Chat() {
     }
   }, [chatId]);
 
+  useEffect(() => {
+    if (chatState.authUser && !socket) { 
+      socket = io("http://localhost:5500");
+      socket.emit("setup", chatState.authUser);
+  
+      socket.on("connected", () => {
+        setSocketConnected(true);
+      });
+    }
+  }, [chatState.authUser]);
+  
+  
   return !loading ? (
     <div
       className={`h-screen ${
@@ -62,9 +82,7 @@ function Chat() {
       )}
     </div>
   ) : (
-    <div
-      className={`md:w-7/12 xl:w-8/12 h-screen flex flex-col gap-7 p-3`}
-    >
+    <div className={`md:w-7/12 xl:w-8/12 h-screen flex flex-col gap-7 p-3`}>
       <Skeleton className="h-[58px] w-full bg-primary rounded" />
       <Skeleton className="h-full w-full bg-primary rounded" />
       <Skeleton className="h-[58px] w-full bg-primary rounded" />

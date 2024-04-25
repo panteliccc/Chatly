@@ -2,7 +2,23 @@ import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import { useChatState } from "../../Context/Provider";
+interface Message {
+  user: User;
+  text: string;
+  createdAt: string;
+}
+
+interface User {
+  _id: string;
+  username: string;
+  email: string;
+  image: string;
+  isDeleted: boolean;
+}
+
 function SendMessage() {
+  const chatState = useChatState();
   const [message, setMessage] = useState("");
   const location = useLocation();
   const chatId = new URLSearchParams(location.search).get("chat");
@@ -13,7 +29,7 @@ function SendMessage() {
     }
 
     try {
-      await axios.post(
+      const { data } = await axios.post(
         "http://localhost:5500/api/sendMessage",
         {
           text: message,
@@ -24,6 +40,17 @@ function SendMessage() {
           withCredentials: true,
         }
       );
+      const newMessage: Message = {
+        user: data.user,
+        text: data.text,
+        createdAt: data.createdAt,
+      };
+      
+      chatState.setMessages((prev: Message[]) => {
+        return [...prev, newMessage];
+      });
+      
+
       setMessage("");
     } catch (err) {
       console.log(err);
