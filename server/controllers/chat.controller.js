@@ -56,7 +56,6 @@ const getChats = asyncHandler(async (req, res) => {
       path: "latestMessage.user",
       select: "username image email",
     });
-    console.log(chats);
 
     const authUser = await User.findOne({ _id: req.user._id }).select(
       "username email image _id"
