@@ -40,9 +40,11 @@ interface User {
 }
 
 interface Message {
+  _id:string;
   user: User;
   text: string;
   createdAt:string;
+  chat?:Chat;
 }
 interface Data {
   _id: string;

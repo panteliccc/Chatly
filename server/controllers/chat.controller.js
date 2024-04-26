@@ -93,5 +93,25 @@ const createGroupChat = asyncHandler(async (req, res) => {
     throw new Error(error.message);
   }
 });
+const getChatById = asyncHandler(async (req, res) => {
+  try {
+    const chat = await Chat.findById(req.params.chatId)
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password")
+      .populate("latestMessage")
+      .populate({
+        path: "latestMessage.user",
+        select: "username image email",
+      });
 
-module.exports = { createChat, getChats, createGroupChat };
+    if (!chat) {
+      return res.status(404).json({ message: "Chat not found" });
+    }
+
+    res.status(200).json(chat);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+
+module.exports = { createChat, getChats, createGroupChat, getChatById};

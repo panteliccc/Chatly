@@ -16,13 +16,14 @@ interface User {
   image: string;
   isDeleted: boolean;
 }
-
-function SendMessage() {
+interface Props{
+  socket:any;
+}
+function SendMessage(props: Props) {
   const chatState = useChatState();
   const [message, setMessage] = useState("");
   const location = useLocation();
   const chatId = new URLSearchParams(location.search).get("chat");
-
   const sendMessage = async () => {
     if (message.trim() === "") {
       return;
@@ -40,17 +41,11 @@ function SendMessage() {
           withCredentials: true,
         }
       );
-      const newMessage: Message = {
-        user: data.user,
-        text: data.text,
-        createdAt: data.createdAt,
-      };
-      
+      props.socket.emit('new message', data)
       chatState.setMessages((prev: Message[]) => {
-        return [...prev, newMessage];
+        return [...prev, data];
       });
       
-
       setMessage("");
     } catch (err) {
       console.log(err);

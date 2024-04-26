@@ -6,15 +6,29 @@ import { ScrollArea } from "../ui/scrollarea";
 import Search from "./Search";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Chat from "../Messages/Chat";
 
 interface User {
   _id: string;
   username: string;
   email: string;
   image: string;
-  isDeleted?: boolean;
+  isDeleted: boolean;
 }
-
+interface chat {
+  _id: string;
+  chatName: string;
+  isGroup: boolean;
+  users: User[];
+  latestMessage: Message;
+}
+interface Message {
+  _id:string;
+  user: User;
+  text: string;
+  createdAt:string;
+  chat?:chat;
+}
 const SideBar = () => {
   const chatState = useChatState();
   const [isSearching, setIsSearching] = useState(false);
@@ -54,8 +68,9 @@ const SideBar = () => {
   }, []);
   
 
-  const handleStartChat = (chatId: string) => {
-    router(`?chat=${chatId}`);
+  const handleStartChat = (chat: chat) => {
+    router(`?chat=${chat._id}`);
+    chatState.setSelectedChat(chat)
   };
   return (
     <div
@@ -69,7 +84,7 @@ const SideBar = () => {
             chatState.chats.map((chat) => (
               <div
                 onClick={() => {
-                  handleStartChat(chat._id);
+                  handleStartChat(chat);
                 }}
                 key={chat._id}
               >

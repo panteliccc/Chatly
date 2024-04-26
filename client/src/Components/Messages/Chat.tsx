@@ -7,14 +7,35 @@ import axios from "axios";
 import { useChatState } from "../../Context/Provider";
 import { Skeleton } from "../ui/skeleton";
 import io from "socket.io-client";
+interface User {
+  _id: string;
+  username: string;
+  email: string;
+  image: string;
+  isDeleted: boolean;
+}
 
-const ENDPOINT: string = "http://localhost:5500";
+interface Message {
+  _id: string;
+  user: User;
+  text: string;
+  createdAt: string;
+  chat?: Chat;
+}
+interface Chat {
+  _id: string;
+  chatName: string;
+  isGroup: boolean;
+  users: User[];
+  latestMessage: Message;
+}
+
 let socket: any;
-var selectedChatCompare;
+let selectedChatCompare: Chat | null | undefined;
 
 function Chat() {
   const location = useLocation();
-  const chatId = new URLSearchParams(location.search).get("chat");
+  let chatId = new URLSearchParams(location.search).get("chat");
   const chatState = useChatState();
   const [loading, setLoading] = useState(false);
   const [socketConnected, setSocketConnected] = useState(false);
@@ -29,37 +50,50 @@ function Chat() {
           withCredentials: true,
         }
       );
-      const chatData = response.data.chat[0];
-      chatState.setSelectedChat(chatData);
-      console.log(response.data.messages);
-
-      chatState.setMessages(response.data.messages);
+      chatState.setMessages(response.data);
       setLoading(false);
 
-      socket.emit("join chat", chatId)
+      socket.emit("join chat", chatId);
     } catch (err) {
       console.log(err);
     }
   };
 
-  useEffect(() => {
-    if (chatId) {
+  useEffect(
+    () => {
       getChat();
-    }
-  }, [chatId]);
+      selectedChatCompare = chatState.selectedChat;
+    },
+    chatState?.selectedChat ? [chatState?.selectedChat] : []
+  );
 
   useEffect(() => {
-    if (chatState.authUser && !socket) { 
+    if (chatState.authUser && !socket) {
       socket = io("http://localhost:5500");
       socket.emit("setup", chatState.authUser);
-  
-      socket.on("connected", () => {
+
+      socket.on("connection", () => {
         setSocketConnected(true);
       });
     }
-  }, [chatState.authUser]);
-  
-  
+  });
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("message received", (newMessage: Message) => {
+        if (
+          !selectedChatCompare ||
+          selectedChatCompare._id !== newMessage.chat?._id
+        ) {
+          // NOTIFICATION
+        } else {
+          if (chatState?.messages != null) {
+            chatState?.setMessages([...chatState?.messages, newMessage]);
+          }
+        }
+      });
+    }
+  });
   return !loading ? (
     <div
       className={`h-screen ${
@@ -71,7 +105,7 @@ function Chat() {
           <>
             <ChatHeader />
             <Messages />
-            <SendMessage />
+            <SendMessage socket={socket} />
           </>
         )
       ) : (

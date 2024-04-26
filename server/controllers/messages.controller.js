@@ -35,20 +35,25 @@ const sendMessage = asyncHandler(async(req,res) =>{
 
 });
 
-const allMessage = asyncHandler(async(req,res)=>{
-    try{
-        const messages = await Message.find({chat:req.params.chatId})
-        .populate("user","-password")
+const allMessage = asyncHandler(async (req, res) => {
+    try {
+        const messages = await Message.find({ chat: req.params.chatId })
+            .populate({
+                path: 'user',
+                select: '-password' 
+            })
+            .populate({
+                path: 'chat',
+                populate: {
+                    path: 'users',
+                    select: '-password' 
+                }
+            });
 
-        const chat = await Chat.find({_id:req.params.chatId})
-        .populate("users","-password")
-
-
-        res.json({messages,chat})
-    }catch(err){
+        res.json(messages);
+    } catch (err) {
         res.status(400).json({ error: err });
     }
-
 });
 
 module.exports = {sendMessage,allMessage}
