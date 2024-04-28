@@ -65,7 +65,7 @@ const SideBar = () => {
     };
 
     fetchData();
-  }, []);
+  }, [chatState.refreshChats]);
   
 
   const handleStartChat = (chat: chat) => {

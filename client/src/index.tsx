@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import ChatProvider from "./Context/Provider"
+import { Toaster } from './Components/ui/toaster';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
@@ -13,6 +14,7 @@ root.render(
     <React.StrictMode>
       <ChatProvider>
         <App/>
+        <Toaster />
       </ChatProvider>
     </React.StrictMode>
   </BrowserRouter>

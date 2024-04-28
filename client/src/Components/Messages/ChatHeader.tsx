@@ -35,10 +35,8 @@ function ChatHeader() {
 
     setSender(newSender);
     return newSender;
-
   };
-  
-  
+
   useEffect(() => {
     getSender(chatState?.selectedChat?.users);
   }, [chatState?.selectedChat?.users]);
@@ -75,7 +73,7 @@ function ChatHeader() {
         <h2 className={`text-2xl font-semibold`}>
           {chatState.selectedChat?.isGroup
             ? chatState.selectedChat.chatName
-            : sender?.username  }
+            : sender?.username}
         </h2>
       </div>
     </div>

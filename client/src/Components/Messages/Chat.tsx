@@ -7,6 +7,7 @@ import axios from "axios";
 import { useChatState } from "../../Context/Provider";
 import { Skeleton } from "../ui/skeleton";
 import io from "socket.io-client";
+import { useToast } from "../ui/use-toast"
 interface User {
   _id: string;
   username: string;
@@ -35,27 +36,30 @@ let selectedChatCompare: Chat | null | undefined;
 
 function Chat() {
   const location = useLocation();
+  const { toast } = useToast()  
   let chatId = new URLSearchParams(location.search).get("chat");
   const chatState = useChatState();
   const [loading, setLoading] = useState(false);
   const [socketConnected, setSocketConnected] = useState(false);
 
   const getChat = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        `http://localhost:5500/api/allMessages/${chatId}`,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
-      chatState.setMessages(response.data);
-      setLoading(false);
+    if (chatId) {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `http://localhost:5500/api/allMessages/${chatId}`,
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          }
+        );
+        chatState.setMessages(response.data);
+        setLoading(false);
 
-      socket.emit("join chat", chatId);
-    } catch (err) {
-      console.log(err);
+        socket.emit("join chat", chatId);
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
@@ -85,10 +89,14 @@ function Chat() {
           !selectedChatCompare ||
           selectedChatCompare._id !== newMessage.chat?._id
         ) {
-          // NOTIFICATION
+          chatState?.setRefreshChats(!chatState.refreshChats)
+          toast({
+            description:`${newMessage.user.username} : ${newMessage.text}`,
+          });
         } else {
           if (chatState?.messages != null) {
             chatState?.setMessages([...chatState?.messages, newMessage]);
+            chatState?.setRefreshChats(!chatState.refreshChats)
           }
         }
       });

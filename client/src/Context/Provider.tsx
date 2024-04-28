@@ -29,6 +29,8 @@ interface ChatContextType {
   setSearchResults: any;
   visible: any;
   setVisible:any;
+  refreshChats: any;
+  setRefreshChats:any;
 }
 
 interface User {
@@ -66,6 +68,7 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   ]);
   const [activeLink, setActiveLink] = useState<string | null>("messages");
   const [visible, setVisible] = useState(false);
+  const [refreshChats,setRefreshChats] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -102,6 +105,9 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         setSearchResults,
         visible,
         setVisible,
+        refreshChats,
+        setRefreshChats,
+        
       }}
     >
       <CookiesProvider>{children}</CookiesProvider>
