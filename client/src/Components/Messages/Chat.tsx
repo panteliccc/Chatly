@@ -91,8 +91,10 @@ function Chat() {
         ) {
           chatState?.setRefreshChats(!chatState.refreshChats)
           toast({
-            description:`${newMessage.user.username} : ${newMessage.text}`,
+            title:`${newMessage.chat?.isGroup ? `${newMessage.chat.chatName} ` : ""}`,
+            description: `${newMessage.user.username}: ${newMessage.text}`,
           });
+          
         } else {
           if (chatState?.messages != null) {
             chatState?.setMessages([...chatState?.messages, newMessage]);
