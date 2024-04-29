@@ -108,12 +108,12 @@ function Chat() {
     <div
       className={`h-screen ${
         chatState.visible ? "flex w-screen" : "hidden w-0"
-      } flex-col md:w-7/12 xl:w-8/12 md:flex`}
+      } flex-col  md:flex ${chatState.openInfo?'hidden md:flex md:w-4/12 xl:w-5/12':'md:w-8/12 flex'}`}
     >
       {chatId ? (
         chatState.selectedChat && (
           <>
-            <ChatHeader />
+            <ChatHeader/>
             <Messages />
             <SendMessage socket={socket} />
           </>
@@ -126,7 +126,7 @@ function Chat() {
       )}
     </div>
   ) : (
-    <div className={`md:w-7/12 xl:w-8/12 h-screen flex flex-col gap-7 p-3`}>
+    <div className={`md:w-8/12 h-screen flex flex-col gap-7 p-3`}>
       <Skeleton className="h-[58px] w-full bg-primary rounded" />
       <Skeleton className="h-full w-full bg-primary rounded" />
       <Skeleton className="h-[58px] w-full bg-primary rounded" />

@@ -2,7 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useChatState } from "../../Context/Provider";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/popover";
 interface User {
   _id: string;
   username: string;
@@ -10,7 +17,6 @@ interface User {
   image: string;
   isDeleted?: boolean;
 }
-
 function ChatHeader() {
   const chatState = useChatState();
   const router = useNavigate();
@@ -44,39 +50,65 @@ function ChatHeader() {
   const closeChat = () => {
     router("/");
     chatState.setVisible(false);
+    chatState.setSelectedChat(null)
+    chatState.setOpenInfo(false)
   };
   return (
-    <div
-      className={`flex p-3 justify-between items-center bg-primary border-b border-primary`}
-    >
-      <div className="flex gap-2 items-center ">
-        <img
-          src={`/arrow-left-solid.svg`}
-          alt="login ilustration"
-          className=" w-4 md:hidden flex"
-          onClick={closeChat}
-        />
-        <Avatar className="w-10 h-10 rounded-full">
-          {sender?.image ? (
-            <AvatarImage
-              src={sender?.image}
-              className="w-full h-full rounded-full overflow-hidden"
-            />
-          ) : (
-            <AvatarFallback className=" bg-[#272f37]">
-              {chatState.selectedChat?.isGroup
-                ? chatState.selectedChat.chatName[0]
-                : sender?.username[0]}
-            </AvatarFallback>
-          )}
-        </Avatar>
-        <h2 className={`text-2xl font-semibold`}>
-          {chatState.selectedChat?.isGroup
-            ? chatState.selectedChat.chatName
-            : sender?.username}
-        </h2>
+    <DropdownMenu>
+      <div
+        className={`flex justify-between items-center bg-primary border-b border-primary p-2`}
+        onClick={() => {
+          chatState.setOpenInfo(true);
+        }}
+      >
+        <div className="flex gap-2 items-center hover:bg-border cursor-pointer px-2 py-1 rounded">
+          <img
+            src={`/arrow-left-solid.svg`}
+            alt="login ilustration"
+            className=" w-4 md:hidden flex"
+            onClick={closeChat}
+          />
+          <Avatar className="w-10 h-10 rounded-full">
+            {sender?.image ? (
+              <AvatarImage
+                src={sender?.image}
+                className="w-full h-full rounded-full overflow-hidden"
+              />
+            ) : (
+              <AvatarFallback className=" bg-[#272f37]">
+                {chatState.selectedChat?.isGroup
+                  ? chatState.selectedChat.chatName[0]
+                  : sender?.username[0]}
+              </AvatarFallback>
+            )}
+          </Avatar>
+          <h2 className={`text-2xl font-semibold`}>
+            {chatState.selectedChat?.isGroup
+              ? chatState.selectedChat.chatName
+              : sender?.username}
+          </h2>
+        </div>
+        <DropdownMenuTrigger>
+          <FontAwesomeIcon
+            icon={faEllipsisVertical}
+            className="text-2xl cursor-pointer mr-1"
+          />
+        </DropdownMenuTrigger>
       </div>
-    </div>
+      <DropdownMenuContent className="rounded ">
+        <DropdownMenuItem
+          className="text-lg cursor-pointer px-4"
+          onClick={() => {
+            chatState.setOpenInfo(true);
+          }}
+        >
+          Account info
+        </DropdownMenuItem>
+        <DropdownMenuItem className="text-lg cursor-pointer px-4" onClick={closeChat}>
+          Close chat
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 

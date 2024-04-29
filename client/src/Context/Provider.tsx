@@ -31,6 +31,8 @@ interface ChatContextType {
   setVisible:any;
   refreshChats: any;
   setRefreshChats:any;
+  openInfo: any;
+  setOpenInfo:any;
 }
 
 interface User {
@@ -69,6 +71,8 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [activeLink, setActiveLink] = useState<string | null>("messages");
   const [visible, setVisible] = useState(false);
   const [refreshChats,setRefreshChats] = useState(false)
+  const [openInfo, setOpenInfo] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -107,7 +111,8 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         setVisible,
         refreshChats,
         setRefreshChats,
-        
+        openInfo,
+        setOpenInfo,
       }}
     >
       <CookiesProvider>{children}</CookiesProvider>

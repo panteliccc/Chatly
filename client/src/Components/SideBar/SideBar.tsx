@@ -74,7 +74,7 @@ const SideBar = () => {
   };
   return (
     <div
-      className={`bg-secondary h-screen ${chatState.visible?'hidden w-0':'flex w-screen'}  md:flex flex-col md:w-5/12 xl:w-4/12  overflow-hidden`}
+      className={`bg-secondary h-screen ${chatState.visible?'hidden w-0':'flex w-screen'}  md:flex flex-col md:w-4/12  overflow-hidden`}
     >
       <Header />
       <Search setIsSearching={setIsSearching} />

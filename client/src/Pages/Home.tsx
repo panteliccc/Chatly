@@ -6,6 +6,7 @@ import { useChatState } from "../Context/Provider";
 import Menu from "../Components/Menu";
 import SideBar from "../Components/SideBar/SideBar";
 import Chat from "../Components/Messages/Chat";
+import ChatInfo from "../Components/ChatInfo/ChatInfo";
 
 function Home(props: any) {
   const router = useNavigate();
@@ -57,9 +58,9 @@ function Home(props: any) {
 
   return (
     <div className={`bg-background w-screen h-screen flex flex-col-reverse md:flex-row`}>
-      <Menu />
       <SideBar/>
       <Chat />
+      <ChatInfo/>
     </div>
   );
 }
