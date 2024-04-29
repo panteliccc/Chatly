@@ -47,7 +47,7 @@ function ChatInfo() {
       <ScrollArea className="">
         <ChatInfoHeader />
         <div className="h-auto flex flex-col gap-5  py-5 items-center">
-          <Avatar className="w-96 h-96 rounded-full">
+          <Avatar className=" w-80 h-80 md:w-64 md:h-64 xl:w-80 xl:h-80 rounded-full">
             {sender?.image ? (
               <AvatarImage
                 src={sender?.image}

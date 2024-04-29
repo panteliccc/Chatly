@@ -50,24 +50,30 @@ function ChatHeader() {
   const closeChat = () => {
     router("/");
     chatState.setVisible(false);
-    chatState.setSelectedChat(null)
-    chatState.setOpenInfo(false)
+    chatState.setSelectedChat(null);
+    chatState.setOpenInfo(false);
+  };
+  const back = () => {
+    router("/");
+    chatState.setVisible(false);
   };
   return (
     <DropdownMenu>
       <div
         className={`flex justify-between items-center bg-primary border-b border-primary p-2`}
-        onClick={() => {
-          chatState.setOpenInfo(true);
-        }}
       >
-        <div className="flex gap-2 items-center hover:bg-border cursor-pointer px-2 py-1 rounded">
-          <img
-            src={`/arrow-left-solid.svg`}
-            alt="login ilustration"
-            className=" w-4 md:hidden flex"
-            onClick={closeChat}
-          />
+        <img
+          src={`/arrow-left-solid.svg`}
+          alt="login ilustration"
+          className=" w-4 md:hidden flex cursor-pointer"
+          onClick={back}
+        />
+        <div
+          className="flex gap-2 items-center md:hover:bg-border cursor-pointer px-2 py-1 rounded"
+          onClick={() => {
+            chatState.setOpenInfo(true);
+          }}
+        >
           <Avatar className="w-10 h-10 rounded-full">
             {sender?.image ? (
               <AvatarImage
@@ -104,7 +110,10 @@ function ChatHeader() {
         >
           Account info
         </DropdownMenuItem>
-        <DropdownMenuItem className="text-lg cursor-pointer px-4" onClick={closeChat}>
+        <DropdownMenuItem
+          className="text-lg cursor-pointer px-4"
+          onClick={closeChat}
+        >
           Close chat
         </DropdownMenuItem>
       </DropdownMenuContent>
