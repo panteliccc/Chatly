@@ -9,6 +9,7 @@ interface Chat {
   isGroup: boolean;
   users: User[];
   latestMessage: Message;
+  groupAdmin?:User;
 }
 
 interface ChatContextType {
