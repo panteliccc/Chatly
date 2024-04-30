@@ -33,7 +33,9 @@ interface ChatContextType {
   refreshChats: any;
   setRefreshChats:any;
   openInfo: any;
-  setOpenInfo:any;
+  setOpenInfo:any;  
+  openCreateGroup: any;
+  setOpenCreateGroup:any;
 }
 
 interface User {
@@ -73,6 +75,7 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [visible, setVisible] = useState(false);
   const [refreshChats,setRefreshChats] = useState(false)
   const [openInfo, setOpenInfo] = useState(false);
+  const [openCreateGroup, setOpenCreateGroup] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -114,6 +117,8 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         setRefreshChats,
         openInfo,
         setOpenInfo,
+        openCreateGroup,
+        setOpenCreateGroup
       }}
     >
       <CookiesProvider>{children}</CookiesProvider>

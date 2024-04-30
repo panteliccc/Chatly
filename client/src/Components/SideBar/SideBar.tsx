@@ -7,6 +7,7 @@ import Search from "./Search";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Chat from "../Messages/Chat";
+import CreateGroup from "../createGroup";
 
 interface User {
   _id: string;
@@ -23,33 +24,40 @@ interface chat {
   latestMessage: Message;
 }
 interface Message {
-  _id:string;
+  _id: string;
   user: User;
   text: string;
-  createdAt:string;
-  chat?:chat;
+  createdAt: string;
+  chat?: chat;
 }
 const SideBar = () => {
   const chatState = useChatState();
   const [isSearching, setIsSearching] = useState(false);
   const router = useNavigate();
-  const getSender = (users: User[]) => {
+  const [sender, setSender] = useState<User | null>(null);
+
+  const getSender = (users: User[] | null | undefined): string => {
     const loggedUser = chatState.authUser;
     if (!users || users.length === 0) {
       return "";
     }
-
+  
     const isSenderDeleted = users.some(
       (user) => user._id !== loggedUser?._id && user.isDeleted
     );
-
+  
     if (isSenderDeleted) {
-      return "Deleted user";
+      return "Deleted User";
     }
-
+  
     const isSender = users[0]?._id === loggedUser?._id;
-    return isSender ? users[1].username : users[0]?.username || "Deleted user";
+    const newSender = isSender ? users[1] : users[0];
+  
+    return newSender?.username || ""; 
   };
+  
+
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -59,6 +67,7 @@ const SideBar = () => {
 
         chatState.setChats(data.chats);
         chatState.setAuthUser(data.authUser);
+        
       } catch (error) {
         console.log(error);
       }
@@ -66,15 +75,17 @@ const SideBar = () => {
 
     fetchData();
   }, [chatState.refreshChats]);
-  
-
   const handleStartChat = (chat: chat) => {
     router(`?chat=${chat._id}`);
-    chatState.setSelectedChat(chat)
+    chatState.setSelectedChat(chat);
   };
+  console.log(chatState.chats);
+  
   return (
     <div
-      className={`bg-secondary h-screen ${chatState.visible?'hidden w-0':'flex w-screen'}  md:flex flex-col md:w-4/12  overflow-hidden`}
+      className={`bg-secondary h-screen ${
+        chatState.visible ? "hidden w-0" : "flex w-screen"
+      }  md:flex flex-col md:w-4/12  overflow-hidden`}
     >
       <Header />
       <Search setIsSearching={setIsSearching} />
@@ -90,9 +101,7 @@ const SideBar = () => {
               >
                 <ChatCard
                   _id={chat._id}
-                  chatName={
-                    chat.isGroup ? chat.chatName : getSender(chat.users)
-                  }
+                  chatName={chat.isGroup ? chat.chatName : getSender(chat.users)}
                   latestMessage={chat.latestMessage}
                   isGroup={chat.isGroup}
                   className=""
@@ -103,6 +112,7 @@ const SideBar = () => {
       ) : (
         ""
       )}
+      <CreateGroup />
     </div>
   );
 };

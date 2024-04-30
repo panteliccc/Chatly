@@ -44,9 +44,9 @@ function InfoCard(props: Props) {
         </div>
       </ContextMenuTrigger>
 
-      <ContextMenuContent>
-        <ContextMenuItem>Make Admin</ContextMenuItem>
-        <ContextMenuItem>Remove User</ContextMenuItem>
+      <ContextMenuContent  className="rounded absolute right-0  bg-border left-0  w-60">
+        <ContextMenuItem className="py-3 px-5 cursor-pointer hover:bg-input">Make Admin</ContextMenuItem>
+        <ContextMenuItem className="py-3 px-5 cursor-pointer hover:bg-input">Remove User</ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>
   );

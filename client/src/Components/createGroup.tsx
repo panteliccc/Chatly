@@ -47,7 +47,7 @@ function CreateGroup() {
   const [visible, setVisible] = useState("hidden");
   const [data, setData] = useState<Data[] | null>(null);
   const [people, setPeople] = useState<User[]>([]);
-  const chatSate = useChatState();
+  const chatState = useChatState();
 
   const fetchData = async (searchvalue: string) => {
     try {
@@ -98,11 +98,11 @@ function CreateGroup() {
           withCredentials: true,
         }
       );
-      const elementExists = chatSate.chats?.some(
+      const elementExists = chatState.chats?.some(
         (item) => item._id === data._id
       );
       if (!elementExists) {
-        chatSate?.setChats((prev: Chat[]) => [data, ...prev]);
+        chatState?.setChats((prev: Chat[]) => [data, ...prev]);
       }
       setChatName("");
       setPeople([]);
@@ -112,10 +112,10 @@ function CreateGroup() {
     }
   };
   return (
-    <Sheet>
-      <SheetTrigger>
-        <FontAwesomeIcon icon={faUserGroup} />
-      </SheetTrigger>
+    <Sheet
+      open={chatState.openCreateGroup}
+      onOpenChange={chatState.setOpenCreateGroup}
+    >
       <SheetContent
         side="left"
         className="w-screen max-w-none sm:max-w-none md:w-1/3 border-0"

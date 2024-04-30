@@ -101,7 +101,7 @@ function ChatHeader() {
           />
         </DropdownMenuTrigger>
       </div>
-      <DropdownMenuContent className="rounded ">
+      <DropdownMenuContent className="rounded absolute right-0 w-60 bg-border">
         <DropdownMenuItem
           className="text-lg cursor-pointer px-4"
           onClick={() => {

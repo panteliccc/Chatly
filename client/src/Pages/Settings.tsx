@@ -8,7 +8,6 @@ import {
 import { EditAccount } from "../Components/Settings/EditAccount";
 import ChangePassword from "../Components/Settings/ChangePassword";
 import DeleteAccount from "../Components/Settings/DeleteAccount";
-import Menu from "../Components/Menu";
 import { ScrollArea } from "../Components/ui/scrollarea";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
@@ -61,7 +60,6 @@ function Settings() {
         defaultValue="account"
         className="w-screen flex items-start h-screen flex-col-reverse md:flex-row"
       >
-        <Menu />
         <TabsList
           className={`${
             isTabsListHidden ? "hidden" : ""

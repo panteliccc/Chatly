@@ -3,7 +3,6 @@ import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { useChatState } from "../Context/Provider";
-import Menu from "../Components/Menu";
 import SideBar from "../Components/SideBar/SideBar";
 import Chat from "../Components/Messages/Chat";
 import ChatInfo from "../Components/ChatInfo/ChatInfo";
