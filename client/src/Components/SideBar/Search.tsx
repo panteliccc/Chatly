@@ -3,6 +3,7 @@ import axios from "axios";
 import { Input } from "../ui/input";
 import { useChatState } from "../../Context/Provider";
 import SearchResults from "./SearchResults";
+import { useNavigate } from "react-router-dom";
 
 interface User {
   _id: string;
@@ -18,10 +19,12 @@ interface Message {
 
 interface Data {
   _id: string;
-  username: string;
+  username?: string;
   email: string;
   image: string;
   latestMessage: Message;
+  chatName?:string;
+  isGroup?:boolean;
 }
 interface Chat {
   _id: string;
@@ -29,6 +32,7 @@ interface Chat {
   isGroup: boolean;
   users: User[];
   latestMessage: Message;
+  groupAdmin?:User;
 }
 
 interface Props {
@@ -36,19 +40,21 @@ interface Props {
 }
 
 function Search({ setIsSearching }: Props) {
-  const chatSate = useChatState();
+  const chatState = useChatState();
+  const router = useNavigate();
   const [searchValue, setValueSearch] = useState("");
   const [visible, setVisible] = useState("hidden");
 
   const fetchData = async (searchValue: string) => {
     try {
-      const { data } = await axios.get<Data[]>(
-        `http://localhost:5500/api?search=${searchValue}`,
+      const response = await axios.post(
+        "http://localhost:5500/api/search",
+        { search: searchValue }, 
         {
           withCredentials: true,
         }
       );
-      chatSate.setSearchResults(data);
+      chatState.setSearchResults(response.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -66,11 +72,13 @@ function Search({ setIsSearching }: Props) {
           withCredentials: true,
         }
       );
-      const elementExists = chatSate.chats?.some(
+      const elementExists = chatState.chats?.some(
         (item) => item._id === data._id
       );
       if (!elementExists) {
-        chatSate?.setChats((prev: Chat[]) => [data,...prev]);
+        chatState?.setChats((prev: Chat[]) => [data, ...prev]);
+      } else {
+        router(`?chat=${data._id}`);
       }
     } catch (err) {
       console.log(err);
@@ -109,10 +117,7 @@ function Search({ setIsSearching }: Props) {
           />
         </div>
       </div>
-      <SearchResults  
-        handleStartChat={handleStartChat}
-        visible={visible}
-      />
+      <SearchResults handleStartChat={handleStartChat} visible={visible} />
     </div>
   );
 }

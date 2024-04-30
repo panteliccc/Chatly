@@ -55,17 +55,19 @@ interface Message {
 }
 interface Data {
   _id: string;
-  username: string;
+  username?: string;
   email: string;
   image: string;
   latestMessage: Message;
+  chatName?:string;
+  isGroup?:boolean;
 }
 const ChatContext = createContext<ChatContextType | null>(null);
 
 const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [messages, setMessages] = useState<Message[] | null>(null);
-  const [searchResults, setSearchResults] = useState<Data[] | null>(null);
+  const [searchResults, setSearchResults] = useState<Data[] | null>([]);
   const [authUser, setAuthUser] = useState<User | null>(null);
   const [chats, setChats] = useState<Chat[] | null>(null);
   const [cookie, setCookie, removeCookie] = useCookies([

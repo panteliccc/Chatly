@@ -34,7 +34,6 @@ const SideBar = () => {
   const chatState = useChatState();
   const [isSearching, setIsSearching] = useState(false);
   const router = useNavigate();
-  const [sender, setSender] = useState<User | null>(null);
 
   const getSender = (users: User[] | null | undefined): string => {
     const loggedUser = chatState.authUser;
@@ -79,8 +78,6 @@ const SideBar = () => {
     router(`?chat=${chat._id}`);
     chatState.setSelectedChat(chat);
   };
-  console.log(chatState.chats);
-  
   return (
     <div
       className={`bg-secondary h-screen ${

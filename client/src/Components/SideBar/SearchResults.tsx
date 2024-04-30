@@ -9,7 +9,7 @@ interface Props {
 
 const SearchResults = (props: Props) => {
   const chatState = useChatState();
-
+  
   return (
     <ScrollArea className={`h-full w-full  flex flex-col ${props.visible}`}>
       {chatState.searchResults?.length === 0 ? (
@@ -24,7 +24,7 @@ const SearchResults = (props: Props) => {
           >
             <ChatCard
               _id={user._id}
-              chatName={user.username}
+              chatName={(user.isGroup?user.chatName:user?.username) || ""}
               latestMessage={user.latestMessage}
               className="hover:bg-transparent"
             />

@@ -51,13 +51,14 @@ function CreateGroup() {
 
   const fetchData = async (searchvalue: string) => {
     try {
-      const { data } = await axios.get<Data[]>(
-        `http://localhost:5500/api?search=${encodeURIComponent(searchvalue)}`,
+      const response = await axios.post(
+        "http://localhost:5500/api/search",
+        { search: searchvalue }, 
         {
           withCredentials: true,
         }
       );
-      setData(data);
+      setData(response.data.users);
     } catch (error) {
       console.log(error);
     }

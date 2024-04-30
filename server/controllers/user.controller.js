@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
+const Chat = require("../models/chat.model");
 const bcrypt = require("bcrypt");
 const asyncHandler = require("express-async-handler");
 const saltRounds = 10;
@@ -56,19 +57,42 @@ const authUser = async (req, res) => {
     res.status(400).json({ error: "Invalid username or password" });
   }
 };
-const searchUser = asyncHandler(async (req, res) => {
-  const keyword = req.query.search
-    ? {
-        username: { $regex: `^${req.query.search}`, $options: "i" },
-        isDeleted: false,
-        _id: { $ne: req.user._id },
-      }
-    : {
-        isDeleted: false,
-        _id: { $ne: req.user._id },
-      };
-  const users = await User.find(keyword).select("-password");
-  res.send(users);
+const search = asyncHandler(async (req, res) => {
+  const searchTerm = req.body.search;
+  try {
+    // Pronalaženje korisnika čije korisničko ime odgovara unesenom terminu pretrage
+    const users = await User.find({
+      username: { $regex: searchTerm, $options: "i" },
+      isDeleted: false,
+      _id: { $ne: req.user._id },
+    }).select("-password");
+
+    // Transformacija pronađenih korisnika u format koji sadrži informaciju da li su korisnici ili grupe
+    const modifiedUsers = users.map(user => ({
+      ...user.toObject(),
+      isGroup: false
+    }));
+
+    const groups = await Chat.find({
+      chatName: { $regex: searchTerm, $options: "i" },
+      users: { $elemMatch: { $eq: req.user._id } },
+    })
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password")
+      .populate("latestMessage")
+      .sort({ updatedAt: -1 });
+    const modifiedGroups = groups.map(group => ({
+      ...group.toObject(),
+      isGroup: true
+    }));
+
+    const data = [...modifiedUsers, ...modifiedGroups];
+    res.status(200).json({data,users});
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
 });
 
-module.exports = { registerUser, authUser, searchUser };
+
+module.exports = { registerUser, authUser, search };
