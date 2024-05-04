@@ -14,7 +14,7 @@ interface Message {
   user: Users;
   text: string;
   createdAt: string;
-  isImage:boolean;
+  isImage: boolean;
 }
 interface Users {
   _id: string;
@@ -36,7 +36,10 @@ function ChatCard(props: Props) {
       date.getMonth() === today.getMonth() &&
       date.getFullYear() === today.getFullYear()
     ) {
-      return new Date(date).toLocaleTimeString();
+      return new Date(date).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
     } else if (
       date.getDate() === yesterday.getDate() &&
       date.getMonth() === yesterday.getMonth() &&
@@ -82,7 +85,9 @@ function ChatCard(props: Props) {
               ? "you: "
               : ""
             : "start chat"}
-          {props.latestMessage?.isImage? "sent image": props.latestMessage && props.latestMessage.text }
+          {props.latestMessage?.isImage
+            ? "sent image"
+            : props.latestMessage && props.latestMessage.text}
         </span>
       </div>
     </div>
