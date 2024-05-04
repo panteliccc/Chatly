@@ -38,6 +38,10 @@ interface ChatContextType {
   setOpenCreateGroup:any;
   image:any;
   setImage:any;
+  imageView:any;
+  setImageView:any;
+  visibleImage:any;
+  setVisibleImage:any;
 }
 
 interface User {
@@ -82,6 +86,8 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [openInfo, setOpenInfo] = useState(false);
   const [openCreateGroup, setOpenCreateGroup] = useState(false);
   const [image, setImage] = useState<File | null>(null);
+  const [visibleImage, setVisibleImage] = useState(false);
+  const [imageView, setImageView] = useState('');
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -125,7 +131,11 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         openCreateGroup,
         setOpenCreateGroup,
         image, 
-        setImage
+        setImage,
+        imageView,
+        setImageView,
+        visibleImage,
+        setVisibleImage
       }}
     >
       <CookiesProvider>{children}</CookiesProvider>

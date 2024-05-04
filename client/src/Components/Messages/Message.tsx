@@ -1,7 +1,6 @@
 import { useChatState } from "../../Context/Provider";
-import React from "react";
+import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-
 interface Props {
   sender: User;
   text: string;
@@ -23,11 +22,16 @@ function Message(props: Props) {
   const isSender: boolean = chatState.authUser?._id === props.sender._id;
   const sender: User = props.sender;
 
+  function handleImage() {
+    chatState.setImageView(props.text);
+    chatState.setVisibleImage(true);
+  }
+
   return (
     <div
       className={`flex w-full gap-2 items-start relative ${
         props.isFirstMessage && "mt-2"
-      } `}
+      }`}
     >
       <div className="w-10 h-10 absolute">
         {!isSender && props.isFirstMessage && props.isGroup && (
@@ -76,9 +80,10 @@ function Message(props: Props) {
           <img
             src={props.text}
             alt={props.text}
-            className={`max-w-[90%] sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%] rounded-xl border-4 ${
+            className={`max-w-[90%] sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%] rounded-xl border-4 cursor-pointer ${
               isSender ? "border-softBlue" : " border-primary "
             }`}
+            onClick={ handleImage}
           />
         ) : (
           <div

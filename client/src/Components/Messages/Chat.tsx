@@ -9,6 +9,7 @@ import { Skeleton } from "../ui/skeleton";
 import io from "socket.io-client";
 import { useToast } from "../ui/use-toast";
 import SendImage from "./Image";
+import ImageView from "./ImageView";
 interface User {
   _id: string;
   username: string;
@@ -123,11 +124,13 @@ function Chat() {
             <ChatHeader />
             <Messages />
             <SendMessage socket={socket} />
-            {chatState.image ? (
-              <SendImage visible={chatState.image ? true : false} socket={socket}/>
-            ) : (
-              <div></div>
+            {chatState.image && (
+              <SendImage
+                visible={chatState.image ? true : false}
+                socket={socket}
+              />
             )}
+            {chatState.visibleImage && <ImageView />}
           </>
         )
       ) : (
