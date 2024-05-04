@@ -52,7 +52,7 @@ function CreateGroup() {
   const fetchData = async (searchvalue: string) => {
     try {
       const response = await axios.post(
-        "http://localhost:5500/api/search",
+        `${process.env.REACT_APP_SERVER_URL}/api/search`,
         { search: searchvalue }, 
         {
           withCredentials: true,
@@ -89,7 +89,7 @@ function CreateGroup() {
   const CreateGroupChat = async () => {
     try {
       const { data } = await axios.post(
-        "http://localhost:5500/api/createGroupChat",
+        `${process.env.REACT_APP_SERVER_URL}/api/createGroupChat`,
         {
           chatName,
           users: people,

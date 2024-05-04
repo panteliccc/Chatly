@@ -48,7 +48,7 @@ function Search({ setIsSearching }: Props) {
   const fetchData = async (searchValue: string) => {
     try {
       const response = await axios.post(
-        "http://localhost:5500/api/search",
+        `${process.env.REACT_APP_SERVER_URL}/api/search`,
         { search: searchValue }, 
         {
           withCredentials: true,
@@ -63,7 +63,7 @@ function Search({ setIsSearching }: Props) {
   const handleStartChat = async (id: string) => {
     try {
       const { data } = await axios.post<Data>(
-        "http://localhost:5500/api/createChat",
+        `${process.env.REACT_APP_SERVER_URL}/api/createChat`,
         {
           userId: id,
         },

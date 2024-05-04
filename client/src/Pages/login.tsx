@@ -37,7 +37,7 @@ export function Login() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const { email, password } = values;
     try {
-      const res = await axios.post("http://localhost:5500/api/authUser", {
+      const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/authUser`, {
         email,
         password,
       });

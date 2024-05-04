@@ -46,7 +46,7 @@ function Home(props: any) {
 
   const fetchChatById = async (chatId: string) => {
     try {
-      const { data } = await axios.get(`http://localhost:5500/api/getChatById/${chatId}`,{
+      const { data } = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getChatById/${chatId}`,{
         withCredentials: true,
       });
       chatState.setSelectedChat(data);

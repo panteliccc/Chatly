@@ -58,7 +58,7 @@ export function Register() {
     console.log(values);
     const { username, email, password } = values;
     try {
-      await axios.post("http://localhost:5500/api/register", {
+      await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/register`, {
         username,
         email,
         password,

@@ -40,7 +40,7 @@ export function EditAccount(props: any) {
     
     try {
       await axios.put(
-        "http://localhost:5500/api/updateAccount",
+        `${process.env.REACT_APP_SERVER_URL}/api/updateAccount`,
         {
           username,
           email,

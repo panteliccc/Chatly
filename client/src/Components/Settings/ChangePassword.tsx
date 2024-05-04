@@ -41,7 +41,7 @@ function ChangePassword(props: any) {
   const changePassword = async (values: z.infer<typeof formSchema>)=>{
     const {currentPassword,newPassword } = values
     try{
-      axios.put("http://localhost:5500/api/changePassword",{
+      axios.put(`${process.env.REACT_APP_SERVER_URL}/api/changePassword`,{
         currentPassword,newPassword
       },{
         withCredentials:true

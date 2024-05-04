@@ -69,21 +69,21 @@ function SendMessage(props: Props) {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            postMessage(downloadURL, true); // Postavljanje vrednosti isImage na true jer se šalje slika
+            postMessage(downloadURL, true); 
           });
         }
       );
     } else if (message.trim() === "") {
       return;
     } else {
-      postMessage(message, false); // Postavljanje vrednosti isImage na false jer se šalje tekst
+      postMessage(message, false); 
     }
   };
 
   const postMessage = async (text: string, isImage: boolean) => {
     try {
       const { data } = await axios.post(
-        "http://localhost:5500/api/sendMessage",
+        `${process.env.REACT_APP_SERVER_URL}/api/sendMessage`,
         {
           text,
           chat: chatId,

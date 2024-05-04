@@ -48,7 +48,7 @@ function Chat() {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:5500/api/allMessages/${chatId}`,
+          `${process.env.REACT_APP_SERVER_URL}/api/allMessages/${chatId}`,
           {
             headers: { "Content-Type": "application/json" },
             withCredentials: true,

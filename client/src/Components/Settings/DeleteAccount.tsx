@@ -9,7 +9,7 @@ function DeleteAccount(props: any) {
   const deleteAccount = async () => {
     try {
       await axios.put(
-        "http://localhost:5500/api/deleteAccount",
+        `${process.env.REACT_APP_SERVER_URL}/api/deleteAccount`,
         {},
         {
           withCredentials: true,
