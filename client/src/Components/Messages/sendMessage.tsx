@@ -7,14 +7,12 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFaceSmile, faImage } from "@fortawesome/free-regular-svg-icons";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { chatImage } from "../../config/Config";
 
 interface Message {
   user: User;
   text: string;
   createdAt: string;
-  isImage:boolean;
+  isImage: boolean;
 }
 
 interface User {
@@ -31,63 +29,21 @@ interface Props {
 
 function SendMessage(props: Props) {
   const chatState = useChatState();
-  const [image, setImage] = useState<File | null>(null);
   const [message, setMessage] = useState("");
   const location = useLocation();
   const chatId = new URLSearchParams(location.search).get("chat");
 
   const sendMessage = async () => {
-    if (image) {
-      const name = new Date().getTime() + (image?.name || "");
-      const storageRef = ref(chatImage, "ChatImage/" + name);
-      const uploadTask = image && uploadBytesResumable(storageRef, image);
-
-      uploadTask?.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-          }
-        },
-        (error) => {
-          switch (error.code) {
-            case "storage/unauthorized":
-              break;
-            case "storage/canceled":
-              break;
-            case "storage/unknown":
-              break;
-          }
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            postMessage(downloadURL, true); 
-          });
-        }
-      );
-    } else if (message.trim() === "") {
+    if (message.trim() === "") {
       return;
-    } else {
-      postMessage(message, false); 
     }
-  };
-
-  const postMessage = async (text: string, isImage: boolean) => {
     try {
       const { data } = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/api/sendMessage`,
         {
-          text,
+          text: message, // Promenio sam "message" u "text"
           chat: chatId,
-          isImage,
+          isImage: false,
         },
         {
           headers: { "Content-Type": "application/json" },
@@ -119,7 +75,7 @@ function SendMessage(props: Props) {
     <div className="p-3 bg-primary flex gap-3 relative">
       <div className="rounded bg-secondary w-full flex px-2 items-center">
         {showPicker && (
-          <div className=" absolute bottom-24 left-0 w-full md:w-auto md:left-3">
+          <div className="absolute bottom-24 left-0 w-full md:w-auto md:left-3">
             <Picker
               data={data}
               onEmojiSelect={(e: any) => {
@@ -148,7 +104,7 @@ function SendMessage(props: Props) {
           id="sendImage"
           name="sendImage"
           accept=".jpg,.png,.mp4"
-          onChange={(e: any) => setImage(e.target.files[0])}
+          onChange={(e: any) => chatState.setImage(e.target.files[0])}
         />
         <label htmlFor="sendImage">
           <FontAwesomeIcon
@@ -157,7 +113,6 @@ function SendMessage(props: Props) {
           />
         </label>
       </div>
-
       <button
         className="w-16 bg-softBlue md:flex items-center justify-center rounded hidden"
         onClick={sendMessage}

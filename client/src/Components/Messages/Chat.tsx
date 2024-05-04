@@ -7,7 +7,8 @@ import axios from "axios";
 import { useChatState } from "../../Context/Provider";
 import { Skeleton } from "../ui/skeleton";
 import io from "socket.io-client";
-import { useToast } from "../ui/use-toast"
+import { useToast } from "../ui/use-toast";
+import SendImage from "./Image";
 interface User {
   _id: string;
   username: string;
@@ -22,7 +23,7 @@ interface Message {
   text: string;
   createdAt: string;
   chat?: Chat;
-  isImage:boolean;
+  isImage: boolean;
 }
 interface Chat {
   _id: string;
@@ -37,7 +38,7 @@ let selectedChatCompare: Chat | null | undefined;
 
 function Chat() {
   const location = useLocation();
-  const { toast } = useToast()  
+  const { toast } = useToast();
   let chatId = new URLSearchParams(location.search).get("chat");
   const chatState = useChatState();
   const [loading, setLoading] = useState(false);
@@ -90,16 +91,17 @@ function Chat() {
           !selectedChatCompare ||
           selectedChatCompare._id !== newMessage.chat?._id
         ) {
-          chatState?.setRefreshChats(!chatState.refreshChats)
+          chatState?.setRefreshChats(!chatState.refreshChats);
           toast({
-            title:`${newMessage.chat?.isGroup ? `${newMessage.chat.chatName} ` : ""}`,
+            title: `${
+              newMessage.chat?.isGroup ? `${newMessage.chat.chatName} ` : ""
+            }`,
             description: `${newMessage.user.username}: ${newMessage.text}`,
           });
-          
         } else {
           if (chatState?.messages != null) {
             chatState?.setMessages([...chatState?.messages, newMessage]);
-            chatState?.setRefreshChats(!chatState.refreshChats)
+            chatState?.setRefreshChats(!chatState.refreshChats);
           }
         }
       });
@@ -109,14 +111,23 @@ function Chat() {
     <div
       className={`h-screen ${
         chatState.visible ? "flex w-screen" : "hidden w-0"
-      } flex-col  md:flex ${chatState.openInfo?'hidden md:flex md:w-4/12 xl:w-5/12':'md:w-8/12 flex'}`}
+      } flex-col  md:flex ${
+        chatState.openInfo
+          ? "hidden md:flex md:w-4/12 xl:w-5/12"
+          : "md:w-8/12 flex"
+      } relative`}
     >
       {chatId ? (
         chatState.selectedChat && (
           <>
-            <ChatHeader/>
+            <ChatHeader />
             <Messages />
             <SendMessage socket={socket} />
+            {chatState.image ? (
+              <SendImage visible={chatState.image ? true : false} socket={socket}/>
+            ) : (
+              <div></div>
+            )}
           </>
         )
       ) : (
