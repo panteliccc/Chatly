@@ -22,6 +22,7 @@ interface Message {
   text: string;
   createdAt: string;
   chat?: Chat;
+  isImage:boolean;
 }
 interface Chat {
   _id: string;

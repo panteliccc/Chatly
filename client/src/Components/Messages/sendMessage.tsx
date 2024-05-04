@@ -6,11 +6,15 @@ import { useChatState } from "../../Context/Provider";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFaceSmile } from "@fortawesome/free-regular-svg-icons";
+import { faFaceSmile, faImage } from "@fortawesome/free-regular-svg-icons";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { chatImage } from "../../config/Config";
+
 interface Message {
   user: User;
   text: string;
   createdAt: string;
+  isImage:boolean;
 }
 
 interface User {
@@ -20,25 +24,70 @@ interface User {
   image: string;
   isDeleted: boolean;
 }
+
 interface Props {
   socket: any;
 }
+
 function SendMessage(props: Props) {
   const chatState = useChatState();
+  const [image, setImage] = useState<File | null>(null);
   const [message, setMessage] = useState("");
   const location = useLocation();
   const chatId = new URLSearchParams(location.search).get("chat");
-  const sendMessage = async () => {
-    if (message.trim() === "") {
-      return;
-    }
 
+  const sendMessage = async () => {
+    if (image) {
+      const name = new Date().getTime() + (image?.name || "");
+      const storageRef = ref(chatImage, "ChatImage/" + name);
+      const uploadTask = image && uploadBytesResumable(storageRef, image);
+
+      uploadTask?.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+          }
+        },
+        (error) => {
+          switch (error.code) {
+            case "storage/unauthorized":
+              break;
+            case "storage/canceled":
+              break;
+            case "storage/unknown":
+              break;
+          }
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            postMessage(downloadURL, true); // Postavljanje vrednosti isImage na true jer se šalje slika
+          });
+        }
+      );
+    } else if (message.trim() === "") {
+      return;
+    } else {
+      postMessage(message, false); // Postavljanje vrednosti isImage na false jer se šalje tekst
+    }
+  };
+
+  const postMessage = async (text: string, isImage: boolean) => {
     try {
       const { data } = await axios.post(
         "http://localhost:5500/api/sendMessage",
         {
-          text: message,
+          text,
           chat: chatId,
+          isImage,
         },
         {
           headers: { "Content-Type": "application/json" },
@@ -93,7 +142,22 @@ function SendMessage(props: Props) {
             onKeyDown(e);
           }}
         />
+        <Input
+          type="file"
+          className="hidden w-0"
+          id="sendImage"
+          name="sendImage"
+          accept=".jpg,.png,.mp4"
+          onChange={(e: any) => setImage(e.target.files[0])}
+        />
+        <label htmlFor="sendImage">
+          <FontAwesomeIcon
+            icon={faImage}
+            className="emoji-icon text-2xl cursor-pointer"
+          />
+        </label>
       </div>
+
       <button
         className="w-16 bg-softBlue md:flex items-center justify-center rounded hidden"
         onClick={sendMessage}

@@ -52,6 +52,7 @@ interface Message {
   text: string;
   createdAt:string;
   chat?:Chat;
+  isImage:boolean;
 }
 interface Data {
   _id: string;

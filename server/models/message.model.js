@@ -14,6 +14,9 @@ const MessageShema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Chat",
     },
+    isImage:{
+      type:Boolean,
+    }
   },
   {
     timestamps: true,

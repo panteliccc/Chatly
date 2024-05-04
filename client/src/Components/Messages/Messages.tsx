@@ -22,6 +22,7 @@ function Messages() {
             text={message.text}
             isFirstMessage={!sameSender} 
             isGroup={chatState.selectedChat?.isGroup}
+            isImage={message.isImage}
           />
         );
       })}

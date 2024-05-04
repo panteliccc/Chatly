@@ -14,6 +14,7 @@ interface Message {
   user: Users;
   text: string;
   createdAt: string;
+  isImage:boolean;
 }
 interface Users {
   _id: string;
@@ -81,7 +82,7 @@ function ChatCard(props: Props) {
               ? "you: "
               : ""
             : "start chat"}
-          {props.latestMessage ? props.latestMessage.text : ""}
+          {props.latestMessage?.isImage? "sent image": props.latestMessage && props.latestMessage.text }
         </span>
       </div>
     </div>

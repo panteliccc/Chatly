@@ -29,6 +29,7 @@ interface Message {
   text: string;
   createdAt: string;
   chat?: chat;
+  isImage:boolean;
 }
 const SideBar = () => {
   const chatState = useChatState();

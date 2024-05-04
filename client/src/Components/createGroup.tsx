@@ -4,11 +4,11 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
+
   SheetClose,
 } from "./ui/sheet";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserGroup, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Input } from "./ui/input";
 import axios from "axios";
 import ChatCard from "./SideBar/ChatCard";

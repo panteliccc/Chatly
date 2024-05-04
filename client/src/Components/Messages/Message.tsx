@@ -6,7 +6,8 @@ interface Props {
   sender: User;
   text: string;
   isFirstMessage: boolean;
-  isGroup:boolean | undefined;
+  isGroup: boolean | undefined;
+  isImage: boolean;
 }
 
 interface User {
@@ -23,7 +24,11 @@ function Message(props: Props) {
   const sender: User = props.sender;
 
   return (
-    <div className={`flex w-full gap-2 items-start relative ${props.isFirstMessage && "mt-2"} `}>
+    <div
+      className={`flex w-full gap-2 items-start relative ${
+        props.isFirstMessage && "mt-2"
+      } `}
+    >
       <div className="w-10 h-10 absolute">
         {!isSender && props.isFirstMessage && props.isGroup && (
           <Avatar className="w-10 h-10 rounded-full ">
@@ -67,13 +72,23 @@ function Message(props: Props) {
             </svg>
           </span>
         )}
-        <div
-          className={`${
-            isSender ? "bg-softBlue " : " bg-primary "
-          } py-1 px-3 relative break-words max-w-[90%] xl:max-w-[70%] rounded-xl text-pretty`}
-        >
-          {props.text}
-        </div>
+        {props.isImage ? (
+          <img
+            src={props.text}
+            alt={props.text}
+            className={`max-w-[90%] sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%] rounded-xl border-4 ${
+              isSender ? "border-softBlue" : " border-primary "
+            }`}
+          />
+        ) : (
+          <div
+            className={`${
+              isSender ? "bg-softBlue " : " bg-primary "
+            } py-1 px-3 relative break-words max-w-[90%] xl:max-w-[70%] rounded-xl text-pretty`}
+          >
+            {props.text}
+          </div>
+        )}
       </div>
     </div>
   );
