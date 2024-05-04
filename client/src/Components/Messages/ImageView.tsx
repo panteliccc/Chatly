@@ -5,8 +5,6 @@ import React from "react";
 
 function ImageView() {
   const chatState = useChatState();
-  console.log(chatState.imageView, chatState.visible);
-  
   return (
     <div
       className={`${
