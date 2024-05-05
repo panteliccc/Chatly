@@ -23,10 +23,10 @@ interface Message {
   user: User;
   text: string;
   createdAt: string;
-  chat?: Chat;
+  chat?: ChatInteface;
   isImage: boolean;
 }
-interface Chat {
+interface ChatInteface {
   _id: string;
   chatName: string;
   isGroup: boolean;
@@ -35,7 +35,7 @@ interface Chat {
 }
 
 let socket: any;
-let selectedChatCompare: Chat | null | undefined;
+let selectedChatCompare: ChatInteface | null | undefined;
 
 function Chat() {
   const location = useLocation();
@@ -71,8 +71,7 @@ function Chat() {
       getChat();
       selectedChatCompare = chatState.selectedChat;
     },
-    chatState?.selectedChat ? [chatState?.selectedChat] : []
-  );
+    [chatState?.selectedChat]);
 
   useEffect(() => {
     if (chatState.authUser && !socket) {

@@ -6,7 +6,6 @@ import { ScrollArea } from "../ui/scrollarea";
 import Search from "./Search";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Chat from "../Messages/Chat";
 import CreateGroup from "../createGroup";
 
 interface User {
@@ -34,14 +33,7 @@ interface Message {
 const SideBar = () => {
   const chatState = useChatState();
   const [isSearching, setIsSearching] = useState(false);
-  const [sender, setSender] = useState<User | null | undefined>();
   const router = useNavigate();
-  /*useEffect(() => {
-    const newSender = getSender(chatState.selectedChat?.users);
-    if (newSender) {
-      setSender(newSender);
-    }
-  });*/
 
   const getSender = (users: User[] | null | undefined): User | null => {
     const loggedUser = chatState.authUser;
