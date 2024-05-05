@@ -34,12 +34,19 @@ interface Message {
 const SideBar = () => {
   const chatState = useChatState();
   const [isSearching, setIsSearching] = useState(false);
+  const [sender,setSender] = useState<User | null | undefined>()
   const router = useNavigate();
-
-  const getSender = (users: User[] | null | undefined): string => {
+  useEffect(() => {
+    const newSender = getSender(chatState.selectedChat?.users);
+    if (newSender) {
+      setSender(newSender);
+    }
+  }, [chatState.selectedChat?.users]);
+  
+  const getSender = (users: User[] | null | undefined): User | null => {
     const loggedUser = chatState.authUser;
     if (!users || users.length === 0) {
-      return "";
+      return null;
     }
   
     const isSenderDeleted = users.some(
@@ -47,14 +54,15 @@ const SideBar = () => {
     );
   
     if (isSenderDeleted) {
-      return "Deleted User";
+      return { _id: "", username: "Deleted User", email: "", image: "", isDeleted: true };
     }
   
     const isSender = users[0]?._id === loggedUser?._id;
     const newSender = isSender ? users[1] : users[0];
-  
-    return newSender?.username || ""; 
+    
+    return newSender || null;
   };
+  
   
 
   
@@ -99,9 +107,10 @@ const SideBar = () => {
               >
                 <ChatCard
                   _id={chat._id}
-                  chatName={chat.isGroup ? chat.chatName : getSender(chat.users)}
+                  chatName={chat.isGroup ? chat.chatName :sender && sender?.username || ''}
                   latestMessage={chat.latestMessage}
                   isGroup={chat.isGroup}
+                  sender={sender}
                   className=""
                 />
               </div>

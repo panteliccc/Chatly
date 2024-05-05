@@ -23,7 +23,7 @@ const deleteAccount = asyncHandler(async (req, res) => {
 });
 
 const updateAccount = asyncHandler(async (req, res) => {
-  const { username, email } = req.body;
+  const { username, email, image } = req.body;
   const checkUsername = await User.findOne({
     username: username,
     _id: { $ne: req.user._id },
@@ -34,14 +34,14 @@ const updateAccount = asyncHandler(async (req, res) => {
   });
 
   if (checkUsername !== null)
-    res.status(400).json({ massage: "That username is taken. Try another" });
+    res.status(400).json({ message: "That username is taken. Try another" });
   else if (checkEmail !== null)
-    res.status(400).json({ massage: "That email is taken. Try another" });
+    res.status(400).json({ message: "That email is taken. Try another" });
   else {
     try {
       const user = await User.findByIdAndUpdate(
         req.user._id,
-        { username, email },
+        { username, email, image },
         { new: true }
       );
 

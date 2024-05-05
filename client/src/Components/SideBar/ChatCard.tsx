@@ -5,7 +5,7 @@ import { useChatState } from "../../Context/Provider";
 interface Props {
   _id: string;
   chatName: string;
-  sender?: Users;
+  sender?: Users | null | undefined;
   latestMessage?: Message;
   isGroup?: boolean;
   className: string;
@@ -50,13 +50,12 @@ function ChatCard(props: Props) {
       return new Date(date).toLocaleDateString();
     }
   };
-
   return (
     <div
       className={`flex items-center gap-3 border-b p-3 cursor-pointer hover:bg-primary hover:duration-300 ${props.className}`}
     >
       <Avatar className="w-10 h-10">
-        {props.sender ? (
+        {props.sender?.image ? (
           <AvatarImage
             src={props.sender?.image}
             className="w-full h-full rounded-full overflow-hidden"
