@@ -107,7 +107,7 @@ const SideBar = () => {
               >
                 <ChatCard
                   _id={chat._id}
-                  chatName={chat.isGroup ? chat.chatName :sender && sender?.username || ''}
+                  chatName={chat.isGroup ? chat.chatName :sender?.username || ''}
                   latestMessage={chat.latestMessage}
                   isGroup={chat.isGroup}
                   sender={sender}
