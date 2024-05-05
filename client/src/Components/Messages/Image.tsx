@@ -27,7 +27,7 @@ interface User {
 
 function SendImage(props: Props) {
   const chatState = useChatState();
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);  
   const [uploading, setUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const location = useLocation();

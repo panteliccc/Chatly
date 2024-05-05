@@ -14,11 +14,12 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useChatState } from "../../Context/Provider";
 import axios from "axios";
 export function EditAccount(props: any) {
   const chatState = useChatState();
+  const [imageUrl, setImageUrl] = useState<string>('');
   const [image, setImage] = useState<File | null>(null);
   const formSchema = z.object({
     email: z.string().email({
@@ -56,8 +57,8 @@ export function EditAccount(props: any) {
           });
         }
       );
-    }else{
-      handleSubmit(form.getValues(),null);
+    } else {
+      handleSubmit(form.getValues(), null);
     }
   };
   const handleSubmit = async (
@@ -95,7 +96,15 @@ export function EditAccount(props: any) {
       }
     }
   };
-
+  useEffect(() => {
+    if (image) {
+      const imageUrl = URL.createObjectURL(image);
+      setImageUrl(imageUrl);
+      return () => {
+        URL.revokeObjectURL(imageUrl);
+      };
+    }
+  }, [image]);
   const [isHovered, setIsHovered] = useState(false);
   return (
     <div className={`h-full flex flex-col`}>
@@ -180,7 +189,12 @@ export function EditAccount(props: any) {
                 </div>
               )}
               <Avatar className="flex justify-center items-center h-full">
-                {chatState.authUser?.image ? (
+                {image ? (
+                  <AvatarImage
+                    src={imageUrl}
+                    className="w-full h-full rounded-full overflow-hidden"
+                  />
+                ) : chatState.authUser?.image ? (
                   <AvatarImage
                     src={chatState.authUser.image}
                     className="w-full h-full rounded-full overflow-hidden"
