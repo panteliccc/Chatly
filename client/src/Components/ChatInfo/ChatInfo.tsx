@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ChatInfoHeader from "./ChatInfoHeader";
 import { useChatState } from "../../Context/Provider";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -8,7 +8,8 @@ import { Input } from "../ui/input";
 import axios from "axios";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { chatImage } from "../../config/Config";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark, faCheck } from "@fortawesome/free-solid-svg-icons";
 interface User {
   _id: string;
   username: string;
@@ -23,7 +24,11 @@ function ChatInfo() {
   const [name, setName] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
-
+  const isAdmin =
+    chatState.selectedChat?.isGroup &&
+    chatState.authUser?._id === chatState.selectedChat?.groupAdmin?._id;
+  const [inputFocused, setInputFocused] = useState(false);
+  
   useEffect(() => {
     const users = chatState?.selectedChat?.users;
     const loggedUser = chatState.authUser;
@@ -78,7 +83,6 @@ function ChatInfo() {
         }
       );
     } else {
-      // Ako korisnik nije odabrao novu sliku, samo izvršite handleSubmit sa null
       handleSubmit(null);
     }
   };
@@ -86,7 +90,7 @@ function ChatInfo() {
   const handleSubmit = async (groupImage: string | null) => {
     try {
       await axios.put(
-        `${process.env.REACT_APP_SERVER_URL}/api/addGroupImage`,
+        `${process.env.REACT_APP_SERVER_URL}/api/updateGroupImage`,
         {
           _id: chatState.selectedChat?._id,
           groupImage: groupImage,
@@ -101,7 +105,22 @@ function ChatInfo() {
       console.error(err);
     }
   };
-
+  const submitChatName = async () => {
+    try {
+      await axios.put(
+        `${process.env.REACT_APP_SERVER_URL}/api/updateChatName`,
+        {
+          _id: chatState.selectedChat?._id,
+          chatName: name,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
   const cancelImageChange = () => {
     setImage(null);
     setImageUrl(chatState.selectedChat?.groupImage || "");
@@ -184,19 +203,27 @@ function ChatInfo() {
               </AvatarFallback>
             )}
           </Avatar>
-
-          <Input
-            className="text-2xl border-0 ring-0 shadow-0 focus-visible:ring-0 active:ring-0 text-center bg-[#272f37] w-10/12 rounded p-6"
-            onChange={handleNameChange}
-            value={name}
-            readOnly={
-              chatState.selectedChat?.isGroup &&
-              chatState.authUser?._id ===
-                chatState.selectedChat?.groupAdmin?._id
-                ? false
-                : true
-            }
-          />
+          <div
+            className="bg-[#272f37] w-10/12 flex items-center pr-6"
+            onFocus={() => setInputFocused(true)}
+          >
+            <Input
+              className="text-2xl border-0 ring-0 shadow-0 focus-visible:ring-0 active:ring-0 text-left  rounded p-6"
+              onChange={handleNameChange}
+              value={name}
+              readOnly={!isAdmin}
+            />
+            {isAdmin && inputFocused && (
+              <div className="flex items-center gap-3">
+                <FontAwesomeIcon icon={faXmark} className=" cursor-pointer" />
+                <FontAwesomeIcon
+                  icon={faCheck}
+                  className=" cursor-pointer"
+                  onClick={submitChatName}
+                />
+              </div>
+            )}
+          </div>
         </div>
         {chatState.selectedChat?.isGroup ? <GroupPeople /> : null}
       </ScrollArea>

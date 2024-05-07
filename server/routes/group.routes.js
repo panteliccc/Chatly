@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const authenticateUser = require('../middleware/authenticateUser');
-const { addGroupImage } = require('../controllers/group.controller');
+const { updateGroupImage, updateChatName } = require('../controllers/group.controller');
 
-router.put('/addGroupImage',authenticateUser,addGroupImage)
+router.put('/updateGroupImage',authenticateUser,updateGroupImage)
+router.put('/updateChatName',authenticateUser,updateChatName)
 
 module.exports = router;
