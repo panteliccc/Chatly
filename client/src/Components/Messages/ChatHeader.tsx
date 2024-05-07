@@ -83,8 +83,8 @@ function ChatHeader() {
             ) : (
               <AvatarFallback className=" bg-[#272f37]">
                 {chatState.selectedChat?.isGroup
-                  ? chatState.selectedChat.chatName[0]
-                  : sender?.username[0]}
+                  ? chatState.selectedChat.chatName[0].toUpperCase()
+                  : sender?.username[0].toUpperCase()}
               </AvatarFallback>
             )}
           </Avatar>

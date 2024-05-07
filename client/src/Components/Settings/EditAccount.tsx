@@ -201,7 +201,7 @@ export function EditAccount(props: any) {
                   />
                 ) : (
                   <AvatarFallback className=" text-7xl flex items-center justify-center w-auto">
-                    {chatState.authUser?.username[0].toUpperCase()}
+                    {chatState.authUser?.username[0].toUpperCase().toUpperCase()}
                   </AvatarFallback>
                 )}
               </Avatar>

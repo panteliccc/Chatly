@@ -20,7 +20,7 @@ interface User {
 }
 
 function Message(props: Props) {
-  const [imageLoaded, setImageLoaded] = useState(false);  
+  const [imageLoaded, setImageLoaded] = useState(false);
   const chatState = useChatState();
   const isSender: boolean = chatState.authUser?._id === props.sender._id;
   const sender: User = props.sender;
@@ -46,7 +46,7 @@ function Message(props: Props) {
               />
             ) : (
               <AvatarFallback className=" bg-[#272f37]">
-                {sender.username[0]}
+                {sender.username[0].toUpperCase()}
               </AvatarFallback>
             )}
           </Avatar>

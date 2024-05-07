@@ -30,7 +30,7 @@ function InfoCard(props: Props) {
             />
           ) : (
             <AvatarFallback className=" bg-[#272f37] text-xl">
-              {props.user?.username[0]}
+              {props.user?.username[0].toUpperCase()}
             </AvatarFallback>
           )}
         </Avatar>

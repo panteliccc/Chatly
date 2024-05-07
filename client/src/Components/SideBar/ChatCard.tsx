@@ -62,7 +62,7 @@ function ChatCard(props: Props) {
           />
         ) : (
           <AvatarFallback className=" bg-[#272f37]">
-            {props.chatName[0]}
+            {props.chatName[0].toUpperCase()}
           </AvatarFallback>
         )}
       </Avatar>
