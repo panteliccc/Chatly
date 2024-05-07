@@ -12,6 +12,7 @@ function GroupPeople() {
       ) : (
         <></>
       )}
+      <button className="mt-5 text-2xl text-[#fc0330]">Leave Group</button>
     </div>
   );
 }

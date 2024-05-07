@@ -10,6 +10,7 @@ interface Chat {
   users: User[];
   latestMessage: Message;
   groupAdmin?:User;
+  groupImage?:string;
 }
 
 interface ChatContextType {
@@ -68,6 +69,7 @@ interface Data {
   latestMessage: Message;
   chatName?:string;
   isGroup?:boolean;
+  groupImage?:string;
 }
 const ChatContext = createContext<ChatContextType | null>(null);
 

@@ -8,6 +8,7 @@ interface Props {
   sender?: Users | null | undefined;
   latestMessage?: Message;
   isGroup?: boolean;
+  groupImage?: string;
   className: string;
 }
 interface Message {
@@ -55,9 +56,9 @@ function ChatCard(props: Props) {
       className={`flex items-center gap-3 border-b p-3 cursor-pointer hover:bg-primary hover:duration-300 ${props.className}`}
     >
       <Avatar className="w-10 h-10">
-        {props.sender?.image ? (
+        {props.sender?.image || props.groupImage ? (
           <AvatarImage
-            src={props.sender?.image}
+            src={props.sender?.image || props.groupImage}
             className="w-full h-full rounded-full overflow-hidden"
           />
         ) : (

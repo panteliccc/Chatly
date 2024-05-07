@@ -75,9 +75,9 @@ function ChatHeader() {
           }}
         >
           <Avatar className="w-10 h-10 rounded-full">
-            {sender?.image ? (
+            {sender?.image || chatState.selectedChat?.groupImage ? (
               <AvatarImage
-                src={sender?.image}
+                src={sender?.image || chatState.selectedChat?.groupImage}
                 className="w-full h-full rounded-full overflow-hidden"
               />
             ) : (
@@ -108,7 +108,7 @@ function ChatHeader() {
             chatState.setOpenInfo(true);
           }}
         >
-          Account info
+          {chatState.selectedChat?.isGroup ? "Group info" : "Account info"}
         </DropdownMenuItem>
         <DropdownMenuItem
           className="text-lg cursor-pointer px-4"

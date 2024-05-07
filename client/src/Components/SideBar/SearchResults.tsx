@@ -27,6 +27,7 @@ const SearchResults = (props: Props) => {
               chatName={(user.isGroup?user.chatName:user?.username) || ""}
               latestMessage={user.latestMessage}
               className="hover:bg-transparent"
+              groupImage={user.groupImage}
             />
           </div>
         ))

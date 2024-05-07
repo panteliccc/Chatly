@@ -113,6 +113,7 @@ const SideBar = () => {
                     }
                     latestMessage={chat.latestMessage}
                     isGroup={chat.isGroup}
+                    groupImage={chat.groupImage}
                     sender={sender}
                     className=""
                   />

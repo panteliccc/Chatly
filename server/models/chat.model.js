@@ -22,6 +22,10 @@ const ChatSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Users",
   },
+  groupImage:{
+    type:String,
+    default:null,
+  },
 }, {
   timestamps: true 
 });
