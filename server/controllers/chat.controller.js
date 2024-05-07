@@ -1,6 +1,16 @@
 const User = require("../models/user.model");
 const Chat = require("../models/chat.model");
 const asyncHandler = require("express-async-handler");
+const CryptoJS = require("crypto-js");
+
+function decryptLatestMessage(message) {
+  const iv = CryptoJS.enc.Hex.parse(message.iv);
+  const key = CryptoJS.enc.Hex.parse(message.encryptionKey);
+  const decryptedText = CryptoJS.AES.decrypt(message.text, key, {
+    iv,
+  }).toString(CryptoJS.enc.Utf8);
+  return decryptedText;
+}
 
 const createChat = asyncHandler(async (req, res) => {
   const { userId } = req.body;
@@ -22,7 +32,11 @@ const createChat = asyncHandler(async (req, res) => {
     path: "latestMessage.user",
     select: "username email image",
   });
+
   if (isChat != 0) {
+    isChat[0].latestMessage.text = decryptLatestMessage(
+      isChat[0].latestMessage
+    );
     return res.send(isChat[0]);
   } else {
     try {
@@ -42,6 +56,7 @@ const createChat = asyncHandler(async (req, res) => {
     }
   }
 });
+
 const getChats = asyncHandler(async (req, res) => {
   try {
     let chats = await Chat.find({
@@ -55,6 +70,12 @@ const getChats = asyncHandler(async (req, res) => {
     chats = await User.populate(chats, {
       path: "latestMessage.user",
       select: "username image email",
+    });
+
+    chats.forEach((chat) => {
+      if (chat.latestMessage) {
+        chat.latestMessage.text = decryptLatestMessage(chat.latestMessage);
+      }
     });
 
     const authUser = await User.findOne({ _id: req.user._id }).select(
@@ -74,7 +95,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
   if (users.length < 2) {
     return res.status(400).send("Group should have at least 2 members");
   }
-  
+
   try {
     const groupChat = await Chat.create({
       chatName,
@@ -114,4 +135,4 @@ const getChatById = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { createChat, getChats, createGroupChat, getChatById};
+module.exports = { createChat, getChats, createGroupChat, getChatById };

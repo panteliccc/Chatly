@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const MessageShema = new mongoose.Schema(
+const messageSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -8,20 +8,30 @@ const MessageShema = new mongoose.Schema(
     },
     text: {
       type: String,
-      trim: true,
+      required: true,
+    },
+    iv: {
+      type: String,
+      required: true,
     },
     chat: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Chat",
     },
-    isImage:{
-      type:Boolean,
-    }
+    isImage: {
+      type: Boolean,
+      default: false,
+    },
+    encryptionKey: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-const Message = mongoose.model("Message", MessageShema);
+const Message = mongoose.model("Message", messageSchema);
+
 module.exports = Message;

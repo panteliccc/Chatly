@@ -41,7 +41,7 @@ function SendMessage(props: Props) {
       const { data } = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/api/sendMessage`,
         {
-          text: message, // Promenio sam "message" u "text"
+          text: message, 
           chat: chatId,
           isImage: false,
         },
