@@ -39,11 +39,13 @@
   }
 }
 
-.ScrollBar {
+.ScrollableFeed {
   max-height: 100% !important;
   height: 100% !important;
 }
-
+textarea.ScrollBar{
+  height: auto;
+}
 .ScrollBar::-webkit-scrollbar {
   display: flex;
   user-select: none;
@@ -78,6 +80,15 @@
   min-width: 44px;
   min-height: 44px;
 }
+
+/*text-area::-webkit-scrollbar {
+  lo
+  display: none;
+}
+textarea{
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
+}*/
 em-emoji-picker {
   width: 100%;
   max-height: 400px;

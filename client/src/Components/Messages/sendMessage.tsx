@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
@@ -30,7 +30,20 @@ function SendMessage(props: Props) {
   const [message, setMessage] = useState("");
   const location = useLocation();
   const chatId = new URLSearchParams(location.search).get("chat");
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
+  const useAutosizeTextArea = (
+    textAreaRef: HTMLTextAreaElement | null,
+    value: string
+  ) => {
+    useEffect(() => {
+      if (textAreaRef) {
+        textAreaRef.style.height = "0px";
+        const scrollHeight = textAreaRef.scrollHeight;
+        textAreaRef.style.height = scrollHeight + "px";
+      }
+    }, [textAreaRef, value]);
+  };
   const sendMessage = async () => {
     if (message.trim() === "") {
       return;
@@ -60,14 +73,17 @@ function SendMessage(props: Props) {
   };
 
   const onKeyDown = (e: any) => {
-    if (e.key === "Enter") sendMessage();
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
   };
   const [showPicker, setShowPicker] = useState(false);
 
   const onEmojiClick = (emoji: any) => {
     setMessage((prevInput) => prevInput + emoji.native);
   };
-
+  useAutosizeTextArea(textAreaRef.current, message);
   return (
     <div className="flex flex-col-reverse md:flex-col gap-2">
       {showPicker && (
@@ -81,20 +97,24 @@ function SendMessage(props: Props) {
           maxFrequentRows={1}
         />
       )}
-      <div className="p-1  flex gap-3 relative">
-        <div className=" rounded-full bg-secondary w-full flex px-3 items-center">
-          <div className="flex items-center gap-3">
-            <FaceIcon
-              className=" w-6 h-6 cursor-pointer "
-              onClick={() => setShowPicker((val) => !val)}
-            />
-            <label htmlFor="sendImage">
-              <ImageIcon className=" w-6 h-6 cursor-pointer " />
+      <div className="p-1  flex gap-2 relative items-end">
+        <div className="rounded-3xl  bg-secondary w-full flex px-3 items-end">
+          <div className="flex items-center md:gap-3">
+            <div className="w-12 h-12 flex justify-center items-center">
+              <FaceIcon
+                className=" w-6 h-6 cursor-pointer "
+                onClick={() => setShowPicker((val) => !val)}
+              />
+            </div>
+            <label htmlFor="sendImage" className=" hidden md:flex ">
+              <ImageIcon className=" w-6 h-6 cursor-pointer" />
             </label>
           </div>
-          <Input
+          <textarea
+            rows={1}
+            ref={textAreaRef}
             placeholder="Message..."
-            className="py-7 px-3 shadow-none focus-visible:ring-0 border-0 w-full break-words "
+            className="py-3 px-3 x`border-0 w-full outline-none bg-transparent resize-none max-h-[160px] ScrollBar"
             onChange={(e) => setMessage(e.target.value)}
             value={message}
             onKeyDown={(e) => {
@@ -109,12 +129,18 @@ function SendMessage(props: Props) {
             accept=".jpg,.png,.mp4"
             onChange={(e: any) => chatState.setImage(e.target.files[0])}
           />
+          <label
+            htmlFor="sendImage"
+            className=" md:hidden w-12 h-12 flex justify-center items-center"
+          >
+            <ImageIcon className=" w-6 h-6 cursor-pointer" />
+          </label>
         </div>
         <button
-          className="w-16 bg-softBlue md:flex items-center justify-center rounded-full hidden"
+          className="w-12 h-12 bg-softBlue flex items-center justify-center rounded-full"
           onClick={sendMessage}
         >
-          <img src="/send.svg" alt="" />
+          <img src="/send.svg" alt="" className="w-1/2 h-1/2" />
         </button>
       </div>
     </div>
