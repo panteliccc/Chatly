@@ -5,8 +5,6 @@ import axios from "axios";
 import { useChatState } from "../../Context/Provider";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFaceSmile, faImage } from "@fortawesome/free-regular-svg-icons";
 import { FaceIcon, ImageIcon } from "@radix-ui/react-icons";
 interface Message {
   user: User;
