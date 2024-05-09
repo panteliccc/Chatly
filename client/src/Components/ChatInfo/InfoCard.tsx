@@ -58,7 +58,7 @@ function InfoCard(props: Props) {
     }
   };
   return (
-    <ContextMenu key={props.user._id}>
+    <ContextMenu>
       <ContextMenuTrigger className="flex items-center w-full border-b px-2 py-3 cursor-pointer gap-4">
         <Avatar className="w-10 h-10 rounded-full">
           {props.user?.image ? (
