@@ -63,7 +63,7 @@ const getChats = asyncHandler(async (req, res) => {
       users: { $elemMatch: { $eq: req.user._id } },
     })
       .populate("users", "-password")
-      .populate("groupAdmin", "-password")
+      .populate("groupAdmins", "-password")
       .populate("latestMessage")
       .sort({ updatedAt: -1 });
 
@@ -101,12 +101,12 @@ const createGroupChat = asyncHandler(async (req, res) => {
       chatName,
       users,
       isGroup: true,
-      groupAdmin: req.user,
+      groupAdmins: [req.user],
     });
 
     const fullGroupChat = await Chat.findOne({ _id: groupChat._id })
       .populate("users", "-password")
-      .populate("groupAdmin", "-password");
+      .populate("groupAdmins", "-password");
 
     res.status(200).json(fullGroupChat);
   } catch (error) {
@@ -118,7 +118,7 @@ const getChatById = asyncHandler(async (req, res) => {
   try {
     const chat = await Chat.findById(req.params.chatId)
       .populate("users", "-password")
-      .populate("groupAdmin", "-password")
+      .populate("groupAdmins", "-password")
       .populate("latestMessage")
       .populate({
         path: "latestMessage.user",

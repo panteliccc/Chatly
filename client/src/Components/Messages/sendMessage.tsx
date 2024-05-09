@@ -7,7 +7,7 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFaceSmile, faImage } from "@fortawesome/free-regular-svg-icons";
-
+import { FaceIcon, ImageIcon } from "@radix-ui/react-icons";
 interface Message {
   user: User;
   text: string;
@@ -41,7 +41,7 @@ function SendMessage(props: Props) {
       const { data } = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/api/sendMessage`,
         {
-          text: message, 
+          text: message,
           chat: chatId,
           isImage: false,
         },
@@ -68,57 +68,57 @@ function SendMessage(props: Props) {
 
   const onEmojiClick = (emoji: any) => {
     setMessage((prevInput) => prevInput + emoji.native);
-    setShowPicker(false);
   };
 
   return (
-    <div className="p-3 bg-primary flex gap-3 relative">
-      <div className="rounded bg-secondary w-full flex px-2 items-center">
-        {showPicker && (
-          <div className="absolute bottom-24 left-0 w-full md:w-auto md:left-3">
-            <Picker
-              data={data}
-              onEmojiSelect={(e: any) => {
-                onEmojiClick(e);
-              }}
-            />
-          </div>
-        )}
-        <FontAwesomeIcon
-          icon={faFaceSmile}
-          onClick={() => setShowPicker((val) => !val)}
-          className="emoji-icon text-2xl cursor-pointer"
-        />
-        <Input
-          placeholder="Message..."
-          className="py-7 px-3 shadow-none focus-visible:ring-0 border-0 w-full break-words "
-          onChange={(e) => setMessage(e.target.value)}
-          value={message}
-          onKeyDown={(e) => {
-            onKeyDown(e);
+    <div className="flex flex-col-reverse md:flex-col gap-2">
+      {showPicker && (
+        <Picker
+          data={data}
+          onEmojiSelect={(e: any) => {
+            onEmojiClick(e);
           }}
+          previewPosition="none"
+          dynamicWidth="true"
+          maxFrequentRows={1}
         />
-        <Input
-          type="file"
-          className="hidden w-0"
-          id="sendImage"
-          name="sendImage"
-          accept=".jpg,.png,.mp4"
-          onChange={(e: any) => chatState.setImage(e.target.files[0])}
-        />
-        <label htmlFor="sendImage">
-          <FontAwesomeIcon
-            icon={faImage}
-            className="emoji-icon text-2xl cursor-pointer"
+      )}
+      <div className="p-1  flex gap-3 relative">
+        <div className=" rounded-full bg-secondary w-full flex px-3 items-center">
+          <div className="flex items-center gap-3">
+            <FaceIcon
+              className=" w-6 h-6 cursor-pointer "
+              onClick={() => setShowPicker((val) => !val)}
+            />
+            <label htmlFor="sendImage">
+              <ImageIcon className=" w-6 h-6 cursor-pointer " />
+            </label>
+          </div>
+          <Input
+            placeholder="Message..."
+            className="py-7 px-3 shadow-none focus-visible:ring-0 border-0 w-full break-words "
+            onChange={(e) => setMessage(e.target.value)}
+            value={message}
+            onKeyDown={(e) => {
+              onKeyDown(e);
+            }}
           />
-        </label>
+          <Input
+            type="file"
+            className="hidden w-0"
+            id="sendImage"
+            name="sendImage"
+            accept=".jpg,.png,.mp4"
+            onChange={(e: any) => chatState.setImage(e.target.files[0])}
+          />
+        </div>
+        <button
+          className="w-16 bg-softBlue md:flex items-center justify-center rounded-full hidden"
+          onClick={sendMessage}
+        >
+          <img src="/send.svg" alt="" />
+        </button>
       </div>
-      <button
-        className="w-16 bg-softBlue md:flex items-center justify-center rounded hidden"
-        onClick={sendMessage}
-      >
-        <img src="/send.svg" alt="" />
-      </button>
     </div>
   );
 }

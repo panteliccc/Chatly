@@ -9,7 +9,7 @@ interface Chat {
   isGroup: boolean;
   users: User[];
   latestMessage: Message;
-  groupAdmin?:User;
+  groupAdmins?:User[];
   groupImage?:string;
 }
 

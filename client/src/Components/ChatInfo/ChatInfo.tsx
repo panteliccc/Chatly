@@ -26,9 +26,13 @@ function ChatInfo() {
   const [image, setImage] = useState<File | null>(null);
   const isAdmin =
     chatState.selectedChat?.isGroup &&
-    chatState.authUser?._id === chatState.selectedChat?.groupAdmin?._id;
+    chatState.authUser?._id &&
+    chatState.selectedChat.groupAdmins?.some(
+      (admin) => admin._id === chatState.authUser?._id
+    );
+
   const [inputFocused, setInputFocused] = useState(false);
-  
+
   useEffect(() => {
     const users = chatState?.selectedChat?.users;
     const loggedUser = chatState.authUser;
@@ -121,6 +125,10 @@ function ChatInfo() {
       console.error(err);
     }
   };
+  const cancelNameChange = () => {
+    setName(chatState.selectedChat?.chatName || "");
+    setInputFocused(false);
+  };
   const cancelImageChange = () => {
     setImage(null);
     setImageUrl(chatState.selectedChat?.groupImage || "");
@@ -173,15 +181,15 @@ function ChatInfo() {
                         Cancel
                       </button>
                     </div>
-                  ) : chatState.selectedChat.groupImage ? (
+                  ) : chatState.selectedChat?.groupImage ? (
                     <AvatarImage
-                      src={imageUrl || chatState.selectedChat.groupImage}
+                      src={imageUrl || chatState.selectedChat?.groupImage}
                       className="w-full h-full rounded-full overflow-hidden"
                     />
                   ) : (
-                    <AvatarFallback className="bg-[#272f37] text-7xl">
-                      {chatState.selectedChat.chatName[0].toUpperCase()}
-                    </AvatarFallback>
+                    <div className="bg-[#272f37] text-7xl w-full h-full rounded-full flex justify-center items-center">
+                      {chatState.selectedChat?.chatName[0].toUpperCase()}
+                    </div>
                   )}
                 </div>
                 <input
@@ -198,9 +206,9 @@ function ChatInfo() {
                 className="w-full h-full rounded-full overflow-hidden"
               />
             ) : (
-              <AvatarFallback className="bg-[#272f37] text-7xl">
+              <div className="bg-[#272f37] text-7xl w-full rounded-full flex justify-center items-center">
                 {sender?.username[0].toUpperCase()}
-              </AvatarFallback>
+              </div>
             )}
           </Avatar>
           <div
@@ -208,14 +216,20 @@ function ChatInfo() {
             onFocus={() => setInputFocused(true)}
           >
             <Input
-              className="text-2xl border-0 ring-0 shadow-0 focus-visible:ring-0 active:ring-0 text-left  rounded p-6"
+              className={`text-2xl border-0 ring-0 shadow-0 focus-visible:ring-0 active:ring-0 ${
+                inputFocused ? "text-left" : "text-center"
+              } rounded p-6`}
               onChange={handleNameChange}
               value={name}
               readOnly={!isAdmin}
             />
             {isAdmin && inputFocused && (
               <div className="flex items-center gap-3">
-                <FontAwesomeIcon icon={faXmark} className=" cursor-pointer" />
+                <FontAwesomeIcon
+                  icon={faXmark}
+                  className=" cursor-pointer"
+                  onClick={cancelNameChange}
+                />
                 <FontAwesomeIcon
                   icon={faCheck}
                   className=" cursor-pointer"

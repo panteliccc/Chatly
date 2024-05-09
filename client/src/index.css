@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   :root {
     --background: 217, 19%, 13%;
@@ -17,7 +16,7 @@
     --secondary-foreground: 210 40% 98%;
     --muted: 218, 30%, 34%;
     --muted-foreground: 215 20.2% 65.1%;
-    --accent:223, 97%, 54%;
+    --accent: 223, 97%, 54%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
@@ -25,10 +24,9 @@
     --input: 210, 11%, 29%;
     --ring: 214, 17%, 16%;
 
-    --gas:#000000e8;
+    --gas: #000000e8;
   }
 }
-
 
 @layer base {
   * {
@@ -79,4 +77,15 @@
   height: 100%;
   min-width: 44px;
   min-height: 44px;
+}
+em-emoji-picker {
+  width: 100%;
+  max-height: 400px;
+  --background-rgb: 217, 19%, 13%;
+  --rgb-background: 217, 19%, 13%;
+  --rgb-color: 217, 19%, 13%;
+  --rgb-accent: 249, 250, 251;
+  --color-border: 217, 19%, 13%;
+  --color-border-over: 217, 19%, 13%;
+  --rgb-input: 217, 19%, 13%;
 }

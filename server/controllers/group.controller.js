@@ -22,7 +22,6 @@ const updateGroupImage = asyncHandler(async (req, res) => {
 });
 const updateChatName = asyncHandler(async (req, res) => {
   const { _id, chatName } = req.body;
-  console.log(_id,chatName);
   try {
     const chat = await Chat.findByIdAndUpdate(_id, { chatName }, { new: true });
     if (!chat) return res.status(404).json({ message: `Chat not found` });
@@ -34,4 +33,59 @@ const updateChatName = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
-module.exports = { updateGroupImage,updateChatName};
+
+const addAdmin = asyncHandler(async (req, res) => {
+  const { chatId, userId } = req.body;
+
+  if (!chatId || !userId) {
+    return res.status(400).send({ message: "Chat Id or User Id missing" });
+  }
+  const updatedChat = await Chat.findByIdAndUpdate(
+    chatId,
+    { $push: { groupAdmins: userId } },
+    { new: true }
+  )
+    .populate("users", "-password")
+    .populate("groupAdmins", "-password")
+    .populate({
+      path: "latestMessage",
+      populate: {
+        path: "user",
+        select: "username image email",
+      },
+    });
+  if (!updatedChat) {
+    res.status(400);
+    throw new Error("Chat not found");
+  } else {
+    res.json(updatedChat);
+  } 
+});
+const removeAdmin = asyncHandler(async (req, res) => {
+  const { chatId, userId } = req.body;
+
+  if (!chatId || !userId) {
+    return res.status(400).send({ message: "Chat Id or User Id missing" });
+  }
+  const updatedChat = await Chat.findByIdAndUpdate(
+    chatId,
+    { $pull: { groupAdmins: userId } },
+    { new: true }
+  )
+    .populate("users", "-password")
+    .populate("groupAdmins", "-password")
+    .populate({
+      path: "latestMessage",
+      populate: {
+        path: "user",
+        select: "username image email",
+      },
+    });
+  if (!updatedChat) {
+    res.status(400);
+    throw new Error("Chat not found");
+  } else {
+    res.json(updatedChat);
+  } 
+});
+module.exports = { updateGroupImage, updateChatName, addAdmin,removeAdmin};
