@@ -102,7 +102,7 @@ function SendImage(props: Props) {
     <div
       className={`bg-[#000000e8] absolute w-full h-full p-2 md:p-4 xl:p-6 ${
         props.visible ? "flex" : "hidden"
-      } justify-between flex-col items-center`}
+      } justify-between flex-col items-center z-50`}
     >
       <FontAwesomeIcon
         icon={faXmark}
