@@ -19,7 +19,7 @@ dotenv.config();
 
 app.use(
   cors({
-    origin: "'https://chaatly.vercel.app",
+    origin: "https://chaatly.vercel.app",
     credentials: true,
   })
 );
