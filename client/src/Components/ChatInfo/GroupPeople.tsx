@@ -148,7 +148,9 @@ function GroupPeople() {
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
           <DialogHeader className="border-0 ring-0 shadow-none outline-0">
-            <DialogTitle className=" text-[#fc0330]">Leaving the Group</DialogTitle>
+            <DialogTitle className=" text-[#fc0330]">
+              Leaving the Group
+            </DialogTitle>
             <DialogDescription>
               You are the only administrator in this group. In order to leave,
               you need to transfer the administrator role to another member.
