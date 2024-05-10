@@ -59,7 +59,7 @@ const addAdmin = asyncHandler(async (req, res) => {
     throw new Error("Chat not found");
   } else {
     res.json(updatedChat);
-  } 
+  }
 });
 const removeAdmin = asyncHandler(async (req, res) => {
   const { chatId, userId } = req.body;
@@ -86,6 +86,93 @@ const removeAdmin = asyncHandler(async (req, res) => {
     throw new Error("Chat not found");
   } else {
     res.json(updatedChat);
-  } 
+  }
 });
-module.exports = { updateGroupImage, updateChatName, addAdmin,removeAdmin};
+const searchUser = asyncHandler(async (req, res) => {
+  const { search, chatId } = req.body;
+  try {
+    const chatGroup = await Chat.findById(chatId);
+    if (!chatGroup) {
+      return res.status(404).json({ message: "Chat group not found" });
+    }
+    
+    const chatGroupMemberIds = chatGroup.users;
+
+    const users = await User.find({
+      $and: [
+        { username: { $regex: search, $options: "i" } },
+        { _id: { $nin: chatGroupMemberIds } },
+        { _id: { $ne: req.user._id } },
+        { isDeleted: false }
+      ]
+    }).select("-password");
+
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Error searching users: " + error.message });
+  }
+});
+
+const addUser = asyncHandler(async (req, res) => {
+  const { chatId, userId } = req.body;
+
+  if (!chatId || !userId) {
+    return res.status(400).send({ message: "Chat Id or User Id missing" });
+  }
+  const updatedChat = await Chat.findByIdAndUpdate(
+    chatId,
+    { $push: { users: userId } },
+    { new: true }
+  )
+    .populate("users", "-password")
+    .populate("groupAdmins", "-password")
+    .populate({
+      path: "latestMessage",
+      populate: {
+        path: "user",
+        select: "username image email",
+      },
+    });
+  if (!updatedChat) {
+    res.status(400);
+    throw new Error("Chat not found");
+  } else {
+    res.json(updatedChat);
+  }
+});
+const removeUser = asyncHandler(async (req, res) => {
+  const { chatId, userId } = req.body;
+
+  if (!chatId || !userId) {
+    return res.status(400).send({ message: "Chat Id or User Id missing" });
+  }
+  const updatedChat = await Chat.findByIdAndUpdate(
+    chatId,
+    { $pull: { users: userId } },
+    { new: true }
+  )
+    .populate("users", "-password")
+    .populate("groupAdmins", "-password")
+    .populate({
+      path: "latestMessage",
+      populate: {
+        path: "user",
+        select: "username image email",
+      },
+    });
+  if (!updatedChat) {
+    res.status(400);
+    throw new Error("Chat not found");
+  } else {
+    res.json(updatedChat);
+  }
+});
+module.exports = {
+  updateGroupImage,
+  updateChatName,
+  addAdmin,
+  removeAdmin,
+  addUser,
+  removeUser,
+  searchUser
+};

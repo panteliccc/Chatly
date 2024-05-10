@@ -57,6 +57,22 @@ function InfoCard(props: Props) {
       console.error(err);
     }
   };
+  const removeUser = async () => {
+    try {
+      await axios.put(
+        `${process.env.REACT_APP_SERVER_URL}/api/removeUser`,
+        {
+          chatId: chatState.selectedChat?._id,
+          userId: props.user._id,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
   return (
     <ContextMenu>
       <ContextMenuTrigger className="flex items-center w-full border-b px-2 py-3 cursor-pointer gap-4">
@@ -97,7 +113,10 @@ function InfoCard(props: Props) {
             </ContextMenuItem>
           )}
           {authUser && (
-            <ContextMenuItem className="py-3 px-5 cursor-pointer hover:bg-input">
+            <ContextMenuItem
+              className="py-3 px-5 cursor-pointer hover:bg-input"
+              onClick={removeUser}
+            >
               Remove User
             </ContextMenuItem>
           )}

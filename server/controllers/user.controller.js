@@ -60,14 +60,11 @@ const authUser = async (req, res) => {
 const search = asyncHandler(async (req, res) => {
   const searchTerm = req.body.search;
   try {
-    // Pronalaženje korisnika čije korisničko ime odgovara unesenom terminu pretrage
     const users = await User.find({
       username: { $regex: searchTerm, $options: "i" },
       isDeleted: false,
       _id: { $ne: req.user._id },
     }).select("-password");
-
-    // Transformacija pronađenih korisnika u format koji sadrži informaciju da li su korisnici ili grupe
     const modifiedUsers = users.map(user => ({
       ...user.toObject(),
       isGroup: false
@@ -78,7 +75,7 @@ const search = asyncHandler(async (req, res) => {
       users: { $elemMatch: { $eq: req.user._id } },
     })
       .populate("users", "-password")
-      .populate("groupAdmin", "-password")
+      .populate("groupAdmins", "-password")
       .populate("latestMessage")
       .sort({ updatedAt: -1 });
     const modifiedGroups = groups.map(group => ({

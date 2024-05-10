@@ -112,8 +112,8 @@ function Search({ setIsSearching }: Props) {
             type="search"
             placeholder="Search people...."
             className="shadow-none focus-visible:ring-0 border-0 "
-            onChange={handleChangeSearch}
-            value={searchValue}
+              onChange={handleChangeSearch}
+              value={searchValue}
           />
         </div>
       </div>
