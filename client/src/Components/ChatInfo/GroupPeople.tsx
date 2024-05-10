@@ -4,6 +4,13 @@ import InfoCard from "./InfoCard";
 import { Input } from "../ui/input";
 import axios from "axios";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
 interface User {
   _id: string;
   username: string;
@@ -16,6 +23,11 @@ function GroupPeople() {
   const [searchValue, setSearchValue] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [results, setResults] = useState<User[]>([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const isOnlyAdmin =
+    chatState.selectedChat?.groupAdmins?.length === 1 &&
+    chatState.selectedChat?.groupAdmins?.[0]._id === chatState.authUser?._id;
+
   const fetchData = async (searchValue: string) => {
     try {
       const response = await axios.post(
@@ -51,8 +63,26 @@ function GroupPeople() {
           withCredentials: true,
         }
       );
-      setIsSearching(false)
-      setSearchValue('')
+      setIsSearching(false);
+      setSearchValue("");
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
+  const leaveGroup = async () => {
+    if (isOnlyAdmin) return setOpenDialog(true);
+    try {
+      await axios.put(
+        `${process.env.REACT_APP_SERVER_URL}/api/removeUserAndLeaveGroup`,
+        {
+          chatId: chatState.selectedChat?._id,
+          userId: chatState.authUser?._id,
+        },
+        {
+          withCredentials: true,
+        }
+      );
     } catch (err: any) {
       console.error(err);
     }
@@ -110,9 +140,23 @@ function GroupPeople() {
           ) : (
             <></>
           )}
-          <button className="mt-5 text-2xl text-[#fc0330]">Leave Group</button>
+          <button className="mt-5 text-2xl text-[#fc0330]" onClick={leaveGroup}>
+            Leave Group
+          </button>
         </div>
       )}
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent>
+          <DialogHeader className="border-0 ring-0 shadow-none outline-0">
+            <DialogTitle className=" text-[#fc0330]">Leaving the Group</DialogTitle>
+            <DialogDescription>
+              You are the only administrator in this group. In order to leave,
+              you need to transfer the administrator role to another member.
+              Please assign a new administrator before leaving the group
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

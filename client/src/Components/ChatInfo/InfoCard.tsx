@@ -60,7 +60,7 @@ function InfoCard(props: Props) {
   const removeUser = async () => {
     try {
       await axios.put(
-        `${process.env.REACT_APP_SERVER_URL}/api/removeUser`,
+        `${process.env.REACT_APP_SERVER_URL}/api/removeUserAndLeaveGroup`,
         {
           chatId: chatState.selectedChat?._id,
           userId: props.user._id,
