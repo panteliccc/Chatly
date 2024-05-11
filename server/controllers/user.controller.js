@@ -29,6 +29,7 @@ const registerUser = async (req, res) => {
 };
 
 const authUser = async (req, res) => {
+  res.header('Access-Control-Allow-Origin', 'https://chaatly.vercel.app');
   const { email, password } = req.body;
 
   try {
