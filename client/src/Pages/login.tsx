@@ -53,7 +53,8 @@ export function Login() {
             path: "/",
             expires: expirationDate,
             secure: true,
-            sameSite: "none",
+            httpOnly: true,
+            sameSite: "none", 
           });
         } else {
           chatState?.setCookie("chatly.session-token", data.user, {

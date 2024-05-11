@@ -32,6 +32,8 @@ const authUser = async (req, res) => {
 
   console.log(email,password);
   try {
+
+
     const user = await User.findOne({ email });
     const validPassword = await bcrypt.compare(
       password,
@@ -50,6 +52,8 @@ const authUser = async (req, res) => {
           { expiresIn: expirationTime }
         );
         res.cookies("chatly.session-token", token, {
+          path:"/",
+          expires: expirationTime,
           secure: true,
           httpOnly: true,
           sameSite: "None",
