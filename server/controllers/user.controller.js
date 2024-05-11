@@ -50,14 +50,6 @@ const authUser = async (req, res) => {
           { expiresIn: expirationTime }
         );
         res.status(200).json({ message: "Authorize", user: token });
-        res.cookies("chatly.session-token", token, {
-          path:"/",
-          expires: expirationTime,
-          secure: true,
-          httpOnly: true,
-          sameSite: "None",
-        });
-        
       }
     } else {
       return res.status(404).json({ message: "Account is deleted" });
