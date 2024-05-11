@@ -30,6 +30,7 @@ const registerUser = async (req, res) => {
 const authUser = async (req, res) => {
   const { email, password } = req.body;
 
+  console.log(email,password);
   try {
     const user = await User.findOne({ email });
     const validPassword = await bcrypt.compare(
