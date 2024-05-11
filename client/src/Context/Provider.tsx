@@ -93,7 +93,7 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5500/api/getChats", {
+        const { data } = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getChats`, {
           withCredentials: true,
         });
 
