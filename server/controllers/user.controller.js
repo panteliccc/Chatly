@@ -47,7 +47,8 @@ const authUser = async (req, res) => {
             _id: user._id,
           },
           process.env.SECRET_KEY,
-          { expiresIn: expirationTime }
+          { expiresIn: expirationTime },
+          {httpOnly:true}
         );
 
         res
