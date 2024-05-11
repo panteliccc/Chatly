@@ -32,8 +32,6 @@ const authUser = async (req, res) => {
 
   console.log(email,password);
   try {
-
-
     const user = await User.findOne({ email });
     const validPassword = await bcrypt.compare(
       password,
@@ -51,6 +49,7 @@ const authUser = async (req, res) => {
           process.env.SECRET_KEY,
           { expiresIn: expirationTime }
         );
+        res.status(200).json({ message: "Authorize", user: token });
         res.cookies("chatly.session-token", token, {
           path:"/",
           expires: expirationTime,
@@ -58,7 +57,7 @@ const authUser = async (req, res) => {
           httpOnly: true,
           sameSite: "None",
         });
-        res.status(200).json({ message: "Authorize", user: token });
+        
       }
     } else {
       return res.status(404).json({ message: "Account is deleted" });
