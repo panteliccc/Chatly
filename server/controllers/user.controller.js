@@ -27,39 +27,28 @@ const registerUser = async (req, res) => {
     res.status(400).json({ massage: "That username is taken. Try another" });
   }
 };
-
 const authUser = async (req, res) => {
-  res.header('Access-Control-Allow-Origin', 'https://chaatly.vercel.app');
   const { email, password } = req.body;
 
   try {
     const user = await User.findOne({ email });
-    const validPassword = await bcrypt.compare(password, user.password || "");
-
+    const validPassword = await bcrypt.compare(
+      password,
+      user.password ? user.password : ""
+    );
     if (!user.isDeleted) {
-      if (!user || !validPassword) {
-        return res.status(400).json({ message: "Invalid email or password" });
-      } else {
+      if (!user || !validPassword)
+        return res.status(400).json({ message: "Inavlid email or password" });
+      else {
         const expirationTime = Math.floor(Date.now() / 1000) + 8 * 60 * 60;
-        const token = jwt.sign({ _id: user._id }, process.env.SECRET_KEY, {
-          expiresIn: expirationTime,
-        });
-
-        const expirationDate = new Date();
-        expirationDate.setHours(expirationDate.getHours() + 8);
-        const cookieOptions = {
-          path: "/",
-          expires: expirationDate,
-          httpOnly: true,
-          sameSite: "None",
-        };
-
-        if (process.env.NODE_ENV === "production") {
-          cookieOptions.secure = true;
-        }
-
-        res.cookie("chatly.session-token", token, cookieOptions);
-        res.json({ token, cookieOptions});
+        const token = jwt.sign(
+          {
+            _id: user._id,
+          },
+          process.env.SECRET_KEY,
+          { expiresIn: expirationTime }
+        );
+        res.status(200).json({ message: "Authorize", user: token });
       }
     } else {
       return res.status(404).json({ message: "Account is deleted" });
@@ -76,9 +65,9 @@ const search = asyncHandler(async (req, res) => {
       isDeleted: false,
       _id: { $ne: req.user._id },
     }).select("-password");
-    const modifiedUsers = users.map((user) => ({
+    const modifiedUsers = users.map(user => ({
       ...user.toObject(),
-      isGroup: false,
+      isGroup: false
     }));
 
     const groups = await Chat.find({
@@ -89,17 +78,18 @@ const search = asyncHandler(async (req, res) => {
       .populate("groupAdmins", "-password")
       .populate("latestMessage")
       .sort({ updatedAt: -1 });
-    const modifiedGroups = groups.map((group) => ({
+    const modifiedGroups = groups.map(group => ({
       ...group.toObject(),
-      isGroup: true,
+      isGroup: true
     }));
 
     const data = [...modifiedUsers, ...modifiedGroups];
-    res.status(200).json({ data, users });
+    res.status(200).json({data,users});
   } catch (error) {
     res.status(400);
     throw new Error(error.message);
   }
 });
+
 
 module.exports = { registerUser, authUser, search };
