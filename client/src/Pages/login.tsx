@@ -55,9 +55,6 @@ export function Login() {
         chatState?.setCookie("chatly.session-token", data.user, {
           path: "/",
           expires: expirationDate,
-          httpOnly: true,
-          secure: true,
-          sameSite: "None",
         });
         router("/");
       } else {
