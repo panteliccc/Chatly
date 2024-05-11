@@ -37,31 +37,18 @@ export function Login() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const { email, password } = values;
     try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/api/authUser`,
-        {
-          email,
-          password,
-        }
-      );
+      const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/authUser`, {
+        email,
+        password,
+      });
       if (res.status === 200) {
         const data = await res.data;
         const expirationDate = new Date();
         expirationDate.setHours(expirationDate.getHours() + 8);
-        if (process.env.NODE_ENV === "production") {
-          chatState?.setCookie("chatly.session-token", data.user, {
-            path: "/",
-            expires: expirationDate,
-            secure: true,
-            httpOnly: true,
-            sameSite: "none", 
-          });
-        } else {
-          chatState?.setCookie("chatly.session-token", data.user, {
-            path: "/",
-            expires: expirationDate,
-          });
-        }
+        chatState?.setCookie("chatly.session-token", data.user, {
+          path: "/",
+          expires: expirationDate,
+        });
         router("/");
       } else {
         throw new Error("Invalid username or password");
@@ -70,10 +57,11 @@ export function Login() {
       if (err.response && err.response.status === 400) {
         form.setError("email", { message: "" });
         form.setError("password", { message: "Invalid username or password" });
-      } else if (err.response && err.response.status === 404) {
+      }else if(err.response && err.response.status === 404){
         form.setError("email", { message: "" });
         form.setError("password", { message: "Account is deleted" });
-      } else {
+      } 
+      else {
         console.error("An error occurred:", err);
       }
     }
