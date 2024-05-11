@@ -13,13 +13,19 @@ const nocache = require("nocache");
 const app = express();
 app.use(cookieParser());
 app.use(nocache());
-
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin",  process.env.CLIENT_URL);
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
+  res.header("Access-Control-Allow-Headers", "content-type");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
 const PORT = 5500;
 dotenv.config();
 
 app.use(
   cors({
-    origin: "https://chaatly.vercel.app",
+    origin: process.env.CLIENT_URL,
     credentials: true,
   })
 );
@@ -42,7 +48,7 @@ const server = app.listen(PORT, () => {
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "https://chaatly.vercel.app",
+    origin: process.env.CLIENT_URL,
   },
 });
 

@@ -30,6 +30,7 @@ const registerUser = async (req, res) => {
 const authUser = async (req, res) => {
   const { email, password } = req.body;
 
+  console.log(email, password);
   try {
     const user = await User.findOne({ email });
     const validPassword = await bcrypt.compare(
@@ -48,7 +49,16 @@ const authUser = async (req, res) => {
           process.env.SECRET_KEY,
           { expiresIn: expirationTime }
         );
-        res.status(200).json({ message: "Authorize", user: token });
+
+        res
+          .cookie("chatly.session-token", token, {
+            httpOnly: true,
+            path: "/",
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+          })
+          .status(200)
+          .json({ message: "Authorized", user: token });
       }
     } else {
       return res.status(404).json({ message: "Account is deleted" });
@@ -65,9 +75,9 @@ const search = asyncHandler(async (req, res) => {
       isDeleted: false,
       _id: { $ne: req.user._id },
     }).select("-password");
-    const modifiedUsers = users.map(user => ({
+    const modifiedUsers = users.map((user) => ({
       ...user.toObject(),
-      isGroup: false
+      isGroup: false,
     }));
 
     const groups = await Chat.find({
@@ -78,18 +88,17 @@ const search = asyncHandler(async (req, res) => {
       .populate("groupAdmins", "-password")
       .populate("latestMessage")
       .sort({ updatedAt: -1 });
-    const modifiedGroups = groups.map(group => ({
+    const modifiedGroups = groups.map((group) => ({
       ...group.toObject(),
-      isGroup: true
+      isGroup: true,
     }));
 
     const data = [...modifiedUsers, ...modifiedGroups];
-    res.status(200).json({data,users});
+    res.status(200).json({ data, users });
   } catch (error) {
     res.status(400);
     throw new Error(error.message);
   }
 });
-
 
 module.exports = { registerUser, authUser, search };
