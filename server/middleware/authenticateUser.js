@@ -3,6 +3,7 @@ const User = require('../models/user.model');
 
 const authenticateUser = (req, res, next) => {
   const token = req.cookies["chatly.session-token"];
+  console.log("Token:", token); // Dodajte ovaj log
 
   if (!token) {
     return res.status(401).json({ message: 'Authorization token is required' });
