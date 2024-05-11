@@ -39,7 +39,9 @@ export function Login() {
 
       if (res.status === 200) {
         const data = await res.data;
-        chatState?.setCookie('chatly.session-token', data.token, data.token.cookieOptions);
+        chatState?.setCookie('chatly.session-token', data.token, data.cookieOptions);
+        console.log(data.token, data.cookieOptions);
+        
         router('/'); 
       } else {
         throw new Error('Invalid username or password');
