@@ -46,7 +46,10 @@ const authUser = async (req, res) => {
             _id: user._id,
           },
           process.env.SECRET_KEY,
-          { expiresIn: expirationTime }
+          { expiresIn: expirationTime },
+          { httpOnly: true },
+          { secure: process.env.NODE_ENV === "production" ? true : false },
+          {sameSite: 'None'}
         );
         res.status(200).json({ message: "Authorize", user: token });
       }
@@ -65,9 +68,9 @@ const search = asyncHandler(async (req, res) => {
       isDeleted: false,
       _id: { $ne: req.user._id },
     }).select("-password");
-    const modifiedUsers = users.map(user => ({
+    const modifiedUsers = users.map((user) => ({
       ...user.toObject(),
-      isGroup: false
+      isGroup: false,
     }));
 
     const groups = await Chat.find({
@@ -78,18 +81,17 @@ const search = asyncHandler(async (req, res) => {
       .populate("groupAdmins", "-password")
       .populate("latestMessage")
       .sort({ updatedAt: -1 });
-    const modifiedGroups = groups.map(group => ({
+    const modifiedGroups = groups.map((group) => ({
       ...group.toObject(),
-      isGroup: true
+      isGroup: true,
     }));
 
     const data = [...modifiedUsers, ...modifiedGroups];
-    res.status(200).json({data,users});
+    res.status(200).json({ data, users });
   } catch (error) {
     res.status(400);
     throw new Error(error.message);
   }
 });
-
 
 module.exports = { registerUser, authUser, search };
