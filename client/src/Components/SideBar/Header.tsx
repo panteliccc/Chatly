@@ -8,10 +8,21 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "../ui/popover";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useChatState } from "../../Context/Provider";
+import axios from "axios";
 function Header() {
   const chatState = useChatState();
+  const router = useNavigate();
+  
+  async function handleLogout() {
+    try {
+      await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/logout`);
+      router("/Account/Login"); 
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  }
   return (
     <div>
       <div className={`flex p-3 justify-between items-center border-b `}>
@@ -38,7 +49,7 @@ function Header() {
               Create Group
             </DropdownMenuItem>
             <DropdownMenuSeparator className=" bg-white" />
-            <DropdownMenuItem className="text-lg cursor-pointer px-4" onClick={()=> chatState.removeCookie("chatly.session-token")}>
+            <DropdownMenuItem className="text-lg cursor-pointer px-4" onClick={handleLogout}>
               Log Out
             </DropdownMenuItem>
           </DropdownMenuContent>

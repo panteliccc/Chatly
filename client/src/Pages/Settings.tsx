@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { useChatState } from "../Context/Provider";
+import axios from "axios";
 function Settings() {
   const router = useNavigate();
   const chatState = useChatState();
@@ -53,7 +54,14 @@ function Settings() {
       setIsContentOpen(false);
     }
   };
-
+  async function handleLogout() {
+    try {
+      await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/logout`);
+      router("/Account/Login");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  }
   return (
     <div className="bg-background h-screen w-screen">
       <Tabs
@@ -99,10 +107,7 @@ function Settings() {
           </div>
           <button
             className=" w-full p-5 bg-destructive rounded mt-7 text-white flex items-center justify-center gap-3 md:hidden "
-            onClick={() => {
-              chatState.removeCookie(["chatly.session-token"]);
-              router("/Account/Login");
-            }}
+            onClick={handleLogout}
           >
             <FontAwesomeIcon
               icon={faRightFromBracket}

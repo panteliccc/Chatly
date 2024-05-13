@@ -39,33 +39,58 @@ const authUser = async (req, res) => {
     );
     if (!user.isDeleted) {
       if (!user || !validPassword)
-        return res.status(400).json({ message: "Inavlid email or password" });
+        return res.status(403).json({ message: "Inavlid email or password" });
       else {
-        const expirationTime = Math.floor(Date.now() / 1000) + 8 * 60 * 60;
+        const expirationTime = "8h";
         const token = jwt.sign(
           {
             _id: user._id,
           },
           process.env.SECRET_KEY,
-          { expiresIn: expirationTime },
-          {httpOnly:true}
+          { expiresIn: expirationTime }
         );
 
         res
           .cookie("chatly.session-token", token, {
             httpOnly: true,
+            expiresIn: expirationTime,
             path: "/",
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
           })
           .status(200)
-          .json({ message: "Authorized", user: token });
+          .json({ message: "Authorized" });
       }
     } else {
       return res.status(404).json({ message: "Account is deleted" });
     }
   } catch (err) {
-    res.status(400).json({ error: "Invalid username or password" });
+    res.status(500).json(err);
+  }
+};
+
+const logout=asyncHandler(async(req,res)=>{
+  res.clearCookie("chatly.session-token"); 
+  res.status(200).json({ message: "Logged out successfully" });
+})
+const validToken = (req, res, next) => {
+  const token = req.cookies["chatly.session-token"];
+  if (!token) {
+    return res.status(200).json({ message: "Authorization token is required" });
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    req.user = decoded;
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    if (decoded.exp < currentTimestamp) {
+      return res.status(403).json({ message: "Token has expired" });
+    }
+    else{
+      return res.status(200).json({ message: "Valid token" });
+    }
+    next();
+  } catch (error) {
+    return res.status(403).json({ message: "Invalid authorization token" });
   }
 };
 const search = asyncHandler(async (req, res) => {
@@ -102,4 +127,4 @@ const search = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { registerUser, authUser, search };
+module.exports = { registerUser, authUser, search ,logout,validToken};

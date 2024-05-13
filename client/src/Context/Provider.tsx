@@ -90,22 +90,6 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [image, setImage] = useState<File | null>(null);
   const [visibleImage, setVisibleImage] = useState(false);
   const [imageView, setImageView] = useState('');
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getChats`, {
-          withCredentials: true,
-        });
-
-        setChats(data.chats);
-        setAuthUser(data.authUser);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
-  }, []);
   return (
     <ChatContext.Provider
       value={{
