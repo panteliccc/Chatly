@@ -12,17 +12,21 @@ function Home(props: any) {
   const chatId = new URLSearchParams(location.search).get("chat");
   const chatState = useChatState();
 
-  async function validToken() {
-    try {
-      await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/validToken`, {
-        withCredentials: true,
-      });
-    } catch (error: any) {
-      if (error.response.status === 403) {
-        router("/Account/Login");
+  useEffect(() => {
+    async function validToken() {
+      try {
+        await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/validToken`, {
+          withCredentials: true,
+        });
+      } catch (error: any) {
+        if (error.response.status === 403) {
+          router("/Account/Login");
+        }
       }
     }
-  }
+
+    validToken();
+  }, [router]);
 
   useEffect(() => {
     if (chatId) {
@@ -30,9 +34,6 @@ function Home(props: any) {
       fetchChatById(chatId);
     }
   }, [chatId]);
-  /*useEffect(() => {
-    validToken();
-  });*/
 
   const fetchChatById = async (chatId: string) => {
     try {

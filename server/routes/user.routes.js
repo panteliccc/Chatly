@@ -15,4 +15,5 @@ router.post("/authUser", authUser);
 router.get("/logout", logout);
 router.get("/validToken", authenticateUser, accessOpen);
 router.post("/search", authenticateUser, search);
+
 module.exports = router;

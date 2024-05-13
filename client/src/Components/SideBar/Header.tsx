@@ -17,7 +17,9 @@ function Header() {
   
   async function handleLogout() {
     try {
-      await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/logout`);
+      await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/logout`,{
+        withCredentials:true
+      });
       router("/Account/Login"); 
     } catch (error) {
       console.error("Error logging out:", error);

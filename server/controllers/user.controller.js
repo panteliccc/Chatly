@@ -24,54 +24,54 @@ const registerUser = async (req, res) => {
       res.status(400).json({ error: "User not created" });
     }
   } else {
-    res.status(400).json({ massage: "That username is taken. Try another" });
+    res.status(400).json({ message: "That username is taken. Try another" });
   }
 };
+
 const authUser = async (req, res) => {
   const { email, password } = req.body;
 
-  console.log(email, password);
   try {
     const user = await User.findOne({ email });
     const validPassword = await bcrypt.compare(
       password,
       user.password ? user.password : ""
     );
-    if (!user.isDeleted) {
-      if (!user || !validPassword)
-        return res.status(403).json({ message: "Inavlid email or password" });
-      else {
-        const expirationTime = "8h";
-        const token = jwt.sign(
-          {
-            _id: user._id,
-          },
-          process.env.SECRET_KEY,
-          { expiresIn: expirationTime }
-        );
-
-        res
-          .cookie("chatly.session-token", token, {
-            httpOnly: true,
-            expiresIn: expirationTime,
-            path: "/",
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "None",
-          })
-          .status(200)
-          .json({ message: "Authorized" });
-      }
-    } else {
+    if (!user || !validPassword) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    } else if (user.isDeleted) {
       return res.status(404).json({ message: "Account is deleted" });
+    } else {
+      const expirationTime = "8h";
+      const token = jwt.sign(
+        {
+          _id: user._id,
+        },
+        process.env.SECRET_KEY,
+        { expiresIn: expirationTime }
+      );
+
+      res
+        .cookie("chatly.session-token", token, {
+          httpOnly: true,
+          expiresIn: expirationTime,
+          path: "/",
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "None",
+        })
+        .status(200)
+        .json({ message: "Authorized" });
     }
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({ error: err.message });
   }
 };
+
 const accessOpen = async (req, res) => {
   console.log("aaa");
   return res.status(200).json("Access");
 };
+
 const logout = asyncHandler(async (req, res) => {
   res.clearCookie("chatly.session-token");
   res.status(200).json({ message: "Logged out successfully" });
@@ -106,8 +106,7 @@ const search = asyncHandler(async (req, res) => {
     const data = [...modifiedUsers, ...modifiedGroups];
     res.status(200).json({ data, users });
   } catch (error) {
-    res.status(400);
-    throw new Error(error.message);
+    res.status(500).json({ error: error.message });
   }
 });
 

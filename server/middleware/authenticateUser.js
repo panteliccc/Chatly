@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/user.model");
 
 const authenticateUser = (req, res, next) => {
   const token = req.cookies["chatly.session-token"];
