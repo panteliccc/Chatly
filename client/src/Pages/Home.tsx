@@ -30,9 +30,9 @@ function Home(props: any) {
       fetchChatById(chatId);
     }
   }, [chatId]);
-  useEffect(() => {
+  /*useEffect(() => {
     validToken();
-  });
+  });*/
 
   const fetchChatById = async (chatId: string) => {
     try {
