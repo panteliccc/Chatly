@@ -74,8 +74,9 @@ function Chat() {
     [chatState?.selectedChat]);
 
   useEffect(() => {
+    const url:string = process.env.REACT_APP_SERVER_URL || ""
     if (chatState.authUser && !socket) {
-      socket = io("http://localhost:5500");
+      socket = io(url);
       socket.emit("setup", chatState.authUser);
 
       socket.on("connection", () => {
