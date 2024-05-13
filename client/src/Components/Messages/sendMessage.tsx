@@ -6,6 +6,8 @@ import { useChatState } from "../../Context/Provider";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { FaceIcon, ImageIcon } from "@radix-ui/react-icons";
+import {socket} from '../../socket'
+
 interface Message {
   user: User;
   text: string;
@@ -21,11 +23,8 @@ interface User {
   isDeleted: boolean;
 }
 
-interface Props {
-  socket: any;
-}
 
-function SendMessage(props: Props) {
+function SendMessage() {
   const chatState = useChatState();
   const [message, setMessage] = useState("");
   const location = useLocation();
@@ -61,7 +60,7 @@ function SendMessage(props: Props) {
           withCredentials: true,
         }
       );
-      props.socket.emit("new message", data);
+      socket.emit("new message", data);
       chatState.setMessages((prev: Message[]) => {
         return [...prev, data];
       });

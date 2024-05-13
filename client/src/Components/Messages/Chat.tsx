@@ -10,6 +10,7 @@ import io from "socket.io-client";
 import { useToast } from "../ui/use-toast";
 import SendImage from "./Image";
 import ImageView from "./ImageView";
+import {socket} from '../../socket'
 interface User {
   _id: string;
   username: string;
@@ -34,7 +35,6 @@ interface ChatInteface {
   latestMessage: Message;
 }
 
-let socket: any;
 let selectedChatCompare: ChatInteface | null | undefined;
 
 function Chat() {
@@ -74,8 +74,8 @@ function Chat() {
     [chatState?.selectedChat]);
 
   useEffect(() => {
-    if (chatState.authUser && !socket) {
-      socket = io("https://chatly-sqn9.onrender.com");
+    if (chatState.authUser && socket) {
+      
       socket.emit("setup", chatState.authUser);
 
       socket.on("connection", () => {
@@ -122,7 +122,7 @@ function Chat() {
           <>
             <ChatHeader />
             <Messages />
-            <SendMessage socket={socket} />
+            <SendMessage />
             {chatState.image && (
               <SendImage
                 visible={chatState.image ? true : false}
