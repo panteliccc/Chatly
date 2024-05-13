@@ -9,7 +9,7 @@ import { Skeleton } from "../ui/skeleton";
 import { useToast } from "../ui/use-toast";
 import SendImage from "./Image";
 import ImageView from "./ImageView";
-import {socket} from '../../socket'
+import { socket } from "../../socket";
 interface User {
   _id: string;
   username: string;
@@ -65,47 +65,41 @@ function Chat() {
     }
   };
 
-  useEffect(
-    () => {
-      getChat();
-      selectedChatCompare = chatState.selectedChat;
-    },
-    [chatState?.selectedChat]);
+  useEffect(() => {
+    getChat();
+    selectedChatCompare = chatState.selectedChat;
+  }, [chatState?.selectedChat]);
 
   useEffect(() => {
     if (chatState.authUser && socket) {
-      
       socket.emit("setup", chatState.authUser);
 
       socket.on("connection", () => {
         setSocketConnected(true);
       });
     }
-  },[]);
+  }, []);
 
   useEffect(() => {
-    if (socket) {
-      socket.on("message received", (newMessage: Message) => {
-        if (
-          !selectedChatCompare ||
-          selectedChatCompare._id !== newMessage.chat?._id
-        ) {
-          chatState?.setRefreshChats(!chatState.refreshChats);
-          toast({
-            title: `${
-              newMessage.chat?.isGroup ? `${newMessage.chat.chatName} ` : ""
-            }`,
-            description: `${newMessage.user.username}: ${newMessage.text}`,
-          });
-        } else {
-          if (chatState?.messages != null) {
-            chatState?.setMessages([...chatState?.messages, newMessage]);
-            chatState?.setRefreshChats(!chatState.refreshChats);
-          }
+    socket.on("message received", (newMessage: Message) => {
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newMessage.chat?._id
+      ) {
+        chatState?.setRefreshChats(!chatState.refreshChats);
+        toast({
+          title: `${
+            newMessage.chat?.isGroup ? `${newMessage.chat.chatName} ` : ""
+          }`,
+          description: `${newMessage.user.username}: ${newMessage.text}`,
+        });
+      } else {
+        if (chatState?.messages != null) {
+          chatState?.setMessages([...chatState?.messages, newMessage]);
         }
-      });
-    }
-  });
+      }
+    });
+  }, [chatState.messages]);
   return !loading ? (
     <div
       className={`h-screen ${
