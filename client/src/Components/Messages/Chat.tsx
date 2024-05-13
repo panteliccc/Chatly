@@ -75,14 +75,14 @@ function Chat() {
 
   useEffect(() => {
     if (chatState.authUser && !socket) {
-      socket = io("https://chatly-server-api.vercel.app");
+      socket = io("https://chatly-sqn9.onrender.com");
       socket.emit("setup", chatState.authUser);
 
       socket.on("connection", () => {
         setSocketConnected(true);
       });
     }
-  });
+  },[]);
 
   useEffect(() => {
     if (socket) {

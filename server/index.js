@@ -16,7 +16,7 @@ dotenv.config();
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: ['https://chaatly.vercel.app',"http://localhost:3000"],
     methods:["GET","POST","PUT","PATCH","DELETE","HEAD"],
     credentials: true,
   })
@@ -41,7 +41,7 @@ const server = app.listen(PORT, () => {
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: '*',
+    origin: 'https://chaatly.vercel.app',
   },
 });
 
