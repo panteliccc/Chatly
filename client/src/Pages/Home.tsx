@@ -14,9 +14,13 @@ function Home(props: any) {
 
   async function validToken() {
     try {
-      await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/validToken`, {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/api/validToken`,
+        {
+          withCredentials: true,
+        }
+      );
+      if (res.status !== 200) router("/Account/Login");
     } catch (error: any) {
       if (error.response.status === 403) {
         router("/Account/Login");
@@ -24,7 +28,7 @@ function Home(props: any) {
     }
   }
 
-  useEffect(() => { 
+  useEffect(() => {
     if (chatId) {
       chatState.setVisible(true);
       fetchChatById(chatId);
@@ -32,7 +36,7 @@ function Home(props: any) {
   }, [chatId]);
   useEffect(() => {
     validToken();
-  },[]);
+  });
 
   const fetchChatById = async (chatId: string) => {
     try {
