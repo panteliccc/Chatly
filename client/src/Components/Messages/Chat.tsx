@@ -74,9 +74,8 @@ function Chat() {
     [chatState?.selectedChat]);
 
   useEffect(() => {
-    const url:string = process.env.REACT_APP_SERVER_URL || ""
     if (chatState.authUser && !socket) {
-      socket = io(url);
+      socket = io("https://chatly-server-api.vercel.app");
       socket.emit("setup", chatState.authUser);
 
       socket.on("connection", () => {
