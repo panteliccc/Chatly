@@ -41,7 +41,7 @@ const server = app.listen(PORT, () => {
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: 'https://chaatly.vercel.app',
+    origin: 'http://localhost:3000',
   },
 });
 
@@ -58,6 +58,8 @@ io.on("connection", (socket) => {
 
   socket.on("new message", (newMessage) => {
     var chat = newMessage.chat;
+    console.log("aaa");
+    console.log(newMessage);
     if (!chat.users) return console.log("chat.users not defined");
 
     chat.users.forEach((user) => {

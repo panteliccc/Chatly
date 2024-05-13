@@ -6,7 +6,6 @@ import SendMessage from "./sendMessage";
 import axios from "axios";
 import { useChatState } from "../../Context/Provider";
 import { Skeleton } from "../ui/skeleton";
-import io from "socket.io-client";
 import { useToast } from "../ui/use-toast";
 import SendImage from "./Image";
 import ImageView from "./ImageView";
