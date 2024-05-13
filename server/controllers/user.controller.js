@@ -68,14 +68,14 @@ const authUser = async (req, res) => {
     res.status(500).json(err);
   }
 };
-const accessOpen = async(req,res)=>{
+const accessOpen = async (req, res) => {
   console.log("aaa");
-  return res.status(200).json("Access")
-}
-const logout=asyncHandler(async(req,res)=>{
-  res.clearCookie("chatly.session-token"); 
+  return res.status(200).json("Access");
+};
+const logout = asyncHandler(async (req, res) => {
+  res.clearCookie("chatly.session-token");
   res.status(200).json({ message: "Logged out successfully" });
-})
+});
 
 const search = asyncHandler(async (req, res) => {
   const searchTerm = req.body.search;
@@ -111,4 +111,4 @@ const search = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { registerUser, authUser, search ,logout,accessOpen};
+module.exports = { registerUser, authUser, search, logout, accessOpen };

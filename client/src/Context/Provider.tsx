@@ -9,8 +9,8 @@ interface Chat {
   isGroup: boolean;
   users: User[];
   latestMessage: Message;
-  groupAdmins?:User[];
-  groupImage?:string;
+  groupAdmins?: User[];
+  groupImage?: string;
 }
 
 interface ChatContextType {
@@ -30,19 +30,19 @@ interface ChatContextType {
   searchResults: Data[] | null;
   setSearchResults: any;
   visible: any;
-  setVisible:any;
+  setVisible: any;
   refreshChats: any;
-  setRefreshChats:any;
+  setRefreshChats: any;
   openInfo: any;
-  setOpenInfo:any;  
+  setOpenInfo: any;
   openCreateGroup: any;
-  setOpenCreateGroup:any;
-  image:any;
-  setImage:any;
-  imageView:any;
-  setImageView:any;
-  visibleImage:any;
-  setVisibleImage:any;
+  setOpenCreateGroup: any;
+  image: any;
+  setImage: any;
+  imageView: any;
+  setImageView: any;
+  visibleImage: any;
+  setVisibleImage: any;
 }
 
 interface User {
@@ -54,12 +54,12 @@ interface User {
 }
 
 interface Message {
-  _id:string;
+  _id: string;
   user: User;
   text: string;
-  createdAt:string;
-  chat?:Chat;
-  isImage:boolean;
+  createdAt: string;
+  chat?: Chat;
+  isImage: boolean;
 }
 interface Data {
   _id: string;
@@ -67,9 +67,9 @@ interface Data {
   email: string;
   image: string;
   latestMessage: Message;
-  chatName?:string;
-  isGroup?:boolean;
-  groupImage?:string;
+  chatName?: string;
+  isGroup?: boolean;
+  groupImage?: string;
 }
 const ChatContext = createContext<ChatContextType | null>(null);
 
@@ -84,12 +84,12 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   ]);
   const [activeLink, setActiveLink] = useState<string | null>("messages");
   const [visible, setVisible] = useState(false);
-  const [refreshChats,setRefreshChats] = useState(false)
+  const [refreshChats, setRefreshChats] = useState(false);
   const [openInfo, setOpenInfo] = useState(false);
   const [openCreateGroup, setOpenCreateGroup] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const [visibleImage, setVisibleImage] = useState(false);
-  const [imageView, setImageView] = useState('');
+  const [imageView, setImageView] = useState("");
   return (
     <ChatContext.Provider
       value={{
@@ -116,12 +116,12 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         setOpenInfo,
         openCreateGroup,
         setOpenCreateGroup,
-        image, 
+        image,
         setImage,
         imageView,
         setImageView,
         visibleImage,
-        setVisibleImage
+        setVisibleImage,
       }}
     >
       <CookiesProvider>{children}</CookiesProvider>

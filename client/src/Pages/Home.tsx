@@ -14,13 +14,9 @@ function Home(props: any) {
 
   async function validToken() {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/api/validToken`,
-        {
-          withCredentials: true,
-        }
-      );
-      if (res.status !== 200) router("/Account/Login");
+      await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/validToken`, {
+        withCredentials: true,
+      });
     } catch (error: any) {
       if (error.response.status === 403) {
         router("/Account/Login");
