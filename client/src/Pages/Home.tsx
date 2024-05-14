@@ -11,23 +11,6 @@ function Home(props: any) {
   const location = useLocation();
   const chatId = new URLSearchParams(location.search).get("chat");
   const chatState = useChatState();
-
-  useEffect(() => {
-    async function validToken() {
-      try {
-        await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/validToken`, {
-          withCredentials: true,
-        });
-      } catch (error: any) {
-        if (error.response.status === 401) {
-          router("/Account/Login");
-        }
-      }
-    }
-
-    validToken();
-  }, [router]);
-
   useEffect(() => {
     if (chatId) {
       chatState.setVisible(true);

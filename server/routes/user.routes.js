@@ -3,17 +3,17 @@ const {
   registerUser,
   authUser,
   search,
+  checkAuth,
   logout,
-  accessOpen,
 } = require("../controllers/user.controller");
 const authenticateUser = require("../middleware/authenticateUser");
 
 const router = express.Router();
 
 router.post("/register", registerUser);
-router.post("/authUser", authUser);
+router.post("/login", authUser);
+router.get("/checkAuth", checkAuth);
 router.get("/logout", logout);
-router.get("/validToken", authenticateUser, accessOpen);
 router.post("/search", authenticateUser, search);
 
 module.exports = router;

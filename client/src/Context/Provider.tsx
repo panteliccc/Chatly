@@ -43,6 +43,8 @@ interface ChatContextType {
   setImageView: any;
   visibleImage: any;
   setVisibleImage: any;
+  auth: any;
+  setAuth: any;
 }
 
 interface User {
@@ -82,6 +84,7 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [cookie, setCookie, removeCookie] = useCookies([
     "chatly.session-token",
   ]);
+  const [auth, setAuth] = useState(false);
   const [activeLink, setActiveLink] = useState<string | null>("messages");
   const [visible, setVisible] = useState(false);
   const [refreshChats, setRefreshChats] = useState(false);
@@ -122,6 +125,8 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         setImageView,
         visibleImage,
         setVisibleImage,
+        auth,
+        setAuth,
       }}
     >
       <CookiesProvider>{children}</CookiesProvider>

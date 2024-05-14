@@ -38,7 +38,7 @@ export function Login() {
     const { email, password } = values;
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/api/authUser`,
+        `${process.env.REACT_APP_SERVER_URL}/api/login`,
         {
           email,
           password,
@@ -48,6 +48,7 @@ export function Login() {
         }
       );
       if (res.status === 200) {
+        chatState.setAuth(true);
         router("/");
       } else {
         throw new Error("Invalid username or password");

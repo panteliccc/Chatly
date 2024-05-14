@@ -13,21 +13,20 @@ import { useChatState } from "../../Context/Provider";
 import axios from "axios";
 function Header() {
   const chatState = useChatState();
-  const router = useNavigate();
-  
-  async function handleLogout() {
+  const logout = async () => {
     try {
-      await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/logout`, {
-        withCredentials: true
-      });
-      // Provjera da li je kolačić stvarno obrisan
-      const isCookieDeleted = document.cookie.includes("chatly.session-token=");
-      console.log("Is cookie deleted?", !isCookieDeleted);
-      router("/Account/Login");
-    } catch (error) {
-      console.error("Greška prilikom odjavljivanja:", error);
+      const res = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/api/logout`,
+        {
+          withCredentials: true,
+        }
+      );
+      chatState.setAuth(false);
+    } catch (err: any) {
+      console.log(err);
     }
-  }
+  };
+
   return (
     <div>
       <div className={`flex p-3 justify-between items-center border-b `}>
@@ -54,7 +53,10 @@ function Header() {
               Create Group
             </DropdownMenuItem>
             <DropdownMenuSeparator className=" bg-white" />
-            <DropdownMenuItem className="text-lg cursor-pointer px-4" onClick={handleLogout}>
+            <DropdownMenuItem
+              className="text-lg cursor-pointer px-4"
+              onClick={logout}
+            >
               Log Out
             </DropdownMenuItem>
           </DropdownMenuContent>

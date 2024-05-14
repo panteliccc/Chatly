@@ -37,47 +37,63 @@ const authUser = async (req, res) => {
       password,
       user.password ? user.password : ""
     );
-    if (!user || !validPassword) {
+    if (!user || !validPassword)
       return res.status(401).json({ message: "Invalid email or password" });
-    } else if (user.isDeleted) {
+    if (user.isDeleted)
       return res.status(404).json({ message: "Account is deleted" });
-    } else {
-      res.clearCookie("chatly.session-token");
-      const expirationTime = "8h";
-      const token = jwt.sign(
-        {
-          _id: user._id,
-        },
-        process.env.SECRET_KEY,
-        { expiresIn: expirationTime }
-      );
+    const token = jwt.sign(
+      {
+        _id: user._id,
+      },
+      process.env.SECRET_KEY,
+      { expiresIn: "8h" }
+    );
 
-      res
-        .cookie("chatly.session-token", token, {
-          httpOnly: true,
-          expiresIn: expirationTime,
-          path: "/",
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "None",
-        })
-        .status(200)
-        .json({ message: "Authorized" });
-    }
+    res
+      .cookie("chatly.session-token", token, {
+        path: "/",
+        expiresIn: "8h",
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
+      .status(200)
+      .json({ access: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-const accessOpen = async (req, res) => {
-  console.log("aaa");
-  return res.status(200).json("Access");
-};
-
-const logout = asyncHandler(async (req, res) => {
-  res.clearCookie("chatly.session-token");
-  res.status(200).json({ message: "Logged out successfully" });
+const checkAuth = asyncHandler(async (req, res) => {
+  const token = req.cookies["chatly.session-token"];
+  if (!token) {
+    return res.status(401).json({ message: "Authorization token is required" });
+  } else {
+    try {
+      const decoded = jwt.verify(token, process.env.SECRET_KEY);
+      req.user = decoded;
+      res
+        .status(200)
+        .json({ user: req.user, access: true, message: "authorized" });
+    } catch (error) {
+      res.clearCookie("chatly.session-token");
+      res.status(401).json({ message: "Invalid token" });
+    }
+  }
 });
-
+const logout = asyncHandler(async (req, res) => {
+  const token = req.cookies["chatly.session-token"];
+  if (token) {
+    try {
+      res
+        .clearCookie("chatly.session-token")
+        .status(200)
+        .json({ message: "Log Out" });
+    } catch (err) {
+      res.status(400).send({ message: "Log out failed" });
+    }
+  }
+});
 const search = asyncHandler(async (req, res) => {
   const searchTerm = req.body.search;
   try {
@@ -111,4 +127,4 @@ const search = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { registerUser, authUser, search, logout, accessOpen };
+module.exports = { registerUser, authUser, search, checkAuth, logout };
