@@ -86,7 +86,13 @@ const logout = asyncHandler(async (req, res) => {
   if (token) {
     try {
       res
-        .clearCookie("chatly.session-token")
+        .clearCookie("chatly.session-token",{
+          path: "/",
+          expiresIn: "8h",
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        })
         .status(200)
         .json({ message: "Log Out" });
     } catch (err) {
