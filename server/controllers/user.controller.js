@@ -57,7 +57,7 @@ const authUser = async (req, res) => {
           expiresIn: expirationTime,
           path: "/",
           secure: process.env.NODE_ENV === "production",
-          sameSite: "Lax",
+          sameSite: "None",
         })
         .status(200)
         .json({ message: "Authorized" });
