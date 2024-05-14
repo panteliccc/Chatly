@@ -17,12 +17,15 @@ function Header() {
   
   async function handleLogout() {
     try {
-      await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/logout`,{
-        withCredentials:true
+      await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/logout`, {
+        withCredentials: true
       });
-      router("/Account/Login"); 
+      // Provjera da li je kolačić stvarno obrisan
+      const isCookieDeleted = document.cookie.includes("chatly.session-token=");
+      console.log("Is cookie deleted?", !isCookieDeleted);
+      router("/Account/Login");
     } catch (error) {
-      console.error("Error logging out:", error);
+      console.error("Greška prilikom odjavljivanja:", error);
     }
   }
   return (
