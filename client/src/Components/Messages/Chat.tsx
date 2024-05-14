@@ -81,7 +81,8 @@ function Chat() {
   }, []);
 
   useEffect(() => {
-    socket.on("message received", (newMessage: Message) => {
+    console.log("gas");
+    function onMessageRecived(newMessage: Message) {
       if (
         !selectedChatCompare ||
         selectedChatCompare._id !== newMessage.chat?._id
@@ -93,14 +94,18 @@ function Chat() {
           description: `${newMessage.user.username}: ${newMessage.text}`,
         });
       } else {
-        if (chatState?.messages != null) {
-          chatState?.setMessages([...chatState?.messages, newMessage]);
-          console.log(newMessage);
-          
-        }
+        chatState?.setMessages((prevMessages: Message[]) => [
+          ...prevMessages,
+          newMessage,
+        ]);
       }
-    });
-  }, [chatState.messages]);
+    }
+    socket.on("message received", onMessageRecived);
+    return () => {
+      socket.off("message received", onMessageRecived);
+    };
+    
+  }, [chatState.selectedChat]);
   return !loading ? (
     <div
       className={`h-screen ${
