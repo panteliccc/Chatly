@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
 
-const URL = "http://localhost:5500";
+const URL = "https://chatly-sqn9.onrender.com";
 
 export const socket = io(URL);
