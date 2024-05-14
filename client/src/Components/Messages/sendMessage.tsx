@@ -64,7 +64,6 @@ function SendMessage() {
       chatState.setMessages((prev: Message[]) => {
         return [...prev, data];
       });
-      chatState.setRefreshChats(!chatState.refreshChats);
       setMessage("");
     } catch (err) {
       console.log(err);

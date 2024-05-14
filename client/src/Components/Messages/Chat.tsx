@@ -86,7 +86,6 @@ function Chat() {
         !selectedChatCompare ||
         selectedChatCompare._id !== newMessage.chat?._id
       ) {
-        chatState?.setRefreshChats(!chatState.refreshChats);
         toast({
           title: `${
             newMessage.chat?.isGroup ? `${newMessage.chat.chatName} ` : ""
@@ -96,6 +95,8 @@ function Chat() {
       } else {
         if (chatState?.messages != null) {
           chatState?.setMessages([...chatState?.messages, newMessage]);
+          console.log(newMessage);
+          
         }
       }
     });
