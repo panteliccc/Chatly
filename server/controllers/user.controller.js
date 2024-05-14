@@ -42,6 +42,7 @@ const authUser = async (req, res) => {
     } else if (user.isDeleted) {
       return res.status(404).json({ message: "Account is deleted" });
     } else {
+      res.clearCookie("chatly.session-token");
       const expirationTime = "8h";
       const token = jwt.sign(
         {

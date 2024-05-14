@@ -19,7 +19,7 @@ function Home(props: any) {
           withCredentials: true,
         });
       } catch (error: any) {
-        if (error.response.status === 403) {
+        if (error.response.status === 401) {
           router("/Account/Login");
         }
       }
