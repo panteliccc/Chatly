@@ -81,8 +81,23 @@ function Chat() {
   }, []);
 
   useEffect(() => {
-    console.log("gas");
+    const updateChat = (newMessage: Message) => {
+      if (chatState?.chats) {
+        const chats = [...chatState.chats];
+        const indexOfChat = chats.findIndex(
+          (c) => c._id === newMessage.chat?._id
+        );
+
+        chats[indexOfChat].latestMessage = newMessage;
+
+        const updatedChat = chats.splice(indexOfChat, 1)[0];
+        chats.unshift(updatedChat);
+
+        chatState?.setChats(chats);
+      }
+    };
     function onMessageRecived(newMessage: Message) {
+      updateChat(newMessage);
       if (
         !selectedChatCompare ||
         selectedChatCompare._id !== newMessage.chat?._id
@@ -104,7 +119,6 @@ function Chat() {
     return () => {
       socket.off("message received", onMessageRecived);
     };
-    
   }, [chatState.selectedChat]);
   return !loading ? (
     <div

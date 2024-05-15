@@ -46,13 +46,13 @@ const authUser = async (req, res) => {
         _id: user._id,
       },
       process.env.SECRET_KEY,
-      { expiresIn: "8h" }
+      { expiresIn: "1d" }
     );
 
     res
       .cookie("chatly.session-token", token, {
         path: "/",
-        expiresIn: "8h",
+        expiresIn: "1d",
         httpOnly: true,
         secure: true,
         sameSite: "none",
@@ -88,7 +88,7 @@ const logout = asyncHandler(async (req, res) => {
       res
         .clearCookie("chatly.session-token",{
           path: "/",
-          expiresIn: "8h",
+          expiresIn: "1d",
           httpOnly: true,
           secure: true,
           sameSite: "none",

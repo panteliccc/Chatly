@@ -31,7 +31,9 @@ function Home(props: any) {
       console.error("Error fetching chat:", error);
     }
   };
-
+  useEffect(()=>{
+    if(!chatState.auth) router("/Account/Login")
+  },[])
   return (
     <div
       className={`bg-background w-screen h-screen flex flex-col-reverse md:flex-row`}

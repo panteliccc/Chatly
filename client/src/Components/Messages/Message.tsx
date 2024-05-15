@@ -82,12 +82,12 @@ function Message(props: Props) {
         {props.isImage ? (
           <>
             {!imageLoaded && (
-              <Skeleton className="w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] h-[60vh] rounded-xl bg-primary" />
+              <Skeleton className="w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] h-[50vh] rounded-xl bg-primary" />
             )}
             <img
               src={props.text}
               alt={props.text}
-              className={`max-w-[90%] sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%] rounded-xl border-4 cursor-pointer ${
+              className={`max-w-[90%] sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%] max-h-[50vh] rounded-xl border-4 cursor-pointer ${
                 isSender ? "border-softBlue" : " border-primary "
               }`}
               onLoad={() => setImageLoaded(true)}

@@ -59,4 +59,6 @@ io.on("connection", (socket) => {
   socket.on("new message", (newMessage) => {
     socket.to(newMessage.chat._id).emit("message received", newMessage);
   });
+
+  
 });

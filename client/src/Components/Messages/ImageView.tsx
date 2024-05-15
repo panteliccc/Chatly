@@ -18,7 +18,7 @@ function ImageView() {
       />
       <div className="w-10/12 h-full flex items-center justify-center">
         {chatState.imageView && (
-          <img src={chatState.imageView} alt="image" className="w-full" />
+          <img src={chatState.imageView} alt="image" className="max-w-full max-h-full" />
         )}
       </div>
     </div>
